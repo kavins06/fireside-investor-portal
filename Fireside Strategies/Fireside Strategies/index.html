@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Four Seasons Townhomes — Fireside Strategies | Investor Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<!-- GSAP core + ScrollTrigger (vendored locally from github.com/greensock/GSAP v3.15.0) -->
+<script src="../../GSAP/dist/gsap.min.js"></script>
+<script src="../../GSAP/dist/ScrollTrigger.min.js"></script>
+<style>
+  :root{
+    --navy:#16293b; --navy2:#1f3650; --navy3:#2a4862;
+    --gold:#cf9f3b; --gold2:#e0b85a;
+    --slate:#7e98a1; --mist:#9fb1b8;
+    --paper:#eef0f1; --card:#ffffff; --line:#e3e7ea;
+    --ink:#16293b; --ink2:#54666f;
+    --good:#3f7d5e; --bad:#bb5f48;
+    --shadow:0 1px 3px rgba(22,41,59,.06),0 8px 24px rgba(22,41,59,.05);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',system-ui,sans-serif;background:var(--paper);color:var(--ink);
+       -webkit-font-smoothing:antialiased;line-height:1.5}
+  h1,h2,h3,.jost{font-family:'Jost',sans-serif;font-weight:300;letter-spacing:.01em}
+  .label{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--slate)}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 28px}
+
+  /* top bar */
+  .topbar{background:var(--navy);color:#fff;padding:14px 0}
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between}
+  .brand{display:flex;align-items:center;gap:13px}
+  .mark{width:34px;height:34px;border:1.5px solid rgba(255,255,255,.55);display:flex;
+        align-items:flex-end;justify-content:flex-start;padding:4px;position:relative}
+  .mark b{font-family:'Inter';font-weight:700;color:var(--gold);font-size:18px;line-height:.8}
+  .mark s{position:absolute;top:5px;right:5px;font-size:9px;color:#fff;text-decoration:none;font-weight:600}
+  .mark i{position:absolute;bottom:4px;left:5px;width:11px;height:2px;background:var(--gold)}
+  .wordmark{font-family:'Inter';font-weight:700;letter-spacing:.22em;font-size:13px}
+  .wordmark span{font-weight:400;color:var(--mist);letter-spacing:.32em;font-size:11px;display:block;margin-top:1px}
+  .topbar .tag{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mist);font-weight:600}
+
+  /* hero */
+  .hero{padding:34px 0 24px}
+  .hero .crumb{color:var(--slate)}
+  .hero h1{font-size:46px;color:var(--navy);margin:6px 0 2px;line-height:1.02}
+  .hero h1 b{font-family:'Inter';font-weight:700;font-size:44px}
+  .hero .loc{font-family:'Inter';font-weight:600;color:var(--gold);font-size:14px;margin-bottom:14px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{background:var(--card);border:1px solid var(--line);border-radius:30px;padding:6px 14px;
+        font-size:12.5px;color:var(--ink2);font-weight:500}
+  .chip b{color:var(--navy);font-weight:600}
+  .basebadge{display:inline-flex;align-items:center;gap:7px;margin-top:14px;font-size:12px;
+        color:var(--ink2);background:#fbf4e3;border:1px solid #ecdcae;border-radius:6px;padding:6px 12px}
+  .basebadge .dot{width:7px;height:7px;border-radius:50%;background:var(--gold)}
+
+  /* kpi strip */
+  .kpis{background:var(--navy);color:#fff}
+  .kpis .wrap{display:grid;grid-template-columns:repeat(6,1fr);gap:0}
+  .kpi{padding:22px 18px;border-right:1px solid rgba(255,255,255,.09)}
+  .kpi:last-child{border-right:none}
+  .kpi .label{color:var(--mist)}
+  .kpi .val{font-family:'Jost';font-weight:300;font-size:33px;color:#fff;margin-top:7px;line-height:1}
+  .kpi .val.gold{color:var(--gold2)}
+  .kpi .sub{font-size:11px;color:var(--slate);margin-top:5px}
+
+  /* layout */
+  .grid{display:grid;grid-template-columns:340px 1fr;gap:22px;padding:26px 0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
+  .card .hd{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+  .card .hd h3{font-size:17px;color:var(--navy)}
+  .card .bd{padding:18px 20px}
+
+  /* sliders */
+  .ctrl{margin-bottom:21px}
+  .ctrl:last-child{margin-bottom:6px}
+  .ctrl .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px}
+  .ctrl .nm{font-size:13px;font-weight:600;color:var(--navy)}
+  .ctrl .cur{font-family:'Jost';font-weight:400;font-size:19px;color:var(--navy)}
+  .ctrl .cur .d{font-family:'Inter';font-size:11px;font-weight:600;margin-left:6px}
+  .d.up{color:var(--good)} .d.dn{color:var(--bad)} .d.base{color:var(--slate)}
+  input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:4px;
+        background:var(--line);outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;
+        background:var(--navy);cursor:pointer;border:3px solid #fff;box-shadow:0 1px 4px rgba(22,41,59,.3)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--navy);
+        cursor:pointer;border:3px solid #fff}
+  .scale{display:flex;justify-content:space-between;font-size:10.5px;color:var(--slate);margin-top:5px}
+  .resetbtn{width:100%;margin-top:8px;padding:11px;border:1px solid var(--line);background:#fff;border-radius:8px;
+        font-family:'Inter';font-weight:600;font-size:12.5px;letter-spacing:.04em;color:var(--ink2);cursor:pointer;
+        text-transform:uppercase}
+  .resetbtn:hover{background:var(--paper);color:var(--navy)}
+
+  /* charts grid */
+  .charts{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .chartbox{position:relative;height:248px}
+  .span2{grid-column:1 / -1}
+  .chartbox.tall{height:270px}
+
+  /* table */
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:10px 12px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+  th:first-child,td:first-child{text-align:left}
+  thead th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--slate);font-weight:600}
+  tbody td{font-variant-numeric:tabular-nums;color:var(--ink)}
+  tbody tr:hover{background:#f7f9fa}
+  tr.exit{background:#fbf4e3}
+  tr.exit td{font-weight:600;color:var(--navy);border-top:1.5px solid var(--gold)}
+  td .neg{color:var(--bad)}
+
+  /* waterfall */
+  .wf{display:grid;grid-template-columns:1.35fr 1fr;gap:0}
+  .wf .left{padding:6px 24px 6px 0;border-right:1px solid var(--line)}
+  .wf .right{padding:6px 0 6px 24px}
+  .tier{display:flex;gap:13px;align-items:flex-start;padding:11px 0;border-bottom:1px dashed var(--line)}
+  .tier:last-child{border-bottom:none}
+  .tier .n{width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font-size:12px;
+        font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .tier .t b{display:block;font-size:13.5px;color:var(--navy);font-weight:600}
+  .tier .t span{font-size:12px;color:var(--ink2)}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:4px}
+  .pcard{border:1px solid var(--line);border-radius:10px;padding:15px}
+  .pcard.lp{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .pcard .label{margin-bottom:11px}
+  .pcard.lp .label{color:var(--mist)}
+  .pcard .r{display:flex;justify-content:space-between;font-size:13px;padding:5px 0}
+  .pcard .r b{font-family:'Jost';font-weight:400;font-size:17px}
+  .pcard.lp .r{color:#dfe6ea}
+  .pcard.lp .r b{color:var(--gold2)}
+
+  .foot{padding:26px 0 50px;color:var(--ink2);font-size:11px;line-height:1.65}
+  .foot .wrap{border-top:1px solid var(--line);padding-top:18px}
+  .sectitle{margin:8px 0 14px}
+  .sectitle .label{display:block;margin-bottom:4px}
+  .sectitle h2{font-size:24px;color:var(--navy)}
+
+  @media(max-width:980px){
+    .grid{grid-template-columns:1fr}
+    .kpis .wrap{grid-template-columns:repeat(3,1fr)}
+    .kpi:nth-child(3){border-right:none}
+    .charts,.wf{grid-template-columns:1fr}
+    .wf .left{border-right:none;padding:0;border-bottom:1px solid var(--line);padding-bottom:10px}
+    .wf .right{padding:16px 0 0}
+    .hero h1{font-size:34px}.hero h1 b{font-size:32px}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="wrap">
+  <div class="brand">
+    <div class="mark"><b>F</b><s>S</s><i></i></div>
+    <div class="wordmark">FIRESIDE<span>STRATEGIES</span></div>
+  </div>
+  <div class="tag">Fireside Fund · Investor Dashboard</div>
+</div></div>
+
+<div class="hero"><div class="wrap">
+  <div class="label crumb">Pipeline · Deal Tear Sheet</div>
+  <h1><b>Four Seasons</b> Townhomes</h1>
+  <div class="loc">Greensboro, North Carolina · 2705 Four Seasons Blvd, 27407</div>
+  <div class="chips">
+    <div class="chip"><b>90</b> Units (2BR / 1.5BA)</div>
+    <div class="chip"><b>Built 1970</b> · 13 buildings</div>
+    <div class="chip"><b>6.78</b> acres</div>
+    <div class="chip"><b>~960</b> sq ft / unit</div>
+    <div class="chip"><b>100%</b> Occupancy</div>
+    <div class="chip">Co-GP: <b>Ginkgo Residential</b></div>
+  </div>
+  <div class="basebadge"><span class="dot"></span> Base case mirrors the sponsor's closing pro forma. Move the levers to stress-test the deal.</div>
+</div></div>
+
+<div class="kpis"><div class="wrap">
+  <div class="kpi"><div class="label">Levered IRR</div><div class="val gold" id="k_irr">—</div><div class="sub">Deal level, to all equity</div></div>
+  <div class="kpi"><div class="label">Equity Multiple</div><div class="val" id="k_mult">—</div><div class="sub">Total distributions ÷ equity</div></div>
+  <div class="kpi"><div class="label">Avg Cash-on-Cash</div><div class="val" id="k_coc">—</div><div class="sub">Operating years, pre-sale</div></div>
+  <div class="kpi"><div class="label">Total Profit</div><div class="val" id="k_profit">—</div><div class="sub">Net of invested equity</div></div>
+  <div class="kpi"><div class="label">LP Net IRR</div><div class="val gold" id="k_lpirr">—</div><div class="sub">After 8% pref &amp; promote</div></div>
+  <div class="kpi"><div class="label">LP Multiple</div><div class="val" id="k_lpmult">—</div><div class="sub">LP net equity multiple</div></div>
+</div></div>
+
+<div class="wrap">
+<div class="grid">
+
+  <!-- controls -->
+  <div class="card">
+    <div class="hd"><h3>Scenario Levers</h3><span class="label">Live</span></div>
+    <div class="bd">
+      <div class="ctrl">
+        <div class="top"><span class="nm">Exit Cap Rate</span><span class="cur"><span id="v_cap"></span><span class="d base" id="d_cap"></span></span></div>
+        <input type="range" id="s_cap" min="5.0" max="8.0" step="0.05" value="6.25">
+        <div class="scale"><span>5.0%</span><span>8.0%</span></div>
+      </div>
+      <div class="ctrl">
+        <div class="top"><span class="nm">Annual Rent Growth</span><span class="cur"><span id="v_rent"></span><span class="d base" id="d_rent"></span></span></div>
+        <input type="range" id="s_rent" min="-3" max="3" step="0.25" value="0">
+        <div class="scale"><span>−3% vs base</span><span>+3% vs base</span></div>
+      </div>
+      <div class="ctrl">
+        <div class="top"><span class="nm">Stabilized Occupancy</span><span class="cur"><span id="v_occ"></span><span class="d base" id="d_occ"></span></span></div>
+        <input type="range" id="s_occ" min="88" max="98" step="0.5" value="95">
+        <div class="scale"><span>88%</span><span>98%</span></div>
+      </div>
+      <div class="ctrl">
+        <div class="top"><span class="nm">Annual Expense Growth</span><span class="cur"><span id="v_exp"></span><span class="d base" id="d_exp"></span></span></div>
+        <input type="range" id="s_exp" min="-2" max="4" step="0.25" value="0">
+        <div class="scale"><span>−2% vs base</span><span>+4% vs base</span></div>
+      </div>
+      <div class="ctrl">
+        <div class="top"><span class="nm">Hold Period / Exit Year</span><span class="cur"><span id="v_hold"></span><span class="d base" id="d_hold"></span></span></div>
+        <input type="range" id="s_hold" min="3" max="10" step="1" value="7">
+        <div class="scale"><span>3 yrs</span><span>10 yrs</span></div>
+      </div>
+      <button class="resetbtn" id="reset">Reset to sponsor base case</button>
+    </div>
+  </div>
+
+  <!-- charts -->
+  <div class="card">
+    <div class="hd"><h3>Performance &amp; Sensitivity</h3><span class="label" id="exitlabel"></span></div>
+    <div class="bd">
+      <div class="charts">
+        <div class="chartbox span2"><canvas id="c_cf"></canvas></div>
+        <div class="chartbox"><canvas id="c_sens"></canvas></div>
+        <div class="chartbox"><canvas id="c_stack"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- cash flow table -->
+<div class="wrap">
+  <div class="sectitle"><span class="label">Projected Operations</span><h2>Annual Cash Flow</h2></div>
+  <div class="card"><div class="bd" style="overflow-x:auto">
+    <table>
+      <thead><tr>
+        <th>Year</th><th>Net Operating Income</th><th>Debt Service</th><th>DSCR</th>
+        <th>Operating Cash Flow</th><th>Cash-on-Cash</th><th>Distribution to Equity</th>
+      </tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div></div>
+</div>
+
+<!-- waterfall -->
+<div class="wrap">
+  <div class="sectitle" style="margin-top:30px"><span class="label">Distribution Waterfall</span><h2>How Investor Capital Is Returned</h2></div>
+  <div class="card"><div class="bd"><div class="wf">
+    <div class="left">
+      <div class="tier"><div class="n">1</div><div class="t"><b>Return of Contributed Capital</b><span>Limited Partners receive 100% of invested equity back first.</span></div></div>
+      <div class="tier"><div class="n">2</div><div class="t"><b>8% Annual Preferred Return</b><span>LPs earn a cumulative 8% preferred return on unreturned capital.</span></div></div>
+      <div class="tier"><div class="n">3</div><div class="t"><b>GP Catch-Up</b><span>GP receives 20% of the preferred return distributed.</span></div></div>
+      <div class="tier"><div class="n">4</div><div class="t"><b>80 / 20 Split</b><span>Remaining profit split 80% LP / 20% GP until LPs reach a 2.5x return.</span></div></div>
+      <div class="tier"><div class="n">5</div><div class="t"><b>50 / 50 Split</b><span>All distributions beyond 2.5x MOIC are shared 50 / 50.</span></div></div>
+    </div>
+    <div class="right">
+      <div class="label" style="margin-bottom:12px">Projected outcome at current scenario</div>
+      <div class="split">
+        <div class="pcard lp">
+          <div class="label">Limited Partners</div>
+          <div class="r">Net IRR <b id="w_lpirr">—</b></div>
+          <div class="r">Multiple <b id="w_lpmult">—</b></div>
+          <div class="r">Distributions <b id="w_lpdist">—</b></div>
+        </div>
+        <div class="pcard">
+          <div class="label">General Partner</div>
+          <div class="r">IRR <b id="w_gpirr">—</b></div>
+          <div class="r">Multiple <b id="w_gpmult">—</b></div>
+          <div class="r">Distributions <b id="w_gpdist">—</b></div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--ink2);margin-top:13px;line-height:1.55">
+        Assumes a 90 / 10 LP / GP equity split, 8% preferred return, and 20% promote. Illustrative;
+        actual distributions are governed by the Limited Partnership Agreement.
+      </div>
+    </div>
+  </div></div></div>
+</div>
+
+<!-- transaction snapshot -->
+<div class="wrap">
+  <div class="sectitle" style="margin-top:30px"><span class="label">At a Glance</span><h2>Transaction Snapshot</h2></div>
+  <div class="card"><div class="bd">
+    <div class="charts" style="grid-template-columns:repeat(4,1fr)">
+      <div><div class="label">Purchase Price</div><div class="jost" style="font-size:26px;color:var(--navy);margin-top:6px">$9,721,995</div><div class="sub" style="font-size:11px;color:var(--ink2)">$108,022 / unit</div></div>
+      <div><div class="label">Total Equity</div><div class="jost" style="font-size:26px;color:var(--navy);margin-top:6px">$4,813,998</div><div class="sub" style="font-size:11px;color:var(--ink2)">30.1% of total cost</div></div>
+      <div><div class="label">Agency Debt</div><div class="jost" style="font-size:26px;color:var(--navy);margin-top:6px">$6,800,000</div><div class="sub" style="font-size:11px;color:var(--ink2)">5.23% fixed · interest-only · 69.9% LTV</div></div>
+      <div><div class="label">Capital Improvements</div><div class="jost" style="font-size:26px;color:var(--navy);margin-top:6px">$1,420,000</div><div class="sub" style="font-size:11px;color:var(--ink2)">$15,778 / unit</div></div>
+    </div>
+  </div></div>
+</div>
+
+<div class="foot"><div class="wrap">
+  This dashboard is an illustrative scenario model prepared for informational purposes only. The base case
+  mirrors the sponsor's closing pro forma; projected figures are inherently predictive and not a guarantee of
+  results. This material does not constitute an offer to sell or a solicitation to purchase an interest in
+  Fireside Fund LP, which may be made only via a confidential private placement memorandum. An investment is
+  speculative and subject to risk of loss, including loss of principal. Past performance is not necessarily
+  indicative of future results. © Fireside Strategies, LLC.
+</div></div>
+
+<script>
+// ===== Model (validated against pro forma) =====
+const DEAL = {
+  equity:4813998, loan:6800000, rate:0.0523, lpShare:0.90, gpShare:0.10,
+  pref:0.08, promote:0.20, moicHurdle:2.5, assetMgmt:0.01, sellCost:0.01, baseOcc:0.95,
+  baseNOI:[693600,924800,979200,1020000,1047200,1081200,1107537],
+  baseOpex:[601560,552600,564120,580050,596340,613080,630270]
+};
+const baseRev = DEAL.baseNOI.map((n,i)=>n+DEAL.baseOpex[i]);
+const ext=(a,g,n)=>{const o=a.slice();while(o.length<n)o.push(o[o.length-1]*(1+g));return o;};
+const REV=ext(baseRev,0.026,11), OPEX=ext(DEAL.baseOpex,0.028,11);
+const DEFAULT={cap:0.0625,rent:0,occ:0.95,exp:0,hold:7};
+
+function irr(cfs){let lo=-0.9,hi=5,npv=r=>cfs.reduce((s,c,t)=>s+c/Math.pow(1+r,t),0);
+  if(npv(lo)*npv(hi)>0)return null;
+  for(let i=0;i<200;i++){const m=(lo+hi)/2;if(npv(m)>0)lo=m;else hi=m;}return (lo+hi)/2;}
+
+function run(p){
+  const ds=DEAL.loan*DEAL.rate, amf=DEAL.assetMgmt*DEAL.equity, occF=p.occ/DEAL.baseOcc, Y=p.hold;
+  const rows=[];
+  for(let y=1;y<=Y+1;y++){
+    const rev=REV[y-1]*Math.pow(1+p.rent,y-1)*occF;
+    const opex=OPEX[y-1]*Math.pow(1+p.exp,y-1);
+    const noi=rev-opex;
+    rows.push({y,noi,ds,dscr:noi/ds,opCF:noi-ds-amf});
+  }
+  const exitNOI=rows[Y].noi, exitValue=exitNOI/p.cap, netSale=exitValue*(1-DEAL.sellCost)-DEAL.loan;
+  const cfs=[-DEAL.equity];
+  for(let y=1;y<=Y;y++){let c=rows[y-1].opCF;if(y===Y)c+=netSale;cfs.push(c);}
+  const totalDist=cfs.slice(1).reduce((a,b)=>a+b,0);
+  const dealIRR=irr(cfs), mult=totalDist/DEAL.equity;
+  const avgCoC=rows.slice(0,Y).reduce((a,r)=>a+r.opCF/DEAL.equity,0)/Y;
+
+  // waterfall
+  const lpEq=DEAL.equity*DEAL.lpShare, gpEq=DEAL.equity*DEAL.gpShare;
+  let lpCap=lpEq,gpCap=gpEq,prefAcc=0,prefPaid=0,catchPaid=0,lpCum=0;
+  const lpCF=[-lpEq],gpCF=[-gpEq],lpDistYr=[];
+  for(let y=1;y<=Y;y++){
+    prefAcc+=lpCap*DEAL.pref; let A=cfs[y],lpD=0,gpD=0,pay;
+    pay=Math.min(A,lpCap);lpCap-=pay;lpD+=pay;A-=pay;
+    pay=Math.min(A,gpCap);gpCap-=pay;gpD+=pay;A-=pay;
+    pay=Math.min(A,prefAcc);prefAcc-=pay;lpD+=pay;prefPaid+=pay;A-=pay;
+    const cd=prefPaid*(DEAL.promote/(1-DEAL.promote))-catchPaid;
+    pay=Math.min(A,Math.max(0,cd));gpD+=pay;catchPaid+=pay;A-=pay;
+    if(A>0){const s=(lpCum<DEAL.moicHurdle*lpEq)?0.8:0.5;lpD+=A*s;gpD+=A*(1-s);A=0;}
+    lpCum+=lpD;lpCF.push(lpD);gpCF.push(gpD);lpDistYr.push(lpD);
+  }
+  return {rows,Y,exitValue,exitNOI,netSale,dealIRR,mult,avgCoC,totalDist,
+    profit:totalDist-DEAL.equity,
+    lpIRR:irr(lpCF),lpMult:lpCF.slice(1).reduce((a,b)=>a+b,0)/lpEq,lpDist:lpCF.slice(1).reduce((a,b)=>a+b,0),
+    gpIRR:irr(gpCF),gpMult:gpCF.slice(1).reduce((a,b)=>a+b,0)/gpEq,gpDist:gpCF.slice(1).reduce((a,b)=>a+b,0),
+    cfs};
+}
+
+// ===== formatting =====
+const $=id=>document.getElementById(id);
+const f$=n=>'$'+Math.round(n).toLocaleString();
+const f$M=n=>'$'+(n/1e6).toFixed(2)+'M';
+const fpct=(n,d=1)=>(n*100).toFixed(d)+'%';
+const fmult=n=>n.toFixed(2)+'x';
+
+// ===== charts =====
+const C={navy:'#16293b',navy2:'#2a4862',gold:'#cf9f3b',gold2:'#e0b85a',slate:'#7e98a1',mist:'#aebcc2',line:'#e3e7ea'};
+Chart.defaults.font.family="'Inter',sans-serif";
+Chart.defaults.font.size=11;
+Chart.defaults.color='#54666f';
+let chCF,chSens,chStack;
+
+function initCharts(){
+  chCF=new Chart($('c_cf'),{type:'bar',data:{labels:[],datasets:[
+      {label:'Net Operating Income',data:[],backgroundColor:C.navy,borderRadius:3,order:2},
+      {label:'Cash Flow to Equity',data:[],backgroundColor:C.gold,borderRadius:3,order:2},
+      {label:'DSCR',data:[],type:'line',yAxisID:'y2',borderColor:C.slate,backgroundColor:C.slate,
+        borderWidth:2,pointRadius:3,tension:.3,order:1}
+    ]},options:{maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'top',labels:{boxWidth:10,boxHeight:10,usePointStyle:true,padding:14}},
+        title:{display:true,text:'Net Operating Income & Cash Flow by Year',color:C.navy,font:{size:13,family:'Jost',weight:'400'},padding:{bottom:10}},
+        tooltip:{callbacks:{label:c=>c.dataset.label==='DSCR'?'DSCR: '+c.raw.toFixed(2):c.dataset.label+': '+f$(c.raw)}}},
+      scales:{y:{ticks:{callback:v=>'$'+(v/1e6).toFixed(1)+'M'},grid:{color:C.line}},
+        y2:{position:'right',grid:{display:false},ticks:{callback:v=>v.toFixed(1)+'x'},title:{display:true,text:'DSCR'}},
+        x:{grid:{display:false}}}}});
+
+  chSens=new Chart($('c_sens'),{type:'line',data:{labels:[],datasets:[
+      {label:'Levered IRR',data:[],borderColor:C.navy,backgroundColor:'rgba(22,41,59,.06)',
+        borderWidth:2.5,fill:true,tension:.3,pointRadius:0},
+      {label:'Current',data:[],borderColor:C.gold,backgroundColor:C.gold,pointRadius:6,
+        pointHoverRadius:7,showLine:false}
+    ]},options:{maintainAspectRatio:false,
+      plugins:{legend:{display:false},
+        title:{display:true,text:'Levered IRR vs. Exit Cap Rate',color:C.navy,font:{size:13,family:'Jost',weight:'400'},padding:{bottom:10}},
+        tooltip:{callbacks:{title:i=>'Exit cap '+i[0].label,label:c=>'IRR '+c.raw.toFixed(1)+'%'}}},
+      scales:{y:{ticks:{callback:v=>v+'%'},grid:{color:C.line}},x:{grid:{display:false}}}}});
+
+  chStack=new Chart($('c_stack'),{type:'doughnut',data:{labels:['LP Distributions','GP Distributions','Invested Equity'],
+      datasets:[{data:[],backgroundColor:[C.navy,C.gold,C.mist],borderColor:'#fff',borderWidth:2}]},
+    options:{maintainAspectRatio:false,cutout:'62%',
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,boxHeight:10,usePointStyle:true,padding:12}},
+        title:{display:true,text:'Profit Distribution (LP / GP)',color:C.navy,font:{size:13,family:'Jost',weight:'400'},padding:{bottom:6}},
+        tooltip:{callbacks:{label:c=>c.label+': '+f$(c.raw)}}}}});
+}
+
+// ===== delta label helper =====
+function setDelta(el,cur,base,unit,better){
+  const diff=cur-base;
+  if(Math.abs(diff)<1e-9){el.textContent='base';el.className='d base';return;}
+  const sign=diff>0?'+':'';
+  const up=(better==='high')?diff>0:diff<0;
+  el.textContent=sign+(unit==='yr'?diff:(unit==='%'?diff.toFixed(2)+'%':diff.toFixed(2)));
+  if(unit==='yr')el.textContent=sign+diff+' yr';
+  el.className='d '+(up?'up':'dn');
+}
+
+// ===== main update =====
+function read(){return{
+  cap:+$('s_cap').value/100, rent:+$('s_rent').value/100, occ:+$('s_occ').value/100,
+  exp:+$('s_exp').value/100, hold:+$('s_hold').value};}
+
+function update(){
+  const p=read(), r=run(p);
+  // slider value labels
+  $('v_cap').textContent=(p.cap*100).toFixed(2)+'%';
+  $('v_rent').textContent=(p.rent>=0?'+':'')+(p.rent*100).toFixed(2)+'%';
+  $('v_occ').textContent=(p.occ*100).toFixed(1)+'%';
+  $('v_exp').textContent=(p.exp>=0?'+':'')+(p.exp*100).toFixed(2)+'%';
+  $('v_hold').textContent=p.hold+' years';
+  setDelta($('d_cap'),p.cap*100,6.25,'%','low');
+  setDelta($('d_rent'),p.rent*100,0,'%','high');
+  setDelta($('d_occ'),p.occ*100,95,'%','high');
+  setDelta($('d_exp'),p.exp*100,0,'%','low');
+  setDelta($('d_hold'),p.hold,7,'yr','high');
+
+  // KPIs
+  $('k_irr').textContent=fpct(r.dealIRR);
+  $('k_mult').textContent=fmult(r.mult);
+  $('k_coc').textContent=fpct(r.avgCoC);
+  $('k_profit').textContent=f$M(r.profit);
+  $('k_lpirr').textContent=fpct(r.lpIRR);
+  $('k_lpmult').textContent=fmult(r.lpMult);
+  $('exitlabel').textContent='Exit: Year '+p.hold+' @ '+(p.cap*100).toFixed(2)+'% cap';
+
+  // waterfall cards
+  $('w_lpirr').textContent=fpct(r.lpIRR); $('w_lpmult').textContent=fmult(r.lpMult); $('w_lpdist').textContent=f$M(r.lpDist);
+  $('w_gpirr').textContent=fpct(r.gpIRR); $('w_gpmult').textContent=fmult(r.gpMult); $('w_gpdist').textContent=f$M(r.gpDist);
+
+  // table
+  const tb=$('tbody'); tb.innerHTML='';
+  for(let i=0;i<r.Y;i++){
+    const row=r.rows[i], dist=r.cfs[i+1], coc=row.opCF/DEAL.equity;
+    const tr=document.createElement('tr');
+    const distCell=(i===r.Y-1)?`${f$(dist)} <span style="color:var(--gold);font-weight:600">incl. sale</span>`:f$(dist);
+    tr.innerHTML=`<td>Year ${row.y}</td><td>${f$(row.noi)}</td><td class="neg">(${f$(row.ds)})</td>
+      <td>${row.dscr.toFixed(2)}</td><td>${f$(row.opCF)}</td><td>${fpct(coc)}</td><td>${distCell}</td>`;
+    if(i===r.Y-1)tr.className='exit';
+    tb.appendChild(tr);
+  }
+
+  // charts
+  const labels=r.rows.slice(0,r.Y).map(x=>'Y'+x.y);
+  chCF.data.labels=labels;
+  chCF.data.datasets[0].data=r.rows.slice(0,r.Y).map(x=>x.noi);
+  chCF.data.datasets[1].data=r.rows.slice(0,r.Y).map(x=>x.opCF);
+  chCF.data.datasets[2].data=r.rows.slice(0,r.Y).map(x=>x.dscr);
+  chCF.update();
+
+  const caps=[],irrs=[];
+  for(let c=5.0;c<=8.0001;c+=0.25){caps.push(c.toFixed(2)+'%');
+    const rr=run({...p,cap:c/100}); irrs.push(rr.dealIRR*100);}
+  chSens.data.labels=caps;
+  chSens.data.datasets[0].data=irrs;
+  chSens.data.datasets[1].data=caps.map(c=>Math.abs(parseFloat(c)-p.cap*100)<0.13?r.dealIRR*100:null);
+  chSens.update();
+
+  chStack.data.datasets[0].data=[r.lpDist-DEAL.equity*DEAL.lpShare, r.gpDist-DEAL.equity*DEAL.gpShare, DEAL.equity];
+  chStack.update();
+}
+
+['s_cap','s_rent','s_occ','s_exp','s_hold'].forEach(id=>$(id).addEventListener('input',update));
+$('reset').addEventListener('click',()=>{
+  $('s_cap').value=6.25;$('s_rent').value=0;$('s_occ').value=95;$('s_exp').value=0;$('s_hold').value=7;update();});
+
+initCharts(); update();
+</script>
+
+<!-- ===== GSAP ScrollTrigger: subtle on-brand scroll reveals ===== -->
+<script>
+(function(){
+  if(typeof gsap==='undefined'||typeof ScrollTrigger==='undefined')return;
+  gsap.registerPlugin(ScrollTrigger);
+  // Respect users who prefer reduced motion — leave everything static.
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+
+  // Cards fade and rise gently as they scroll into view.
+  gsap.utils.toArray('.card').forEach(el=>{
+    gsap.from(el,{opacity:0,y:24,duration:.6,ease:'power2.out',
+      scrollTrigger:{trigger:el,start:'top 88%',toggleActions:'play none none none'}});
+  });
+
+  // KPI tiles reveal in a quick stagger when the strip enters the viewport.
+  ScrollTrigger.batch('.kpi',{start:'top 92%',
+    onEnter:b=>gsap.from(b,{opacity:0,y:18,duration:.5,stagger:.08,ease:'power2.out',overwrite:true})});
+
+  // Recalculate trigger positions once charts/fonts have settled.
+  window.addEventListener('load',()=>ScrollTrigger.refresh());
+})();
+</script>
+</body>
+</html>
