@@ -1,0 +1,796 @@
+---
+// The live returns model — a full-screen dashboard takeover revealed after the
+// email gate is passed. Server passes the deal engine inputs as JSON (no secrets
+// client-side). Opened via window.firesideOpenModel() from UnlockGate.
+import Mark from '../Mark.astro';
+
+interface Props {
+  engineData: {
+    equity: number; loan: number; rate: number;
+    lpShare: number; gpShare: number; pref: number; promote: number;
+    moicHurdle: number; assetMgmt: number; sellCost: number; baseOcc: number;
+    baseNOI: number[]; baseOpex: number[];
+  };
+  dealName: string;
+  location?: { display?: string; city?: string; state?: string };
+  property?: {
+    type?: string; units?: number; unitMix?: string; yearBuilt?: number;
+    buildings?: number; acres?: number; occupancy?: string;
+  };
+  teaser?: { targetIRR?: string; equityMultiple?: string; holdYears?: number };
+}
+const { engineData, dealName, location = {}, property = {}, teaser = {} } = Astro.props;
+
+const chips = [
+  property.type,
+  property.units ? `${property.units} Units` : null,
+  property.unitMix,
+  property.yearBuilt ? `Built ${property.yearBuilt}` : null,
+  property.buildings ? `${property.buildings} Buildings` : null,
+  property.acres ? `${property.acres} Acres` : null,
+  property.occupancy ? `${property.occupancy} Occupied` : null,
+].filter(Boolean) as string[];
+---
+<div
+  id="model-overlay"
+  role="dialog"
+  aria-modal="true"
+  aria-label={`Live returns model — ${dealName}`}
+>
+  <!-- Dashboard top bar -->
+  <header class="dash-topbar">
+    <div class="wrap">
+      <div class="dash-brand">
+        <Mark size="md" />
+        <div class="dash-wordmark">FIRESIDE<span>STRATEGIES</span></div>
+      </div>
+      <button id="model-close" class="dash-close" type="button" aria-label="Close the live model and return to the overview">
+        <span aria-hidden="true">←</span> Back to overview
+      </button>
+    </div>
+  </header>
+
+  <div class="dash-body">
+    <div class="wrap">
+      <!-- Deal hero -->
+      <div class="dash-hero">
+        <div class="crumb label">Fireside Fund · Live Returns Model</div>
+        <h1>{dealName}</h1>
+        {location.display && <div class="dash-loc">{location.display}</div>}
+        {chips.length > 0 && (
+          <div class="chips">
+            {chips.map(c => <span class="chip">{c}</span>)}
+          </div>
+        )}
+        <div class="basebadge">
+          <span class="dot" aria-hidden="true"></span>
+          Base case mirrors the sponsor's closing pro forma — adjust the levers to explore scenarios.
+        </div>
+      </div>
+
+      <!-- KPI strip -->
+      <div class="kpi-strip" id="kpi-strip">
+        <div class="kpi">
+          <div class="kpi-label label">Levered IRR</div>
+          <div class="kpi-val gold" id="k_irr">—</div>
+          <div class="kpi-sub">Deal level, all equity</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label label">Equity Multiple</div>
+          <div class="kpi-val" id="k_mult">—</div>
+          <div class="kpi-sub">Total dist ÷ equity</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label label">Avg Cash-on-Cash</div>
+          <div class="kpi-val" id="k_coc">—</div>
+          <div class="kpi-sub">Operating years</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label label">Total Profit</div>
+          <div class="kpi-val" id="k_profit">—</div>
+          <div class="kpi-sub">Net of invested equity</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label label">LP Net IRR</div>
+          <div class="kpi-val gold" id="k_lpirr">—</div>
+          <div class="kpi-sub">After 8% pref &amp; promote</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label label">LP Multiple</div>
+          <div class="kpi-val" id="k_lpmult">—</div>
+          <div class="kpi-sub">LP net equity multiple</div>
+        </div>
+      </div>
+
+      <!-- Levers + charts -->
+      <div class="model-grid">
+        <div class="card levers-card anim-card">
+          <div class="card-hd">
+            <h3>Scenario Levers</h3>
+            <span class="label">Live</span>
+          </div>
+          <div class="card-bd">
+            <div class="ctrl">
+              <div class="ctrl-top">
+                <span class="ctrl-name">Exit Cap Rate</span>
+                <span class="ctrl-cur"><span id="v_cap"></span><span class="delta" id="d_cap"></span></span>
+              </div>
+              <input type="range" id="s_cap" min="5.0" max="8.0" step="0.05" value="6.25" aria-label="Exit cap rate" />
+              <div class="scale"><span>5.0%</span><span>8.0%</span></div>
+            </div>
+            <div class="ctrl">
+              <div class="ctrl-top">
+                <span class="ctrl-name">Annual Rent Growth</span>
+                <span class="ctrl-cur"><span id="v_rent"></span><span class="delta" id="d_rent"></span></span>
+              </div>
+              <input type="range" id="s_rent" min="-3" max="3" step="0.25" value="0" aria-label="Annual rent growth vs base" />
+              <div class="scale"><span>−3% vs base</span><span>+3% vs base</span></div>
+            </div>
+            <div class="ctrl">
+              <div class="ctrl-top">
+                <span class="ctrl-name">Stabilised Occupancy</span>
+                <span class="ctrl-cur"><span id="v_occ"></span><span class="delta" id="d_occ"></span></span>
+              </div>
+              <input type="range" id="s_occ" min="88" max="98" step="0.5" value="95" aria-label="Stabilised occupancy" />
+              <div class="scale"><span>88%</span><span>98%</span></div>
+            </div>
+            <div class="ctrl">
+              <div class="ctrl-top">
+                <span class="ctrl-name">Annual Expense Growth</span>
+                <span class="ctrl-cur"><span id="v_exp"></span><span class="delta" id="d_exp"></span></span>
+              </div>
+              <input type="range" id="s_exp" min="-2" max="4" step="0.25" value="0" aria-label="Annual expense growth vs base" />
+              <div class="scale"><span>−2% vs base</span><span>+4% vs base</span></div>
+            </div>
+            <div class="ctrl">
+              <div class="ctrl-top">
+                <span class="ctrl-name">Hold Period / Exit Year</span>
+                <span class="ctrl-cur"><span id="v_hold"></span><span class="delta" id="d_hold"></span></span>
+              </div>
+              <input type="range" id="s_hold" min="3" max="10" step="1" value="7" aria-label="Hold period in years" />
+              <div class="scale"><span>3 yrs</span><span>10 yrs</span></div>
+            </div>
+            <button class="reset-btn" id="reset" type="button">Reset to sponsor base case</button>
+          </div>
+        </div>
+
+        <div class="card charts-card anim-card">
+          <div class="card-hd">
+            <h3>Performance &amp; Sensitivity</h3>
+            <span class="label" id="exitlabel"></span>
+          </div>
+          <div class="card-bd">
+            <div class="charts-grid">
+              <div class="chartbox span2"><canvas id="c_cf"></canvas></div>
+              <div class="chartbox"><canvas id="c_sens"></canvas></div>
+              <div class="chartbox"><canvas id="c_stack"></canvas></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cash flow table -->
+      <div class="table-section anim-card">
+        <div class="sub-header">
+          <span class="label">Projected Operations</span>
+          <h3>Annual Cash Flow</h3>
+        </div>
+        <div class="card" style="overflow-x:auto">
+          <table id="cf-table">
+            <thead>
+              <tr>
+                <th>Year</th>
+                <th>Net Operating Income</th>
+                <th>Debt Service</th>
+                <th>DSCR</th>
+                <th>Operating Cash Flow</th>
+                <th>Cash-on-Cash</th>
+                <th>Distribution to Equity</th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Waterfall -->
+      <div class="waterfall-section anim-card">
+        <div class="sub-header">
+          <span class="label">Distribution Waterfall</span>
+          <h3>How Investor Capital Is Returned</h3>
+        </div>
+        <div class="card">
+          <div class="wf-grid">
+            <div class="wf-tiers">
+              <div class="tier"><div class="tier-n">1</div><div class="tier-t"><b>Return of Contributed Capital</b><span>Limited Partners receive 100% of invested equity back first.</span></div></div>
+              <div class="tier"><div class="tier-n">2</div><div class="tier-t"><b>8% Annual Preferred Return</b><span>LPs earn a cumulative 8% preferred return on unreturned capital.</span></div></div>
+              <div class="tier"><div class="tier-n">3</div><div class="tier-t"><b>GP Catch-Up</b><span>GP receives 20% of the preferred return distributed.</span></div></div>
+              <div class="tier"><div class="tier-n">4</div><div class="tier-t"><b>80 / 20 Split</b><span>Remaining profit split 80% LP / 20% GP until LPs reach 2.5× return.</span></div></div>
+              <div class="tier"><div class="tier-n">5</div><div class="tier-t"><b>50 / 50 Split</b><span>All distributions beyond 2.5× MOIC are shared 50 / 50.</span></div></div>
+            </div>
+            <div class="wf-results">
+              <div class="label" style="margin-bottom:12px">Projected outcome at current scenario</div>
+              <div class="wf-cards">
+                <div class="wf-card lp">
+                  <div class="label">Limited Partners</div>
+                  <div class="wf-row">Net IRR <b id="w_lpirr">—</b></div>
+                  <div class="wf-row">Multiple <b id="w_lpmult">—</b></div>
+                  <div class="wf-row">Distributions <b id="w_lpdist">—</b></div>
+                </div>
+                <div class="wf-card gp">
+                  <div class="label">General Partner</div>
+                  <div class="wf-row">IRR <b id="w_gpirr">—</b></div>
+                  <div class="wf-row">Multiple <b id="w_gpmult">—</b></div>
+                  <div class="wf-row">Distributions <b id="w_gpdist">—</b></div>
+                </div>
+              </div>
+              <p class="wf-note">
+                Assumes a 90 / 10 LP / GP equity split, 8% preferred return, and 20% promote.
+                Illustrative; actual distributions are governed by the Limited Partnership Agreement.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="dash-foot">
+        Illustrative scenario model for informational purposes only. Not an offer to sell or a
+        solicitation to purchase any security. © Fireside Strategies, LLC.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Pass deal data to client script via data attribute -->
+<div id="deal-engine-data"
+  data-engine={JSON.stringify(engineData)}
+  style="display:none"
+  aria-hidden="true"
+></div>
+
+<script>
+  import { run, fmt$, fmt$M, fmtPct, fmtMult } from '../../lib/engine.js';
+  import Chart from 'chart.js/auto';
+
+  const dataEl = document.getElementById('deal-engine-data');
+  if (!dataEl) throw new Error('Missing deal engine data element');
+  const DEAL = JSON.parse(dataEl.dataset.engine!);
+
+  const C = { navy:'#16293b', navy2:'#2a4862', gold:'#cf9f3b', gold2:'#e0b85a', slate:'#7e98a1', mist:'#aebcc2', line:'#e3e7ea' };
+
+  Chart.defaults.font.family = "'Inter', sans-serif";
+  Chart.defaults.font.size   = 11;
+  Chart.defaults.color       = '#54666f';
+
+  const $ = (id: string) => document.getElementById(id)!;
+  const g = (window as any).gsap;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ── Count-up state ────────────────────────────────────────────────────────
+  const numState: Record<string, number> = {};
+  function setNum(el: HTMLElement, value: number, fmt: (n: number) => string, duration = 0.6) {
+    const id = el.id;
+    if (duration === 0 || reduce || !g) {
+      el.textContent = fmt(value);
+      numState[id] = value;
+      return;
+    }
+    const from = numState[id] ?? 0;
+    const proxy = { v: from };
+    g.to(proxy, {
+      v: value, duration, ease: 'power2.out', overwrite: true,
+      onUpdate() { el.textContent = fmt(proxy.v); },
+      onComplete() { el.textContent = fmt(value); },
+    });
+    numState[id] = value;
+  }
+
+  // ── Charts (lazy — created on first open so canvases size correctly) ────────
+  let chCF: any, chSens: any, chStack: any, charted = false;
+  function initCharts() {
+    if (charted) return;
+    charted = true;
+
+    chCF = new Chart($('c_cf') as HTMLCanvasElement, {
+      type: 'bar',
+      data: { labels: [], datasets: [
+        { label: 'Net Operating Income', data: [], backgroundColor: C.navy,  borderRadius: 3, order: 2 },
+        { label: 'Cash Flow to Equity',  data: [], backgroundColor: C.gold,  borderRadius: 3, order: 2 },
+        { label: 'DSCR', data: [], type: 'line', yAxisID: 'y2', borderColor: C.slate, backgroundColor: C.slate,
+          borderWidth: 2, pointRadius: 3, tension: .3, order: 1 },
+      ]},
+      options: {
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { position: 'top', labels: { boxWidth: 10, boxHeight: 10, usePointStyle: true, padding: 14 } },
+          title:  { display: true, text: 'Net Operating Income & Cash Flow by Year', color: C.navy, font: { size: 13, family: 'Jost', weight: '400' }, padding: { bottom: 10 } },
+          tooltip: { callbacks: { label: (c: any) => c.dataset.label === 'DSCR' ? 'DSCR: ' + c.raw.toFixed(2) : c.dataset.label + ': ' + fmt$(c.raw) } },
+        },
+        scales: {
+          y:  { ticks: { callback: (v: any) => '$' + (v / 1e6).toFixed(1) + 'M' }, grid: { color: C.line } },
+          y2: { position: 'right', grid: { display: false }, ticks: { callback: (v: any) => v.toFixed(1) + '×' }, title: { display: true, text: 'DSCR' } },
+          x:  { grid: { display: false } },
+        },
+      },
+    });
+
+    chSens = new Chart($('c_sens') as HTMLCanvasElement, {
+      type: 'line',
+      data: { labels: [], datasets: [
+        { label: 'Levered IRR', data: [], borderColor: C.navy, backgroundColor: 'rgba(22,41,59,.06)', borderWidth: 2.5, fill: true, tension: .3, pointRadius: 0 },
+        { label: 'Current',     data: [], borderColor: C.gold, backgroundColor: C.gold, pointRadius: 6, pointHoverRadius: 7, showLine: false },
+      ]},
+      options: {
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          title:  { display: true, text: 'Levered IRR vs. Exit Cap Rate', color: C.navy, font: { size: 13, family: 'Jost', weight: '400' }, padding: { bottom: 10 } },
+          tooltip: { callbacks: { title: (i: any) => 'Exit cap ' + i[0].label, label: (c: any) => 'IRR ' + c.raw.toFixed(1) + '%' } },
+        },
+        scales: {
+          y: { ticks: { callback: (v: any) => v + '%' }, grid: { color: C.line } },
+          x: { grid: { display: false } },
+        },
+      },
+    });
+
+    chStack = new Chart($('c_stack') as HTMLCanvasElement, {
+      type: 'doughnut',
+      data: {
+        labels: ['LP Distributions', 'GP Distributions', 'Invested Equity'],
+        datasets: [{ data: [], backgroundColor: [C.navy, C.gold, C.mist], borderColor: '#fff', borderWidth: 2 }],
+      },
+      options: {
+        maintainAspectRatio: false,
+        cutout: '62%',
+        plugins: {
+          legend: { position: 'bottom', labels: { boxWidth: 10, boxHeight: 10, usePointStyle: true, padding: 12 } },
+          title:  { display: true, text: 'Profit Distribution (LP / GP)', color: C.navy, font: { size: 13, family: 'Jost', weight: '400' }, padding: { bottom: 6 } },
+          tooltip: { callbacks: { label: (c: any) => c.label + ': ' + fmt$(c.raw) } },
+        },
+      },
+    });
+  }
+
+  // ── Helpers ─────────────────────────────────────────────────────────────────
+  function setDelta(el: HTMLElement, cur: number, base: number, unit: string, better: string) {
+    const diff = cur - base;
+    if (Math.abs(diff) < 1e-9) { el.textContent = 'base'; el.className = 'delta base'; return; }
+    const sign = diff > 0 ? '+' : '';
+    const up = (better === 'high') ? diff > 0 : diff < 0;
+    if (unit === 'yr')  el.textContent = sign + diff + ' yr';
+    else if (unit === '%') el.textContent = sign + diff.toFixed(2) + '%';
+    else el.textContent = sign + diff.toFixed(2);
+    el.className = 'delta ' + (up ? 'up' : 'dn');
+  }
+
+  function read() {
+    return {
+      cap:  +($('s_cap')  as HTMLInputElement).value / 100,
+      rent: +($('s_rent') as HTMLInputElement).value / 100,
+      occ:  +($('s_occ')  as HTMLInputElement).value / 100,
+      exp:  +($('s_exp')  as HTMLInputElement).value / 100,
+      hold: +($('s_hold') as HTMLInputElement).value,
+    };
+  }
+
+  // Recompute everything EXCEPT the KPI / waterfall numbers (those count up separately).
+  function computeAndRender() {
+    const p = read();
+    const r = run(p, DEAL);
+
+    $('v_cap').textContent  = (p.cap  * 100).toFixed(2) + '%';
+    $('v_rent').textContent = (p.rent >= 0 ? '+' : '') + (p.rent * 100).toFixed(2) + '%';
+    $('v_occ').textContent  = (p.occ  * 100).toFixed(1) + '%';
+    $('v_exp').textContent  = (p.exp  >= 0 ? '+' : '') + (p.exp  * 100).toFixed(2) + '%';
+    $('v_hold').textContent = p.hold + ' years';
+
+    setDelta($('d_cap'),  p.cap  * 100, 6.25, '%',  'low');
+    setDelta($('d_rent'), p.rent * 100, 0,    '%',  'high');
+    setDelta($('d_occ'),  p.occ  * 100, 95,   '%',  'high');
+    setDelta($('d_exp'),  p.exp  * 100, 0,    '%',  'low');
+    setDelta($('d_hold'), p.hold, 7, 'yr', 'high');
+
+    $('exitlabel').textContent = 'Exit: Year ' + p.hold + ' @ ' + (p.cap * 100).toFixed(2) + '% cap';
+
+    // Table
+    const tbody = $('tbody');
+    tbody.innerHTML = '';
+    for (let i = 0; i < r.Y; i++) {
+      const row = r.rows[i], dist = r.cfs[i + 1], coc = row.opCF / DEAL.equity;
+      const tr = document.createElement('tr');
+      const distCell = i === r.Y - 1
+        ? fmt$(dist) + ' <span class="incl-sale">incl. sale</span>'
+        : fmt$(dist);
+      tr.innerHTML = `<td>Year ${row.y}</td><td>${fmt$(row.noi)}</td><td class="neg">(${fmt$(row.ds)})</td><td>${row.dscr.toFixed(2)}</td><td>${fmt$(row.opCF)}</td><td>${fmtPct(coc)}</td><td>${distCell}</td>`;
+      if (i === r.Y - 1) tr.className = 'exit';
+      tbody.appendChild(tr);
+    }
+
+    // Charts
+    const labels = r.rows.slice(0, r.Y).map((x: any) => 'Y' + x.y);
+    chCF.data.labels = labels;
+    chCF.data.datasets[0].data = r.rows.slice(0, r.Y).map((x: any) => x.noi);
+    chCF.data.datasets[1].data = r.rows.slice(0, r.Y).map((x: any) => x.opCF);
+    chCF.data.datasets[2].data = r.rows.slice(0, r.Y).map((x: any) => x.dscr);
+    chCF.update();
+
+    const caps: string[] = [], irrs: number[] = [];
+    for (let c = 5.0; c <= 8.0001; c += 0.25) {
+      caps.push(c.toFixed(2) + '%');
+      irrs.push((run({ ...p, cap: c / 100 }, DEAL).dealIRR || 0) * 100);
+    }
+    chSens.data.labels = caps;
+    chSens.data.datasets[0].data = irrs;
+    chSens.data.datasets[1].data = caps.map(c => Math.abs(parseFloat(c) - p.cap * 100) < 0.13 ? r.dealIRR! * 100 : null) as any;
+    chSens.update();
+
+    const lpProfit = r.lpDist - DEAL.equity * DEAL.lpShare;
+    const gpProfit = r.gpDist - DEAL.equity * DEAL.gpShare;
+    chStack.data.datasets[0].data = [lpProfit, gpProfit, DEAL.equity];
+    chStack.update();
+
+    return { r, p };
+  }
+
+  function renderKPIs(r: any, duration: number) {
+    setNum($('k_irr'),    r.dealIRR, fmtPct,  duration);
+    setNum($('k_mult'),   r.mult,    fmtMult, duration);
+    setNum($('k_coc'),    r.avgCoC,  fmtPct,  duration);
+    setNum($('k_profit'), r.profit,  fmt$M,   duration);
+    setNum($('k_lpirr'),  r.lpIRR,   fmtPct,  duration);
+    setNum($('k_lpmult'), r.lpMult,  fmtMult, duration);
+
+    setNum($('w_lpirr'),  r.lpIRR,   fmtPct,  duration);
+    setNum($('w_lpmult'), r.lpMult,  fmtMult, duration);
+    setNum($('w_lpdist'), r.lpDist,  fmt$M,   duration);
+    setNum($('w_gpirr'),  r.gpIRR,   fmtPct,  duration);
+    setNum($('w_gpmult'), r.gpMult,  fmtMult, duration);
+    setNum($('w_gpdist'), r.gpDist,  fmt$M,   duration);
+  }
+
+  // ── Open / close the takeover ────────────────────────────────────────────────
+  const overlay = $('model-overlay');
+  let isOpen = false;
+  let lastFocus: HTMLElement | null = null;
+
+  function openModel() {
+    if (isOpen) return;
+    isOpen = true;
+    lastFocus = document.activeElement as HTMLElement;
+
+    initCharts();
+    overlay.style.display = 'block';
+    overlay.scrollTop = 0;
+    document.body.style.overflow = 'hidden';
+
+    const ctx = computeAndRender();           // populate charts + table (charts draw in)
+    const closeBtn = $('model-close');
+    closeBtn.focus();
+
+    if (reduce || !g) {
+      renderKPIs(ctx.r, 0);                    // final numbers, no animation
+      return;
+    }
+
+    // Reset KPI / waterfall numbers so they count up from zero
+    ['k_irr','k_mult','k_coc','k_profit','k_lpirr','k_lpmult',
+     'w_lpirr','w_lpmult','w_lpdist','w_gpirr','w_gpmult','w_gpdist']
+      .forEach(id => { $(id).textContent = '—'; delete numState[id]; });
+
+    g.set(overlay, { opacity: 0 });
+    g.to(overlay, { opacity: 1, duration: 0.4, ease: 'power1.out' });
+    g.timeline({ defaults: { ease: 'power2.out' } })
+      .from('#model-overlay .dash-hero', { opacity: 0, y: 24, duration: 0.6 })
+      .from('#model-overlay .kpi', { opacity: 0, y: 18, duration: 0.5, stagger: 0.07 }, '-=0.15')
+      .add(() => renderKPIs(ctx.r, 0.9), '-=0.25')
+      .from('#model-overlay .anim-card', { opacity: 0, y: 26, duration: 0.55, stagger: 0.12 }, '-=0.2');
+  }
+
+  function closeModel() {
+    if (!isOpen) return;
+    isOpen = false;
+    document.body.style.overflow = '';
+
+    const done = () => { overlay.style.display = 'none'; };
+    if (reduce || !g) { done(); }
+    else { g.to(overlay, { opacity: 0, duration: 0.3, ease: 'power1.out', onComplete: done }); }
+
+    const trigger = document.getElementById('open-model-cta') || lastFocus;
+    trigger?.focus?.();
+  }
+
+  // ── Wiring ───────────────────────────────────────────────────────────────────
+  const onLever = () => { const { r } = computeAndRender(); renderKPIs(r, 0.35); };
+  ['s_cap','s_rent','s_occ','s_exp','s_hold'].forEach(id => $(id).addEventListener('input', onLever));
+
+  $('reset').addEventListener('click', () => {
+    ($('s_cap')  as HTMLInputElement).value = '6.25';
+    ($('s_rent') as HTMLInputElement).value = '0';
+    ($('s_occ')  as HTMLInputElement).value = '95';
+    ($('s_exp')  as HTMLInputElement).value = '0';
+    ($('s_hold') as HTMLInputElement).value = '7';
+    onLever();
+  });
+
+  $('model-close').addEventListener('click', closeModel);
+
+  // Escape + focus trap while open
+  document.addEventListener('keydown', (e) => {
+    if (!isOpen) return;
+    if (e.key === 'Escape') { e.preventDefault(); closeModel(); return; }
+    if (e.key !== 'Tab') return;
+    const focusables = Array.from(
+      overlay.querySelectorAll<HTMLElement>('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
+    ).filter(el => !el.hasAttribute('disabled') && el.offsetParent !== null);
+    if (!focusables.length) return;
+    const first = focusables[0], last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+
+  // Exposed for the unlock gate
+  (window as any).firesideOpenModel = openModel;
+</script>
+
+<style>
+  /* ── Full-screen takeover shell ───────────────────────────────────────────── */
+  #model-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    overflow-y: auto;
+    background: var(--paper);
+    display: none;
+  }
+
+  .dash-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: var(--navy);
+    color: #fff;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+  .dash-topbar .wrap { display: flex; align-items: center; justify-content: space-between; }
+  .dash-brand { display: flex; align-items: center; gap: 12px; }
+  .dash-wordmark {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    letter-spacing: .22em;
+    font-size: 12px;
+    color: #fff;
+    line-height: 1;
+  }
+  .dash-wordmark span {
+    font-weight: 400;
+    color: var(--mist);
+    letter-spacing: .3em;
+    font-size: 10px;
+    display: block;
+    margin-top: 2px;
+  }
+  .dash-close {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.16);
+    color: #fff;
+    padding: 9px 16px;
+    border-radius: 8px;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: .04em;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  .dash-close:hover { background: rgba(255,255,255,.12); }
+  .dash-close span { font-size: 15px; line-height: 1; }
+
+  .dash-body { padding: 34px 0 56px; }
+
+  /* ── Deal hero (ported from the original standalone dashboard) ────────────── */
+  .dash-hero { padding: 4px 0 28px; }
+  .dash-hero .crumb { display: block; margin-bottom: 8px; }
+  .dash-hero h1 {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(30px, 4.5vw, 46px);
+    color: var(--navy);
+    margin: 6px 0 4px;
+    line-height: 1.02;
+  }
+  .dash-loc {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    color: var(--gold);
+    font-size: 14px;
+    margin-bottom: 14px;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 30px;
+    padding: 6px 14px;
+    font-size: 12.5px;
+    color: var(--ink2);
+    font-weight: 500;
+  }
+  .basebadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--ink2);
+    background: #fbf4e3;
+    border: 1px solid #ecdcae;
+    border-radius: 6px;
+    padding: 6px 12px;
+  }
+  .basebadge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+
+  /* KPI strip */
+  .kpi-strip {
+    background: var(--navy);
+    border-radius: 12px;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .kpi {
+    padding: 22px 18px;
+    border-right: 1px solid rgba(255,255,255,.09);
+    color: #fff;
+  }
+  .kpi:last-child { border-right: none; }
+  .kpi-label { color: var(--mist); margin-bottom: 7px; }
+  .kpi-val {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: 30px;
+    color: #fff;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .kpi-val.gold { color: var(--gold2); }
+  .kpi-sub { font-size: 10px; color: var(--slate); margin-top: 5px; }
+
+  /* Model grid */
+  .model-grid {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 22px;
+    margin-bottom: 32px;
+  }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); }
+  .card-hd {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card-hd h3 { font-size: 17px; color: var(--navy); }
+  .card-bd { padding: 18px 20px; }
+
+  /* Levers */
+  .ctrl { margin-bottom: 21px; }
+  .ctrl:last-of-type { margin-bottom: 6px; }
+  .ctrl-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 9px; }
+  .ctrl-name { font-size: 13px; font-weight: 600; color: var(--navy); }
+  .ctrl-cur { font-family: var(--font-display); font-weight: 400; font-size: 19px; color: var(--navy); }
+
+  .delta { font-family: var(--font-sans); font-size: 11px; font-weight: 600; margin-left: 6px; }
+  .delta.up   { color: var(--good); }
+  .delta.dn   { color: var(--bad);  }
+  .delta.base { color: var(--slate);}
+
+  input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%; height: 4px;
+    border-radius: 4px;
+    background: var(--line);
+    outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--navy);
+    cursor: pointer;
+    border: 3px solid #fff;
+    box-shadow: 0 1px 4px rgba(22,41,59,.3);
+  }
+  input[type=range]::-moz-range-thumb {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--navy);
+    cursor: pointer;
+    border: 3px solid #fff;
+  }
+  .scale { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--slate); margin-top: 5px; }
+
+  .reset-btn {
+    width: 100%; margin-top: 8px; padding: 11px;
+    border: 1px solid var(--line); background: #fff; border-radius: 8px;
+    font-family: var(--font-sans); font-weight: 600; font-size: 12.5px;
+    letter-spacing: .04em; color: var(--ink2); cursor: pointer;
+    text-transform: uppercase;
+  }
+  .reset-btn:hover { background: var(--paper); color: var(--navy); }
+
+  /* Charts */
+  .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .chartbox { position: relative; height: 248px; }
+  .span2 { grid-column: 1 / -1; }
+
+  /* Table */
+  .table-section, .waterfall-section { margin-bottom: 32px; }
+  .sub-header { margin-bottom: 14px; }
+  .sub-header .label { display: block; margin-bottom: 4px; }
+  .sub-header h3 { font-size: clamp(20px, 3vw, 28px); color: var(--navy); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { padding: 10px 12px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  th:first-child, td:first-child { text-align: left; }
+  thead th { font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--slate); font-weight: 600; }
+  tbody td { font-variant-numeric: tabular-nums; color: var(--ink); }
+  tbody tr:hover { background: #f7f9fa; }
+  tr.exit { background: #fbf4e3; }
+  tr.exit td { font-weight: 600; color: var(--navy); border-top: 1.5px solid var(--gold); }
+  td.neg { color: var(--bad); }
+  :global(.incl-sale) { color: var(--gold); font-weight: 600; margin-left: 4px; }
+
+  /* Waterfall */
+  .wf-grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 0; padding: 18px 20px; }
+  .wf-tiers { padding-right: 24px; border-right: 1px solid var(--line); }
+  .tier { display: flex; gap: 13px; align-items: flex-start; padding: 11px 0; border-bottom: 1px dashed var(--line); }
+  .tier:last-child { border-bottom: none; }
+  .tier-n { width: 24px; height: 24px; border-radius: 50%; background: var(--navy); color: #fff; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .tier-t b { display: block; font-size: 13.5px; color: var(--navy); font-weight: 600; }
+  .tier-t span { font-size: 12px; color: var(--ink2); }
+  .wf-results { padding-left: 24px; }
+  .wf-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 4px; margin-bottom: 13px; }
+  .wf-card { border: 1px solid var(--line); border-radius: 10px; padding: 15px; }
+  .wf-card .label { margin-bottom: 11px; display: block; }
+  .wf-card.lp { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .wf-card.lp .label { color: var(--mist); }
+  .wf-row { display: flex; justify-content: space-between; font-size: 13px; padding: 5px 0; color: var(--ink); }
+  .wf-card.lp .wf-row { color: #dfe6ea; }
+  .wf-row b { font-family: var(--font-display); font-weight: 400; font-size: 17px; font-variant-numeric: tabular-nums; }
+  .wf-card.lp .wf-row b { color: var(--gold2); }
+  .wf-note { font-size: 11px; color: var(--ink2); line-height: 1.55; }
+
+  .dash-foot {
+    font-size: 11px;
+    color: var(--ink2);
+    line-height: 1.65;
+    border-top: 1px solid var(--line);
+    padding-top: 22px;
+    margin-top: 4px;
+  }
+
+  @media (max-width: 980px) {
+    .model-grid { grid-template-columns: 1fr; }
+    .kpi-strip { grid-template-columns: repeat(3, 1fr); }
+    .kpi:nth-child(3) { border-right: none; }
+    .charts-grid { grid-template-columns: 1fr; }
+    .wf-grid { grid-template-columns: 1fr; }
+    .wf-tiers { border-right: none; padding-right: 0; border-bottom: 1px solid var(--line); padding-bottom: 20px; margin-bottom: 20px; }
+    .wf-results { padding-left: 0; }
+  }
+  @media (max-width: 600px) {
+    .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+    .kpi:nth-child(2) { border-right: none; }
+    .dash-close span { display: none; }
+  }
+</style>

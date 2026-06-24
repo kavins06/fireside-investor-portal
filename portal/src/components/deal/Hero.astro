@@ -1,0 +1,234 @@
+---
+interface Props {
+  name:        string;
+  location:    string;
+  tagline:     string;
+  heroImage?:  string;
+  imageCredit?: string;
+  teaser: {
+    targetIRR:      string;
+    equityMultiple: string;
+    holdYears:      number;
+  };
+  propertyType: string;
+  units:        number;
+}
+const { name, location, tagline, heroImage, imageCredit, teaser, propertyType, units } = Astro.props;
+const [namePart1, ...rest] = name.split(' ');
+const namePart2 = rest.join(' ');
+---
+<section class="hero" id="main-content" aria-label="Deal overview">
+  {heroImage ? (
+    <div class="hero-bg" aria-hidden="true">
+      <img src={heroImage} alt="" class="hero-bg-img" />
+      <div class="hero-bg-overlay"></div>
+    </div>
+  ) : (
+    <div class="hero-bg hero-bg--gradient" aria-hidden="true"></div>
+  )}
+
+  <div class="wrap hero-inner">
+    <div class="hero-content">
+      <div class="hero-meta label">
+        <span class="deal-type">{propertyType}</span>
+        <span class="sep">·</span>
+        <span>{units} Units</span>
+        <span class="sep">·</span>
+        <span>{location}</span>
+      </div>
+
+      <h1 class="hero-title">
+        <span class="title-line1">{namePart1}</span>
+        <span class="title-line2">{namePart2}</span>
+      </h1>
+
+      <p class="hero-tagline">{tagline}</p>
+    </div>
+
+    <!-- Teaser KPIs — public above the gate -->
+    <div class="teaser-strip">
+      <div class="teaser-kpi">
+        <div class="teaser-label">Target LP IRR</div>
+        <div class="teaser-val">{teaser.targetIRR}</div>
+      </div>
+      <div class="teaser-divider" aria-hidden="true"></div>
+      <div class="teaser-kpi">
+        <div class="teaser-label">Equity Multiple</div>
+        <div class="teaser-val">{teaser.equityMultiple}</div>
+      </div>
+      <div class="teaser-divider" aria-hidden="true"></div>
+      <div class="teaser-kpi">
+        <div class="teaser-label">Target Hold</div>
+        <div class="teaser-val">{teaser.holdYears} yrs</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint" aria-hidden="true">
+    <span>Scroll to explore</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: var(--navy);
+    overflow: hidden;
+    color: #fff;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+  .hero-bg--gradient {
+    background:
+      radial-gradient(ellipse 80% 60% at 60% 40%, rgba(207,159,59,.08) 0%, transparent 70%),
+      linear-gradient(160deg, var(--navy3) 0%, var(--navy) 60%);
+  }
+  .hero-bg-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 40%;
+  }
+  .hero-bg-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(160deg, rgba(22,41,59,.82) 0%, rgba(22,41,59,.65) 100%),
+      radial-gradient(ellipse 80% 60% at 60% 40%, rgba(207,159,59,.10) 0%, transparent 70%);
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    padding-top: 100px;
+    padding-bottom: 140px;
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+  }
+
+  .hero-content {
+    max-width: 720px;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    color: var(--mist);
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .hero-meta .deal-type { color: var(--gold); }
+  .hero-meta .sep { color: var(--navy3); }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-weight: 300;
+    line-height: 1.0;
+    letter-spacing: -.01em;
+    color: #fff;
+    overflow: hidden;
+  }
+  .title-line1 {
+    display: block;
+    font-size: clamp(52px, 8vw, 96px);
+  }
+  .title-line2 {
+    display: block;
+    font-size: clamp(40px, 6vw, 72px);
+    color: var(--gold2);
+    margin-top: .08em;
+  }
+
+  .hero-tagline {
+    margin-top: 24px;
+    font-size: clamp(14px, 1.6vw, 17px);
+    line-height: 1.65;
+    color: var(--mist);
+    max-width: 560px;
+  }
+
+  /* Teaser strip */
+  .teaser-strip {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 12px;
+    padding: 0;
+    width: fit-content;
+    overflow: hidden;
+  }
+  .teaser-kpi {
+    padding: 22px 36px;
+    text-align: center;
+  }
+  .teaser-divider {
+    width: 1px;
+    height: 52px;
+    background: rgba(255,255,255,.10);
+  }
+  .teaser-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--mist);
+    margin-bottom: 6px;
+  }
+  .teaser-val {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: 32px;
+    color: var(--gold2);
+    line-height: 1;
+  }
+
+  /* Scroll indicator */
+  .scroll-hint {
+    position: absolute;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    font-size: 10px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.35);
+  }
+  .scroll-arrow {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, rgba(255,255,255,.35), transparent);
+    animation: pulse-down 2s ease-in-out infinite;
+  }
+  @keyframes pulse-down {
+    0%,100% { transform: scaleY(1); opacity: .4; }
+    50%      { transform: scaleY(1.3); opacity: .8; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-arrow { animation: none; }
+  }
+
+  @media (max-width: 640px) {
+    .teaser-strip { flex-direction: column; width: 100%; }
+    .teaser-divider { width: 100%; height: 1px; }
+    .teaser-kpi { padding: 18px 24px; }
+  }
+</style>

@@ -1,0 +1,61 @@
+---
+import Mark from './Mark.astro';
+
+interface Props {
+  tag?: string;
+}
+const { tag = 'Investor Portal' } = Astro.props;
+---
+<header class="topbar">
+  <div class="wrap">
+    <a href="/" class="brand" aria-label="Fireside Strategies — Home">
+      <Mark />
+      <div class="wordmark">
+        FIRESIDE<span>STRATEGIES</span>
+      </div>
+    </a>
+    <div class="topbar-tag">{tag}</div>
+  </div>
+</header>
+
+<style>
+  .topbar {
+    background: var(--navy);
+    color: #fff;
+    padding: 14px 0;
+  }
+  .topbar .wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    text-decoration: none;
+    color: inherit;
+  }
+  .wordmark {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    letter-spacing: .22em;
+    font-size: 13px;
+    color: #fff;
+  }
+  .wordmark span {
+    font-weight: 400;
+    color: var(--mist);
+    letter-spacing: .32em;
+    font-size: 11px;
+    display: block;
+    margin-top: 1px;
+  }
+  .topbar-tag {
+    font-size: 11px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--mist);
+    font-weight: 600;
+  }
+</style>

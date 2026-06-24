@@ -1,0 +1,326 @@
+---
+interface Props {
+  dealSlug: string;
+  teaser: {
+    targetIRR:      string;
+    equityMultiple: string;
+    holdYears:      number;
+  };
+}
+const { dealSlug, teaser } = Astro.props;
+---
+<div id="unlock-gate" class="gate-section">
+  <div class="wrap">
+    <!-- Locked state: email form -->
+    <div class="gate-card">
+      <div class="gate-inner">
+        <div class="gate-teaser">
+          <div class="gt-item">
+            <div class="label">Target LP IRR</div>
+            <div class="gt-val">{teaser.targetIRR}</div>
+          </div>
+          <div class="gt-divider" aria-hidden="true"></div>
+          <div class="gt-item">
+            <div class="label">Equity Multiple</div>
+            <div class="gt-val">{teaser.equityMultiple}</div>
+          </div>
+          <div class="gt-divider" aria-hidden="true"></div>
+          <div class="gt-item">
+            <div class="label">Target Hold</div>
+            <div class="gt-val">{teaser.holdYears} yrs</div>
+          </div>
+        </div>
+
+        <div class="gate-cta">
+          <h2 class="gate-title">Access the Live Returns Model</h2>
+          <p class="gate-sub">
+            Enter your email to unlock the full interactive model — scenario levers,
+            cash flow projections, and LP/GP waterfall analysis.
+          </p>
+
+          <form id="unlock-form" class="gate-form" novalidate>
+            <input
+              type="email"
+              id="gate-email"
+              name="email"
+              placeholder="your@email.com"
+              autocomplete="email"
+              required
+            />
+            <button type="submit" id="gate-submit">
+              <span id="gate-btn-text">Unlock Model</span>
+            </button>
+          </form>
+
+          <p id="gate-error" class="gate-error" aria-live="polite" hidden></p>
+
+          <p class="gate-disclaimer">
+            No spam. Fireside Strategies, LLC will follow up directly.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Unlocked state: persistent CTA to (re)open the model -->
+    <div id="gate-unlocked" class="gate-unlocked" hidden>
+      <div class="gu-inner">
+        <div class="gu-text">
+          <span class="label" style="color:var(--gold)">Access granted</span>
+          <h2 class="gu-title">The live returns model is unlocked</h2>
+          <p class="gu-sub">Open the full interactive dashboard — adjust the levers and watch the returns recompute.</p>
+        </div>
+        <button id="open-model-cta" type="button" class="gu-btn">
+          View the live returns model <span aria-hidden="true">→</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ dealSlug }}>
+  const STORAGE_KEY = `fireside_unlocked_${dealSlug}`;
+
+  const gateCard = document.querySelector('#unlock-gate .gate-card');
+  const unlocked = document.getElementById('gate-unlocked');
+
+  function showUnlockedState() {
+    if (gateCard) gateCard.style.display = 'none';
+    if (unlocked) unlocked.hidden = false;
+  }
+
+  function openTakeover() {
+    if (typeof window.firesideOpenModel === 'function') window.firesideOpenModel();
+  }
+
+  // Returning visitor — show the CTA but do NOT auto-open the takeover.
+  if (localStorage.getItem(STORAGE_KEY) === '1') {
+    showUnlockedState();
+  }
+
+  document.getElementById('open-model-cta')?.addEventListener('click', openTakeover);
+
+  const form    = document.getElementById('unlock-form');
+  const errEl   = document.getElementById('gate-error');
+  const btnTxt  = document.getElementById('gate-btn-text');
+  const emailEl = document.getElementById('gate-email');
+
+  form?.addEventListener('submit', async e => {
+    e.preventDefault();
+    const email = emailEl?.value?.trim() ?? '';
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      if (errEl) { errEl.textContent = 'Please enter a valid email address.'; errEl.hidden = false; }
+      emailEl?.focus();
+      return;
+    }
+
+    if (errEl) errEl.hidden = true;
+    if (btnTxt) btnTxt.textContent = 'Unlocking…';
+    const btn = document.getElementById('gate-submit');
+    if (btn) btn.setAttribute('disabled', '');
+
+    try {
+      const res = await fetch('/api/unlock', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, deal_slug: dealSlug }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data?.error ?? 'Something went wrong. Please try again.');
+      }
+
+      localStorage.setItem(STORAGE_KEY, '1');
+
+      // Cinematic hand-off: fade the gate card, swap to the unlocked CTA, open the takeover.
+      const g = window.gsap;
+      const launch = () => { showUnlockedState(); openTakeover(); };
+      if (g && gateCard && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        g.to(gateCard, { opacity: 0, y: -12, duration: 0.35, ease: 'power2.in', onComplete: launch });
+      } else {
+        launch();
+      }
+    } catch (err) {
+      if (errEl) {
+        errEl.textContent = err instanceof Error ? err.message : 'Something went wrong. Please try again.';
+        errEl.hidden = false;
+      }
+      if (btnTxt) btnTxt.textContent = 'Unlock Model';
+      if (btn) btn.removeAttribute('disabled');
+    }
+  });
+</script>
+
+<style>
+  .gate-section {
+    background: var(--paper);
+    padding: 0 0 64px;
+  }
+
+  .gate-card {
+    background: var(--navy);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .gate-inner {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    min-height: 360px;
+  }
+
+  /* Teaser column */
+  .gate-teaser {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    padding: 48px 40px;
+    background: rgba(255,255,255,.04);
+    border-right: 1px solid rgba(255,255,255,.08);
+  }
+  .gt-item { text-align: center; padding: 20px 0; }
+  .gt-item .label { color: var(--mist); margin-bottom: 8px; }
+  .gt-val {
+    font-family: var(--font-display);
+    font-size: 40px;
+    font-weight: 300;
+    color: var(--gold2);
+    line-height: 1;
+  }
+  .gt-divider { width: 40px; height: 1px; background: rgba(255,255,255,.1); }
+
+  /* CTA column */
+  .gate-cta {
+    padding: 48px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .gate-title {
+    font-size: clamp(24px, 3vw, 34px);
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  .gate-sub {
+    font-size: 14px;
+    color: var(--mist);
+    line-height: 1.65;
+    margin-bottom: 28px;
+    max-width: 400px;
+  }
+
+  /* Form */
+  .gate-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .gate-form input[type=email] {
+    flex: 1;
+    min-width: 220px;
+    padding: 12px 16px;
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 8px;
+    background: rgba(255,255,255,.07);
+    color: #fff;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .gate-form input[type=email]::placeholder { color: var(--slate); }
+  .gate-form input[type=email]:focus { border-color: var(--gold); }
+
+  .gate-form button {
+    padding: 12px 24px;
+    background: var(--gold);
+    color: var(--navy);
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: .04em;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .2s, opacity .2s;
+  }
+  .gate-form button:hover  { background: var(--gold2); }
+  .gate-form button:disabled { opacity: .6; cursor: default; }
+
+  .gate-error {
+    font-size: 12px;
+    color: #e8857a;
+    margin-bottom: 8px;
+  }
+  .gate-disclaimer {
+    font-size: 11px;
+    color: var(--slate);
+  }
+
+  /* Unlocked CTA panel */
+  .gate-unlocked {
+    background: var(--navy);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .gu-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+    padding: 36px 44px;
+    flex-wrap: wrap;
+  }
+  .gu-text .label { display: block; margin-bottom: 8px; }
+  .gu-title {
+    font-size: clamp(22px, 2.6vw, 30px);
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .gu-sub {
+    font-size: 13.5px;
+    color: var(--mist);
+    line-height: 1.6;
+    max-width: 460px;
+  }
+  .gu-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 14px 26px;
+    background: var(--gold);
+    color: var(--navy);
+    border: none;
+    border-radius: 10px;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 13.5px;
+    letter-spacing: .03em;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .2s, transform .2s;
+  }
+  .gu-btn:hover { background: var(--gold2); transform: translateY(-2px); }
+  @media (prefers-reduced-motion: reduce) {
+    .gu-btn:hover { transform: none; }
+  }
+
+  @media (max-width: 700px) {
+    .gate-inner { grid-template-columns: 1fr; }
+    .gate-teaser {
+      flex-direction: row;
+      gap: 0;
+      border-right: none;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      padding: 28px 24px;
+    }
+    .gt-divider { width: 1px; height: 40px; }
+    .gate-cta { padding: 28px 24px; }
+    .gu-inner { padding: 28px 24px; }
+  }
+</style>

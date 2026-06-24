@@ -1,0 +1,135 @@
+---
+import { getEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Topbar from '../../components/Topbar.astro';
+import Hero from '../../components/deal/Hero.astro';
+import PropertySection from '../../components/deal/PropertySection.astro';
+import ThesisSection from '../../components/deal/ThesisSection.astro';
+import MarketPulse from '../../components/deal/MarketPulse.astro';
+import UnlockGate from '../../components/deal/UnlockGate.astro';
+import ModelIsland from '../../components/deal/ModelIsland.astro';
+
+const { slug } = Astro.params;
+if (!slug) return Astro.redirect('/');
+
+const entry = await getEntry('deals', slug);
+if (!entry) return Astro.redirect('/');
+
+const deal = entry.data;
+---
+<Base
+  title={deal.name}
+  description={deal.copy.tagline}
+>
+  <Topbar tag="Active Deal" />
+
+  <Hero
+    name={deal.name}
+    location={deal.location.display}
+    tagline={deal.copy.tagline}
+    heroImage={deal.images?.hero}
+    imageCredit={deal.images?.credit}
+    teaser={deal.teaser}
+    propertyType={deal.property.type}
+    units={deal.property.units}
+  />
+
+  <PropertySection
+    property={deal.property}
+    transaction={deal.transaction}
+    location={deal.location}
+    exteriorImage={deal.images?.exterior}
+    imageCredit={deal.images?.credit}
+  />
+
+  <ThesisSection
+    copy={deal.copy}
+    dealName={deal.name}
+  />
+
+  {deal.marketFindings && deal.marketFindings.length > 0 && (
+    <MarketPulse
+      findings={deal.marketFindings}
+      dealName={deal.name}
+    />
+  )}
+
+  <UnlockGate
+    dealSlug={deal.slug}
+    teaser={deal.teaser}
+  />
+
+  <!-- Full-screen takeover; hidden via its own CSS until the gate is passed -->
+  <ModelIsland
+    engineData={deal.engine}
+    dealName={deal.name}
+    location={deal.location}
+    property={deal.property}
+    teaser={deal.teaser}
+  />
+
+  <!-- Disclosure footer -->
+  <footer class="foot">
+    <div class="wrap">
+      <p>
+        This portal is an illustrative scenario model prepared for informational purposes only.
+        The base case mirrors the sponsor's closing pro forma; projected figures are inherently
+        predictive and not a guarantee of results. This material does not constitute an offer to
+        sell or a solicitation to purchase an interest in Fireside Fund LP, which may be made only
+        via a confidential private placement memorandum. An investment is speculative and subject
+        to risk of loss, including loss of principal. Past performance is not necessarily indicative
+        of future results. © Fireside Strategies, LLC.
+      </p>
+    </div>
+  </footer>
+</Base>
+
+<!-- GSAP scroll reveals (respects prefers-reduced-motion) -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const g = (window as any).gsap;
+    const ST = (window as any).ScrollTrigger;
+    if (!g || !ST) return;
+
+    g.registerPlugin(ST);
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    // Hero entrance
+    g.from('.hero .hero-content', {
+      opacity: 0, y: 40, duration: 1.0, ease: 'power3.out', delay: 0.2,
+    });
+    g.from('.hero .teaser-strip', {
+      opacity: 0, y: 24, duration: 0.8, ease: 'power2.out', delay: 0.6,
+    });
+
+    // Section entrances on scroll
+    ST.batch(['#property', '#thesis'], {
+      start: 'top 85%',
+      onEnter: (batch: Element[]) =>
+        g.from(batch, { opacity: 0, y: 32, duration: 0.7, ease: 'power2.out', stagger: 0.15 }),
+    });
+
+    // Individual cards
+    g.utils.toArray('.txn-card').forEach((el: Element) => {
+      g.from(el, {
+        opacity: 0, y: 20, duration: 0.55, ease: 'power2.out',
+        scrollTrigger: { trigger: el, start: 'top 90%', toggleActions: 'play none none none' },
+      });
+    });
+
+    window.addEventListener('load', () => ST.refresh());
+  });
+</script>
+
+<style>
+  .foot {
+    padding: 26px 0 50px;
+    border-top: 1px solid var(--line);
+    background: var(--paper);
+  }
+  .foot p {
+    font-size: 11px;
+    color: var(--ink2);
+    line-height: 1.65;
+  }
+</style>

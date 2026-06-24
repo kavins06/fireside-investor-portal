@@ -1,0 +1,22 @@
+# Vercel
+.vercel
+
+# Env vars — never commit
+.env
+.env.local
+.env.*.local
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Build output
+dist/
+
+# Astro
+.astro/
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+*.swp

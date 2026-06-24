@@ -1,0 +1,262 @@
+---
+interface Props {
+  property: {
+    type:        string;
+    units:       number;
+    unitMix?:    string;
+    yearBuilt:   number;
+    buildings?:  number;
+    acres?:      number;
+    sqftPerUnit?: number;
+    occupancy?:  string;
+    coGP?:       string;
+  };
+  transaction: {
+    purchasePrice:   number;
+    totalEquity:     number;
+    agencyDebt:      number;
+    capImprovements: number;
+  };
+  location: {
+    display: string;
+    address: string;
+    city:    string;
+    state:   string;
+    zip:     string;
+  };
+  exteriorImage?: string;
+  imageCredit?:   string;
+}
+const { property, transaction, location, exteriorImage, imageCredit } = Astro.props;
+
+const fmt$ = (n: number) =>
+  '$' + Math.round(n).toLocaleString('en-US');
+const fmt$M = (n: number) =>
+  '$' + (n / 1_000_000).toFixed(2) + 'M';
+
+const specs = [
+  { label: 'Units',           value: String(property.units)       },
+  { label: 'Unit Mix',        value: property.unitMix ?? '—'      },
+  { label: 'Year Built',      value: String(property.yearBuilt)   },
+  { label: 'Buildings',       value: String(property.buildings ?? '—') },
+  { label: 'Acres',           value: property.acres ? property.acres.toFixed(2) : '—' },
+  { label: 'Sq Ft / Unit',    value: property.sqftPerUnit ? `~${property.sqftPerUnit}` : '—' },
+  { label: 'Occupancy',       value: property.occupancy ?? '—'    },
+  { label: 'Co-GP',           value: property.coGP ?? '—'         },
+].filter(s => s.value !== '—');
+
+const txn = [
+  { label: 'Purchase Price',       value: fmt$(transaction.purchasePrice),    sub: fmt$(transaction.purchasePrice / property.units) + ' / unit' },
+  { label: 'Total Equity',         value: fmt$M(transaction.totalEquity),     sub: '30.1% of total cost' },
+  { label: 'Agency Debt',          value: fmt$M(transaction.agencyDebt),      sub: '5.23% fixed · interest-only' },
+  { label: 'Capital Improvements', value: fmt$M(transaction.capImprovements), sub: fmt$(transaction.capImprovements / property.units) + ' / unit' },
+];
+---
+<section class="property-section" id="property">
+  <div class="wrap">
+    <div class="section-header">
+      <span class="label">The Asset</span>
+      <h2>Property &amp; Location</h2>
+    </div>
+
+    <div class="property-grid">
+      <!-- Specs -->
+      <div class="specs-col">
+        <div class="specs-address">
+          <div class="label" style="margin-bottom:6px">Location</div>
+          <div class="address-line">{location.display}</div>
+          <div class="address-sub">{location.address}, {location.zip}</div>
+        </div>
+
+        <div class="specs-list">
+          {specs.map(s => (
+            <div class="spec-row">
+              <span class="spec-label">{s.label}</span>
+              <span class="spec-val">{s.value}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Property image -->
+      <div class="image-col">
+        <div class="property-img-wrap">
+          {exteriorImage ? (
+            <img
+              src={exteriorImage}
+              alt={`Exterior view — ${location.city}, ${location.state}`}
+              class="property-img"
+              loading="lazy"
+            />
+          ) : (
+            <div class="property-img-placeholder" aria-hidden="true"></div>
+          )}
+          <div class="img-overlay">
+            <span class="label">Property</span>
+            <div class="img-loc">{location.city}, {location.state}</div>
+          </div>
+          {imageCredit && (
+            <span class="img-credit">{imageCredit}</span>
+          )}
+        </div>
+      </div>
+    </div>
+
+    <!-- Transaction snapshot -->
+    <div class="txn-row">
+      <div class="section-sub-header">
+        <span class="label">At a Glance</span>
+        <h3>Transaction Snapshot</h3>
+      </div>
+      <div class="txn-grid">
+        {txn.map(t => (
+          <div class="txn-card card">
+            <div class="label">{t.label}</div>
+            <div class="txn-val">{t.value}</div>
+            <div class="txn-sub">{t.sub}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .property-section {
+    background: var(--card);
+    padding: 80px 0 64px;
+  }
+
+  .section-header {
+    margin-bottom: 40px;
+  }
+  .section-header .label { display: block; margin-bottom: 8px; }
+  .section-header h2 {
+    font-size: clamp(28px, 4vw, 42px);
+    color: var(--navy);
+  }
+
+  .property-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 48px;
+    align-items: start;
+    margin-bottom: 56px;
+  }
+
+  .specs-address {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--line);
+  }
+  .address-line {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+  .address-sub {
+    font-size: 13px;
+    color: var(--ink2);
+  }
+
+  .specs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .spec-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 13px;
+  }
+  .spec-row:last-child { border-bottom: none; }
+  .spec-label { color: var(--ink2); }
+  .spec-val   { font-weight: 600; color: var(--navy); }
+
+  /* Image container */
+  .property-img-wrap {
+    position: relative;
+    width: 100%;
+    height: 360px;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    background: linear-gradient(135deg, var(--navy2) 0%, var(--navy3) 50%, var(--navy) 100%);
+  }
+  .property-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  .property-img-placeholder {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 24px,
+      rgba(255,255,255,.02) 24px,
+      rgba(255,255,255,.02) 25px
+    );
+  }
+  .img-overlay {
+    position: relative;
+    z-index: 1;
+    padding: 20px 24px;
+    background: linear-gradient(to top, rgba(22,41,59,.9) 0%, transparent 100%);
+    width: 100%;
+  }
+  .img-overlay .label { color: var(--mist); margin-bottom: 4px; display: block; }
+  .img-loc { font-family: var(--font-display); font-size: 22px; color: #fff; font-weight: 300; }
+  .img-credit {
+    position: absolute;
+    bottom: 8px;
+    right: 12px;
+    font-size: 9px;
+    color: rgba(255,255,255,.25);
+    z-index: 2;
+  }
+
+  /* Transaction */
+  .txn-row { }
+  .section-sub-header { margin-bottom: 20px; }
+  .section-sub-header .label { display: block; margin-bottom: 6px; }
+  .section-sub-header h3 {
+    font-size: clamp(22px, 3vw, 30px);
+    color: var(--navy);
+  }
+  .txn-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .txn-card {
+    padding: 20px;
+  }
+  .txn-card .label { display: block; margin-bottom: 10px; }
+  .txn-val {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 300;
+    color: var(--navy);
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+  .txn-sub { font-size: 11px; color: var(--ink2); }
+
+  @media (max-width: 900px) {
+    .property-grid { grid-template-columns: 1fr; }
+    .txn-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px) {
+    .txn-grid { grid-template-columns: 1fr; }
+  }
+</style>
