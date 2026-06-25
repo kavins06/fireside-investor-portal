@@ -52,18 +52,18 @@ const txn = [
   { label: 'Capital Improvements', value: fmt$M(transaction.capImprovements), sub: fmt$(transaction.capImprovements / property.units) + ' / unit' },
 ];
 ---
-<section class="property-section" id="property">
+<section class="property-section deal-section" id="property">
   <div class="wrap">
-    <div class="section-header">
+    <div class="section-header reveal">
       <span class="label">The Asset</span>
-      <h2>Property &amp; Location</h2>
+      <h2>Property &amp; location</h2>
     </div>
 
     <div class="property-grid">
       <!-- Specs -->
-      <div class="specs-col">
+      <div class="specs-col reveal">
         <div class="specs-address">
-          <div class="label" style="margin-bottom:6px">Location</div>
+          <div class="label" style="margin-bottom:8px">Location</div>
           <div class="address-line">{location.display}</div>
           <div class="address-sub">{location.address}, {location.zip}</div>
         </div>
@@ -79,13 +79,13 @@ const txn = [
       </div>
 
       <!-- Property image -->
-      <div class="image-col">
+      <div class="image-col reveal">
         <div class="property-img-wrap">
           {exteriorImage ? (
             <img
               src={exteriorImage}
               alt={`Exterior view — ${location.city}, ${location.state}`}
-              class="property-img"
+              class="property-img scale-in"
               loading="lazy"
             />
           ) : (
@@ -104,13 +104,13 @@ const txn = [
 
     <!-- Transaction snapshot -->
     <div class="txn-row">
-      <div class="section-sub-header">
+      <div class="section-sub-header reveal">
         <span class="label">At a Glance</span>
-        <h3>Transaction Snapshot</h3>
+        <h3>Transaction snapshot</h3>
       </div>
       <div class="txn-grid">
         {txn.map(t => (
-          <div class="txn-card card">
+          <div class="txn-card reveal">
             <div class="label">{t.label}</div>
             <div class="txn-val">{t.value}</div>
             <div class="txn-sub">{t.sub}</div>
@@ -123,41 +123,45 @@ const txn = [
 
 <style>
   .property-section {
-    background: var(--card);
-    padding: 80px 0 64px;
+    background: var(--bone);
+    padding: clamp(72px, 10vw, 120px) 0 clamp(64px, 8vw, 96px);
   }
 
   .section-header {
-    margin-bottom: 40px;
+    margin-bottom: clamp(40px, 6vw, 64px);
   }
-  .section-header .label { display: block; margin-bottom: 8px; }
+  .section-header .label { display: block; margin-bottom: 14px; }
   .section-header h2 {
-    font-size: clamp(28px, 4vw, 42px);
-    color: var(--navy);
+    font-size: clamp(32px, 5vw, 56px);
+    color: var(--ink);
+    letter-spacing: -.02em;
   }
 
   .property-grid {
     display: grid;
     grid-template-columns: 1fr 1.4fr;
-    gap: 48px;
+    gap: clamp(40px, 5vw, 72px);
     align-items: start;
-    margin-bottom: 56px;
+    margin-bottom: clamp(56px, 7vw, 88px);
   }
 
   .specs-address {
     margin-bottom: 28px;
     padding-bottom: 28px;
-    border-bottom: 1px solid var(--line);
+    border-bottom: var(--hair-light);
   }
   .address-line {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--navy);
-    margin-bottom: 4px;
+    font-family: var(--font-display);
+    font-size: clamp(20px, 2.4vw, 28px);
+    font-weight: 300;
+    color: var(--ink);
+    margin-bottom: 6px;
+    line-height: 1.1;
   }
   .address-sub {
-    font-size: 13px;
-    color: var(--ink2);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--smoke);
   }
 
   .specs-list {
@@ -169,24 +173,24 @@ const txn = [
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--line);
-    font-size: 13px;
+    gap: 16px;
+    padding: 13px 0;
+    border-bottom: var(--hair-light);
   }
   .spec-row:last-child { border-bottom: none; }
-  .spec-label { color: var(--ink2); }
-  .spec-val   { font-weight: 600; color: var(--navy); }
+  .spec-label { font-size: 13px; color: var(--ink2); }
+  .spec-val { font-family: var(--font-mono); font-size: 13px; font-weight: 500; color: var(--ink); }
 
-  /* Image container */
+  /* Image container — duotone, art-directed */
   .property-img-wrap {
     position: relative;
     width: 100%;
-    height: 360px;
-    border-radius: 12px;
+    height: clamp(300px, 42vw, 460px);
+    border-radius: 4px;
     overflow: hidden;
     display: flex;
     align-items: flex-end;
-    background: linear-gradient(135deg, var(--navy2) 0%, var(--navy3) 50%, var(--navy) 100%);
+    background: linear-gradient(150deg, var(--espresso-2) 0%, var(--espresso) 100%);
   }
   .property-img {
     position: absolute;
@@ -195,62 +199,65 @@ const txn = [
     height: 100%;
     object-fit: cover;
     object-position: center;
+    filter: grayscale(.5) contrast(1.04) saturate(.82) brightness(.84);
   }
   .property-img-placeholder {
     position: absolute;
     inset: 0;
-    background: repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 24px,
-      rgba(255,255,255,.02) 24px,
-      rgba(255,255,255,.02) 25px
-    );
+    background:
+      radial-gradient(90% 70% at 70% 30%, rgba(199,93,58,.18) 0%, transparent 55%);
   }
   .img-overlay {
     position: relative;
     z-index: 1;
-    padding: 20px 24px;
-    background: linear-gradient(to top, rgba(22,41,59,.9) 0%, transparent 100%);
+    padding: 22px 26px;
+    background: linear-gradient(to top, rgba(27,21,18,.9) 0%, transparent 100%);
     width: 100%;
   }
-  .img-overlay .label { color: var(--mist); margin-bottom: 4px; display: block; }
-  .img-loc { font-family: var(--font-display); font-size: 22px; color: #fff; font-weight: 300; }
+  .img-overlay .label { color: var(--mist); margin-bottom: 5px; display: block; }
+  .img-loc { font-family: var(--font-display); font-size: clamp(20px, 2.4vw, 26px); color: var(--bone); font-weight: 300; }
   .img-credit {
     position: absolute;
-    bottom: 8px;
-    right: 12px;
+    top: 12px;
+    right: 14px;
+    font-family: var(--font-mono);
     font-size: 9px;
-    color: rgba(255,255,255,.25);
+    color: rgba(242,235,223,.45);
     z-index: 2;
   }
 
   /* Transaction */
-  .txn-row { }
-  .section-sub-header { margin-bottom: 20px; }
-  .section-sub-header .label { display: block; margin-bottom: 6px; }
+  .section-sub-header { margin-bottom: 24px; }
+  .section-sub-header .label { display: block; margin-bottom: 8px; }
   .section-sub-header h3 {
-    font-size: clamp(22px, 3vw, 30px);
-    color: var(--navy);
+    font-size: clamp(22px, 3vw, 34px);
+    color: var(--ink);
+    letter-spacing: -.01em;
   }
   .txn-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
+    gap: 0;
+    border-top: var(--hair-light);
+    border-left: var(--hair-light);
   }
   .txn-card {
-    padding: 20px;
+    padding: 24px;
+    background: transparent;
+    border: none;
+    border-right: var(--hair-light);
+    border-bottom: var(--hair-light);
   }
-  .txn-card .label { display: block; margin-bottom: 10px; }
+  .txn-card .label { display: block; margin-bottom: 14px; }
   .txn-val {
     font-family: var(--font-display);
-    font-size: 26px;
+    font-size: clamp(24px, 2.6vw, 30px);
     font-weight: 300;
-    color: var(--navy);
+    color: var(--ink);
     line-height: 1.1;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
   }
-  .txn-sub { font-size: 11px; color: var(--ink2); }
+  .txn-sub { font-family: var(--font-mono); font-size: 11px; color: var(--smoke); }
 
   @media (max-width: 900px) {
     .property-grid { grid-template-columns: 1fr; }

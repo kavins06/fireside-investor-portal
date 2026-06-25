@@ -12,7 +12,7 @@ const { size = 'md' } = Astro.props;
 
 <style>
   .mark {
-    border: 1.5px solid rgba(255,255,255,.55);
+    border: 1.5px solid rgba(242,235,223,.5);
     display: flex;
     align-items: flex-end;
     justify-content: flex-start;
@@ -24,32 +24,34 @@ const { size = 'md' } = Astro.props;
   .mark--sm { width: 26px; height: 26px; padding: 3px; }
 
   .mark b {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-sans);
     font-weight: 700;
-    color: var(--gold);
-    font-size: 18px;
-    line-height: .8;
+    color: var(--ember);
+    font-size: 17px;
+    line-height: 1;
+    margin-bottom: 4px;   /* lift the F clear of the accent bar so it never reads as “E” */
   }
-  .mark--sm b { font-size: 14px; }
+  .mark--sm b { font-size: 13px; margin-bottom: 3px; }
 
   .mark s {
     position: absolute;
     top: 5px;
     right: 5px;
-    font-size: 9px;
-    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 8.5px;
+    color: var(--bone);
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 500;
   }
   .mark--sm s { top: 3px; right: 3px; font-size: 7px; }
 
   .mark i {
     position: absolute;
-    bottom: 4px;
+    bottom: 3px;
     left: 5px;
-    width: 11px;
+    width: 10px;
     height: 2px;
-    background: var(--gold);
+    background: var(--ember);
   }
   .mark--sm i { bottom: 3px; left: 3px; width: 8px; }
 </style>

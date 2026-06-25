@@ -94,26 +94,29 @@ const deal = entry.data;
     g.registerPlugin(ST);
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    // Hero entrance
-    g.from('.hero .hero-content', {
-      opacity: 0, y: 40, duration: 1.0, ease: 'power3.out', delay: 0.2,
+    // Deal hero — choreographed load: meta, masked title lines, tagline, figures
+    g.from('.hero .hero-meta', { opacity: 0, duration: 0.8, ease: 'power2.out', delay: 0.2 });
+    g.from('.hero .title-line1, .hero .title-line2', {
+      yPercent: 116, duration: 1.1, ease: 'power4.out', stagger: 0.1, delay: 0.3,
     });
-    g.from('.hero .teaser-strip', {
-      opacity: 0, y: 24, duration: 0.8, ease: 'power2.out', delay: 0.6,
+    g.from('.hero .hero-tagline', { opacity: 0, y: 18, duration: 0.9, ease: 'power2.out', delay: 0.7 });
+    g.from('.hero .teaser-kpi', { opacity: 0, y: 18, duration: 0.7, ease: 'power3.out', stagger: 0.08, delay: 0.85 });
+
+    // Section reveals — content groups marked .reveal, staggered per section
+    g.utils.toArray('.deal-section').forEach((sec: Element) => {
+      const items = sec.querySelectorAll('.reveal');
+      if (!items.length) return;
+      g.from(items, {
+        opacity: 0, y: 28, duration: 0.8, ease: 'power3.out', stagger: 0.1,
+        scrollTrigger: { trigger: sec, start: 'top 82%', toggleActions: 'play none none none' },
+      });
     });
 
-    // Section entrances on scroll
-    ST.batch(['#property', '#thesis'], {
-      start: 'top 85%',
-      onEnter: (batch: Element[]) =>
-        g.from(batch, { opacity: 0, y: 32, duration: 0.7, ease: 'power2.out', stagger: 0.15 }),
-    });
-
-    // Individual cards
-    g.utils.toArray('.txn-card').forEach((el: Element) => {
-      g.from(el, {
-        opacity: 0, y: 20, duration: 0.55, ease: 'power2.out',
-        scrollTrigger: { trigger: el, start: 'top 90%', toggleActions: 'play none none none' },
+    // Duotone imagery scales in from a slight overscan
+    g.utils.toArray('.scale-in').forEach((img: Element) => {
+      g.from(img, {
+        scale: 1.12, duration: 1.2, ease: 'power2.out',
+        scrollTrigger: { trigger: img, start: 'top 88%', toggleActions: 'play none none none' },
       });
     });
 
@@ -123,13 +126,15 @@ const deal = entry.data;
 
 <style>
   .foot {
-    padding: 26px 0 50px;
-    border-top: 1px solid var(--line);
-    background: var(--paper);
+    padding: 32px 0 56px;
+    border-top: var(--hair-light);
+    background: var(--bone);
   }
   .foot p {
-    font-size: 11px;
-    color: var(--ink2);
-    line-height: 1.65;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--smoke);
+    line-height: 1.75;
+    max-width: 90ch;
   }
 </style>

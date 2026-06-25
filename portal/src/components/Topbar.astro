@@ -20,9 +20,10 @@ const { tag = 'Investor Portal' } = Astro.props;
 
 <style>
   .topbar {
-    background: var(--navy);
-    color: #fff;
-    padding: 14px 0;
+    background: var(--espresso);
+    color: var(--bone);
+    padding: 16px 0;
+    border-bottom: var(--hair-dark);
   }
   .topbar .wrap {
     display: flex;
@@ -37,25 +38,27 @@ const { tag = 'Investor Portal' } = Astro.props;
     color: inherit;
   }
   .wordmark {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-sans);
     font-weight: 700;
-    letter-spacing: .22em;
+    letter-spacing: .24em;
     font-size: 13px;
-    color: #fff;
+    color: var(--bone);
   }
   .wordmark span {
+    font-family: var(--font-mono);
     font-weight: 400;
     color: var(--mist);
-    letter-spacing: .32em;
-    font-size: 11px;
+    letter-spacing: .34em;
+    font-size: 10px;
     display: block;
-    margin-top: 1px;
+    margin-top: 2px;
   }
   .topbar-tag {
-    font-size: 11px;
-    letter-spacing: .16em;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: .14em;
     text-transform: uppercase;
     color: var(--mist);
-    font-weight: 600;
+    font-weight: 400;
   }
 </style>

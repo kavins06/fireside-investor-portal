@@ -18,35 +18,30 @@ const tagLabels: Record<Finding['tag'], string> = {
   challenge:  'Challenge',
 };
 ---
-<section class="market-pulse" id="market-pulse" aria-labelledby="market-pulse-title">
+<section class="market-pulse deal-section" id="market-pulse" aria-labelledby="market-pulse-title">
   <div class="wrap">
-    <div class="section-header">
+    <div class="section-header reveal">
       <span class="label">Submarket Context</span>
-      <h2 id="market-pulse-title">Market Pulse</h2>
+      <h2 id="market-pulse-title">Market pulse</h2>
       <p class="section-sub">
-        Key findings for the Greensboro–Piedmont Triad multifamily submarket. Marked
-        <strong>illustrative</strong> — drawn from publicly available sources as of mid-2025.
+        Key findings for the Greensboro–Piedmont Triad multifamily submarket —
+        <strong>illustrative</strong>, drawn from publicly available sources as of mid-2025.
       </p>
     </div>
 
     <div class="findings-grid">
       {findings.map(f => (
-        <div class={`finding-card finding-card--${f.tag}`}>
+        <div class={`finding finding--${f.tag} reveal`}>
           <div class="finding-top">
-            <span class={`finding-tag finding-tag--${f.tag}`} aria-label={`Tagged: ${tagLabels[f.tag]}`}>
-              {tagLabels[f.tag]}
+            <span class="finding-status">
+              <span class="finding-swatch" aria-hidden="true"></span>
+              <span class="finding-status-label" aria-label={`Tagged: ${tagLabels[f.tag]}`}>{tagLabels[f.tag]}</span>
             </span>
             <span class="finding-date">{f.date}</span>
           </div>
           <h3 class="finding-headline">{f.headline}</h3>
           <p class="finding-body">{f.body}</p>
-          <div class="finding-source">
-            <svg aria-hidden="true" width="12" height="12" viewBox="0 0 12 12" fill="none">
-              <circle cx="6" cy="6" r="5.5" stroke="currentColor"/>
-              <path d="M6 5.5V8.5M6 3.5v.5" stroke="currentColor" stroke-linecap="round"/>
-            </svg>
-            {f.source}
-          </div>
+          <div class="finding-source">{f.source}</div>
         </div>
       ))}
     </div>
@@ -60,54 +55,52 @@ const tagLabels: Record<Finding['tag'], string> = {
 
 <style>
   .market-pulse {
-    background: var(--navy);
-    padding: 72px 0 64px;
-    color: #fff;
+    background: var(--bone);
+    padding: clamp(72px, 10vw, 120px) 0 clamp(64px, 8vw, 96px);
+    color: var(--ink);
   }
 
   .section-header {
-    margin-bottom: 40px;
-    max-width: 680px;
+    margin-bottom: clamp(40px, 5vw, 56px);
+    max-width: 720px;
   }
-  .section-header .label { display: block; margin-bottom: 8px; }
+  .section-header .label { display: block; margin-bottom: 14px; }
   .section-header h2 {
-    font-size: clamp(26px, 4vw, 38px);
-    color: #fff;
-    margin-bottom: 14px;
+    font-size: clamp(32px, 5vw, 56px);
+    color: var(--ink);
+    letter-spacing: -.02em;
+    margin-bottom: 18px;
   }
   .section-sub {
-    font-size: 13.5px;
-    color: var(--mist);
-    line-height: 1.65;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    color: var(--ink2);
+    line-height: 1.7;
   }
-  .section-sub strong { color: var(--gold2); font-weight: 500; }
+  .section-sub strong { color: var(--ember-ink); font-weight: 600; }
 
-  /* Grid */
+  /* Grid of flat editorial findings */
   .findings-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px;
-    margin-bottom: 28px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 0;
+    margin-bottom: 32px;
+    border-left: var(--hair-light);
   }
 
-  .finding-card {
-    background: rgba(255,255,255,.04);
-    border: 1px solid rgba(255,255,255,.08);
-    border-radius: 10px;
-    padding: 24px;
+  .finding {
+    --tag: var(--smoke);
+    border-top: 2px solid var(--tag);
+    border-right: var(--hair-light);
+    border-bottom: var(--hair-light);
+    padding: 26px 26px 28px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    transition: background .2s;
+    gap: 12px;
   }
-  .finding-card:hover {
-    background: rgba(255,255,255,.07);
-  }
-
-  /* Tag accent line */
-  .finding-card--supportive { border-top: 3px solid var(--good); }
-  .finding-card--watch      { border-top: 3px solid var(--gold); }
-  .finding-card--challenge  { border-top: 3px solid var(--bad);  }
+  .finding--supportive { --tag: var(--good); }
+  .finding--watch      { --tag: var(--watch); }
+  .finding--challenge  { --tag: var(--bad); }
 
   .finding-top {
     display: flex;
@@ -115,56 +108,57 @@ const tagLabels: Record<Finding['tag'], string> = {
     justify-content: space-between;
     gap: 8px;
   }
-
-  .finding-tag {
-    font-size: 9.5px;
-    font-weight: 700;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    padding: 3px 8px;
-    border-radius: 4px;
-  }
-  .finding-tag--supportive { background: rgba(63,125,94,.25);  color: #6ec89a; }
-  .finding-tag--watch      { background: rgba(207,159,59,.20); color: var(--gold2); }
-  .finding-tag--challenge  { background: rgba(187,95,72,.20);  color: #e8917a; }
-
-  .finding-date {
+  .finding-status { display: inline-flex; align-items: center; gap: 8px; }
+  .finding-swatch { width: 8px; height: 8px; background: var(--tag); border-radius: 1px; }
+  .finding-status-label {
+    font-family: var(--font-mono);
     font-size: 10px;
-    color: rgba(255,255,255,.35);
+    font-weight: 500;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink2);
+  }
+  .finding-date {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--smoke);
     white-space: nowrap;
   }
 
   .finding-headline {
     font-family: var(--font-display);
-    font-size: 17px;
+    font-size: clamp(18px, 2vw, 22px);
     font-weight: 400;
-    color: #fff;
-    line-height: 1.25;
+    color: var(--ink);
+    line-height: 1.22;
+    letter-spacing: -.01em;
   }
 
   .finding-body {
-    font-size: 13px;
-    color: var(--mist);
-    line-height: 1.65;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--ink2);
+    line-height: 1.7;
     flex: 1;
   }
 
   .finding-source {
-    display: flex;
-    align-items: center;
-    gap: 5px;
+    font-family: var(--font-mono);
     font-size: 10.5px;
-    color: rgba(255,255,255,.3);
+    color: var(--smoke);
     margin-top: 4px;
+    padding-top: 12px;
+    border-top: var(--hair-light);
   }
 
   .illustrative-note {
+    font-family: var(--font-mono);
     font-size: 10.5px;
-    color: rgba(255,255,255,.25);
-    line-height: 1.6;
-    max-width: 700px;
-    border-top: 1px solid rgba(255,255,255,.08);
-    padding-top: 20px;
+    color: var(--smoke);
+    line-height: 1.7;
+    max-width: 80ch;
+    border-top: var(--hair-light);
+    padding-top: 22px;
   }
 
   @media (max-width: 560px) {

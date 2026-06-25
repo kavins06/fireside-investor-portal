@@ -8,12 +8,13 @@ interface Props {
 }
 const { copy, dealName } = Astro.props;
 ---
-<section class="thesis-section" id="thesis">
+<section class="thesis-section deal-section" id="thesis">
+  <div class="thesis-bg" aria-hidden="true"></div>
   <div class="wrap">
     <div class="thesis-grid">
-      <div class="thesis-col">
-        <span class="label" style="color:var(--gold)">Investment Thesis</span>
-        <h2>Why We Bought It</h2>
+      <div class="thesis-col reveal">
+        <span class="label thesis-kicker">Investment Thesis</span>
+        <h2>Why we bought it</h2>
         <div class="thesis-body">
           {copy.thesis.split('\n').filter(Boolean).map((para: string) => (
             <p>{para}</p>
@@ -22,9 +23,9 @@ const { copy, dealName } = Astro.props;
       </div>
 
       {copy.marketNotes && (
-        <div class="market-col">
-          <span class="label" style="color:var(--gold)">Market Pulse</span>
-          <h3>The Demand Story</h3>
+        <div class="market-col reveal">
+          <span class="label thesis-kicker">Market Pulse</span>
+          <h3>The demand story</h3>
           <div class="market-body">
             {copy.marketNotes.split('\n').filter(Boolean).map((para: string) => (
               <p>{para}</p>
@@ -38,47 +39,74 @@ const { copy, dealName } = Astro.props;
 
 <style>
   .thesis-section {
-    background: var(--navy);
-    padding: 80px 0;
-    color: #fff;
+    position: relative;
+    background: var(--espresso);
+    padding: clamp(80px, 11vw, 140px) 0;
+    color: var(--bone);
+    overflow: hidden;
+  }
+  .thesis-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(70% 60% at 90% 8%, rgba(199,93,58,.18) 0%, transparent 55%),
+      radial-gradient(60% 50% at 0% 100%, rgba(90,38,32,.4) 0%, transparent 60%);
   }
 
   .thesis-grid {
+    position: relative;
+    z-index: 1;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 64px;
+    grid-template-columns: 1.3fr 1fr;
+    gap: clamp(48px, 7vw, 96px);
     align-items: start;
+    padding-top: 40px;
+    border-top: var(--hair-dark);
   }
 
-  .thesis-col .label,
-  .market-col .label {
+  .thesis-kicker {
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 18px;
+    color: var(--ember-glow);
   }
 
   .thesis-col h2 {
-    font-size: clamp(28px, 4vw, 40px);
-    color: #fff;
-    margin-bottom: 24px;
+    font-size: clamp(32px, 5vw, 56px);
+    color: var(--bone);
+    letter-spacing: -.02em;
+    line-height: 1;
+    margin-bottom: 32px;
   }
 
   .market-col h3 {
-    font-size: clamp(22px, 3vw, 30px);
-    color: #fff;
-    margin-bottom: 20px;
+    font-size: clamp(22px, 3vw, 32px);
+    color: var(--bone);
+    letter-spacing: -.01em;
+    margin-bottom: 22px;
   }
 
+  /* Serif lead paragraph — editorial drop into the prose */
+  .thesis-body p:first-child {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(19px, 2.1vw, 25px);
+    line-height: 1.5;
+    color: var(--bone);
+    margin-bottom: 24px;
+  }
   .thesis-body p,
   .market-body p {
+    font-family: var(--font-sans);
     font-size: 15px;
-    line-height: 1.75;
+    line-height: 1.8;
     color: var(--mist);
-    margin-bottom: 16px;
+    margin-bottom: 18px;
+    max-width: 60ch;
   }
   .thesis-body p:last-child,
   .market-body p:last-child { margin-bottom: 0; }
 
   @media (max-width: 860px) {
-    .thesis-grid { grid-template-columns: 1fr; gap: 40px; }
+    .thesis-grid { grid-template-columns: 1fr; gap: 44px; }
   }
 </style>
