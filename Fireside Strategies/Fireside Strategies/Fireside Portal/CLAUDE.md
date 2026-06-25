@@ -46,6 +46,12 @@ Connectors — see the setup card). It gives you these tools:
    (work backwards from today to the closest real figures) — never reuse an old "as of"
    period like mid-2025. Note the submarket name and the latest period you found data
    for; those become the deal's market label and "as of" date.
+   **Do real research before publishing anything** (dashboard SKILL §8 "Go deep"): look
+   each figure up across several current, trustworthy sources and confirm it — don't rely
+   on one source or your own memory. Prefer official sources (Census, BLS, HUD, the Fed,
+   state housing/economic agencies, established CRE research). If you can't confirm a
+   number, leave it out and say so rather than guess — these numbers go in front of
+   investors. Every finding shows its real source and date.
 4. **Assemble the deal record.** Build the structured record the portal needs:
    name, slug (kebab-case, e.g. "maple-street"), status (use **active** to show it on
    the home page; **fundraising** to keep it off the home list but reachable by link),

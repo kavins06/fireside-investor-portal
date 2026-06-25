@@ -66,6 +66,10 @@ components own all visuals. The record is pure data; get the data right.
    (work backwards from today to the closest real data) — never default to an old
    "as of" period. Set `marketAsOf` to the latest reporting period you found data for
    and `marketLabel` to the submarket name; date-stamp each finding to its real period.
+   **Do this as genuine deep research, not one search** (dashboard SKILL §8 "Go deep"):
+   triangulate every figure across multiple current, authoritative sources; verify the
+   deal's externally-checkable facts; and if you can't verify a number to a credible
+   source, leave it out rather than guess. Verified-and-accurate beats long.
 5. **Author the record** `portal/src/content/deals/<slug>.json` to the contract
    below. Derive the `teaser` headline numbers from the engine so they don't lie.
 6. **Wire imagery** (§ Images). Real photos if the GP provides them; otherwise

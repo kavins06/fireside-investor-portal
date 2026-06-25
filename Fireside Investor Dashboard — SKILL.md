@@ -320,6 +320,24 @@ quarter). If the freshest figure you can verify is genuinely older, date it hone
 say so — but never present stale data as current. Re-run this fresh for every deal and
 every update; recency is judged against *today*, not against when this skill was written.
 
+**Go deep — this is real research, not one search.** Before any number goes into a
+deal, dig in properly:
+- **Triangulate every figure across multiple independent, current sources** — never
+  publish a stat seen in only one place. If two credible sources disagree, say so and
+  use the more authoritative/recent one.
+- **Prefer primary / authoritative sources:** Census/ACS, BLS, HUD, the Fed / Treasury /
+  FRED, state & MSA economic-development and housing agencies, county permit & planning
+  records, and recognised CRE research (CoStar, Yardi Matrix, RealPage, Fannie/Freddie
+  commentary) where available — over blogs or listing-site summaries.
+- **Verify, don't assume.** Check the deal's own externally-checkable facts too (year
+  built, unit count, recent comparable trades/cap rates, the actual current loan-rate
+  environment vs. the assumed rate). Flag anything that contradicts the pro forma.
+- **If you can't verify a figure to a credible current source, do not state it** — leave
+  it out or flag the gap explicitly. A smaller set of *verified* findings beats a longer
+  list of guesses. Quality and accuracy over volume; the "3–5 findings" is a floor on
+  rigor, not a license to pad with unsourced claims.
+- Cite the real source and its date on every finding, so the GP (and any LP) can check it.
+
 **What to check (macro → local):**
 - **Rates & capital markets:** current Treasury / SOFR levels and agency spreads vs.
   the deal's assumed loan rate; whether the exit-cap assumption looks rich given
