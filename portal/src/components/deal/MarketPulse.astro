@@ -3,7 +3,7 @@ interface Finding {
   tag:      'supportive' | 'watch' | 'challenge';
   headline: string;
   body:     string;
-  source:   string;
+  sources:  { title: string; url: string }[];
   date:     string;
 }
 interface Props {
@@ -43,7 +43,14 @@ const tagLabels: Record<Finding['tag'], string> = {
           </div>
           <h3 class="finding-headline">{f.headline}</h3>
           <p class="finding-body">{f.body}</p>
-          <div class="finding-source">{f.source}</div>
+          <div class="finding-source">
+            {f.sources.map((s, i) => (
+              <>
+                {i > 0 && <span aria-hidden="true"> · </span>}
+                <a class="src-link" href={s.url} target="_blank" rel="noopener noreferrer">{s.title}</a>
+              </>
+            ))}
+          </div>
         </div>
       ))}
     </div>
@@ -152,6 +159,13 @@ const tagLabels: Record<Finding['tag'], string> = {
     padding-top: 12px;
     border-top: var(--hair-light);
   }
+  .src-link {
+    color: var(--smoke);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(111,100,86,.35);
+    transition: color .15s, border-color .15s;
+  }
+  .src-link:hover { color: var(--ember-ink); border-bottom-color: var(--ember-ink); }
 
   .illustrative-note {
     font-family: var(--font-mono);

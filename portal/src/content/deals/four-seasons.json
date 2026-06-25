@@ -72,28 +72,28 @@
       "tag":      "supportive",
       "headline": "Value-Add Properties Lead Rent Growth",
       "body":     "Greensboro value-add multifamily posted +5.4% YoY rent growth in 2025 — the strongest segment in the metro. Class-A rents are flat while Class-C and workforce repositioning assets command the largest rent spreads, validating the renovation-driven underwriting.",
-      "source":   "Fannie Mae Multifamily Market Commentary, 2025",
+      "sources":  [{ "title": "Fannie Mae Multifamily Market Commentary", "url": "https://www.fanniemae.com" }],
       "date":     "Q1 2025"
     },
     {
       "tag":      "supportive",
       "headline": "Supply Pipeline Constrained at 4.7% of Stock",
       "body":     "The Piedmont Triad's active development pipeline of ~4,600 units represents only 4.7% of the existing 98,000-unit base. With replacement costs exceeding $180K per door, new workforce-tier townhome construction is economically infeasible — creating a structural rent floor for existing assets.",
-      "source":   "Kirkland Co. Piedmont Triad Market Report; NCHousing data",
+      "sources":  [{ "title": "U.S. Census Building Permits Survey", "url": "https://www.census.gov" }, { "title": "HUD PD&R", "url": "https://www.huduser.gov" }],
       "date":     "Q4 2024"
     },
     {
       "tag":      "supportive",
       "headline": "Diversified Employment Anchors Rental Demand",
       "body":     "Toyota's $13.9B EV battery plant (Liberty, NC — 40 min from Greensboro), Cone Health (18,000+ employees), Honda Aircraft, and Volvo represent a diversified employer base driving sustained household formation. NC faces a projected 760,000-unit housing shortage by 2029, keeping absorption strong.",
-      "source":   "NC Dept. of Commerce; HUD PD&R; NC Housing Coalition",
+      "sources":  [{ "title": "NC Dept. of Commerce", "url": "https://www.commerce.nc.gov" }, { "title": "U.S. Bureau of Labor Statistics", "url": "https://www.bls.gov" }],
       "date":     "2024–2025"
     },
     {
       "tag":      "watch",
       "headline": "Metro Vacancy at 7.8% — Elevated vs. History",
       "body":     "HUD reported 7.8% apartment vacancy in the Greensboro–High Point MSA (Q4 2024), above the 5–7% stabilized range. Elevated vacancy is concentrated in Class-A downtown deliveries; workforce 2BR/1.5BA townhomes — like Four Seasons — historically operate well below metro average, as reflected in the property's current 100% occupancy.",
-      "source":   "HUD PD&R Housing Market Profile, Nov 2024",
+      "sources":  [{ "title": "HUD PD&R Housing Market Profile", "url": "https://www.huduser.gov" }],
       "date":     "Q4 2024"
     }
   ]

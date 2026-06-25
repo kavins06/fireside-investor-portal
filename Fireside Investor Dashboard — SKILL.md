@@ -336,7 +336,10 @@ deal, dig in properly:
   it out or flag the gap explicitly. A smaller set of *verified* findings beats a longer
   list of guesses. Quality and accuracy over volume; the "3–5 findings" is a floor on
   rigor, not a license to pad with unsourced claims.
-- Cite the real source and its date on every finding, so the GP (and any LP) can check it.
+- Cite the real source **with a working link (URL)** and its date on every finding, so the
+  GP (and any LP) can click through and check it. In the portal record this is the required
+  `sources` array (`{ title, url }`, ≥1 per finding) — a finding with no real link **cannot
+  be published**, by design. Don't invent a plausible-looking URL; use the actual page.
 
 **What to check (macro → local):**
 - **Rates & capital markets:** current Treasury / SOFR levels and agency spreads vs.

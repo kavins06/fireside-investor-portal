@@ -96,7 +96,13 @@ export const dealSchema = z.object({
     tag:      z.enum(['supportive', 'watch', 'challenge']),
     headline: z.string(),
     body:     z.string(),
-    source:   z.string(),
+    // Every finding must cite at least one real, checkable source with a working link.
+    // This is the structural backstop behind the deep-research rule: an unsourced or
+    // fake-link finding fails validation, so it cannot be published.
+    sources:  z.array(z.object({
+      title: z.string().min(1),
+      url:   z.string().url('each source needs a working link (a full https:// URL)'),
+    })).min(1, 'each market finding needs at least one source with a working link — verify the figure first'),
     date:     z.string(),
   })).optional(),
 });

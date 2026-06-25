@@ -148,7 +148,8 @@ reference. Required unless marked optional.
   "marketFindings": [                        // optional but expected — drives the Market Pulse section
     { "tag": "supportive",                   // "supportive" | "watch" | "challenge"
       "headline": "…", "body": "…",
-      "source": "…", "date": "…" }           // date each finding to its real period (current, not a fixed old quarter)
+      "sources": [{ "title": "…", "url": "https://…" }],  // REQUIRED: ≥1 real, working link per finding — verify it first; publish is BLOCKED without it
+      "date": "…" }                          // the finding's real period (current, not a fixed old quarter)
   ]
 }
 ```
