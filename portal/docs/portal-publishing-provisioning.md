@@ -6,6 +6,24 @@ secrets and account settings I can't touch). ~10 minutes. Order matters.
 > This supersedes `docs/spec-gp-admin.md` (the old web-admin design). No login page,
 > no admin UI, no Supabase deals table — publishing runs through the connector + git.
 
+## 0. Connect Vercel to GitHub — CRITICAL, do this first
+
+The whole flow (and the redesign, and any future push) depends on Vercel
+auto-deploying when GitHub changes. **Right now it doesn't** — the Vercel "portal"
+project has no Git integration; it's only ever been hand-deployed via the CLI from
+the first commit, which is why the redesign never went live despite being pushed.
+
+Fix it once:
+1. Vercel → the **portal** project → **Settings → Git** → **Connect Git Repository**
+   → choose **`kavins06/fireside-investor-portal`**, production branch `master`.
+2. Confirm **Settings → General → Root Directory** is `portal` (the app lives in a subfolder).
+3. Vercel will deploy `master` immediately — that publishes the redesign + the
+   connector endpoint. From now on every push (yours, and the connector's deal
+   commits) auto-deploys.
+
+Without this step, a publisher's deal will commit to GitHub but never appear on the
+site. Everything below assumes this is done.
+
 ## 1. Create a GitHub token (lets the connector commit deals)
 
 1. GitHub → **Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token**.
