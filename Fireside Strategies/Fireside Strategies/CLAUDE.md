@@ -24,6 +24,7 @@ When I say "remember this," write the information to MEMORY.md immediately and c
 - When drafting emails, match the formality level of the original message I'm replying to.  
 - Before drafting a new email, check if a related thread already exists with that recipient. Reply in the existing thread instead of starting a new one.  
 - If you're not sure about something, say so. Don't guess.  
+- **Before publishing any deal or market figure to the Fireside portal, do deep research first.** Verify every number against multiple current, authoritative sources (Census, BLS, HUD, the Fed/Treasury, state housing & economic agencies, established CRE research) — anchored to today's date, working back to the most recent real data. Never publish a stat from memory or a single source; if you can't confirm it, leave it out and say so. These numbers go in front of investors.
 - Before producing any written content on my behalf, read voice-principles.md in the 00\_Resources folder.
 
 ## Routing Map
