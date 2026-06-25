@@ -35,6 +35,14 @@ components own all visuals. The record is pure data; get the data right.
 > That skill targets a standalone HTML file; THIS skill targets the portal record.
 > Same underwriting brain, different output. Don't duplicate the math here — reuse it.
 
+> **Two ways deals reach the portal.** This skill is the *Claude Code* path (you, in
+> the repo: author → validate → git commit → Vercel deploys). Non-technical people
+> publish from **Claude Cowork** via the **Fireside Publish connector** (an MCP server
+> at `portal/src/pages/api/mcp.ts` → commits to the repo the same way). Both paths run
+> the *same* validation (`portal/src/lib/deal-validation.mjs`, shared with the content
+> schema) so neither can publish a broken deal. Cowork setup: `portal/docs/cowork-publish-setup.md`;
+> go-live: `portal/docs/portal-publishing-provisioning.md`.
+
 ---
 
 ## Operating protocol (run every time)

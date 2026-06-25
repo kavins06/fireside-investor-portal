@@ -35,7 +35,8 @@ When I say "remember this," write the information to MEMORY.md immediately and c
 | \[Email HQ\] | \[...need to draft, reply to, or review any email\] |
 | \[Personal Finances\] | \[...am working on budgets, spending, savings, or investments\] |
 | Writing | ...need to write or draft long-form content in my voice: essays, articles, research papers, blog/Substack posts, op-eds. |
-| Investor Dashboard | ...mention a deal, property, pro forma, offering, tear sheet, or ask to build an investor/LP/GP dashboard or model returns (IRR, multiple, waterfall, sensitivity). |
+| Investor Dashboard | ...want a standalone investor/LP/GP dashboard *file* (HTML) to email or keep private for a deal — model returns (IRR, multiple, waterfall, sensitivity). NOT for putting a deal on the website (that's Fireside Portal). |
+| Fireside Portal | ...want to add / publish / update a deal on the **live website** (the portal / the live site), "put this deal online", or upload a pro forma / offering memo and ask to get it live. |
 
 ## References
 
