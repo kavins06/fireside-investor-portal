@@ -146,3 +146,28 @@ export async function fetchDeal(slug: string): Promise<unknown | null> {
   if (!data.content) return null;
   return JSON.parse(Buffer.from(data.content, 'base64').toString('utf8'));
 }
+
+/** Remove a deal record from the repo (unpublish). Triggers a Vercel deploy. */
+export async function deleteDeal(slug: string): Promise<{ ok: boolean; existed: boolean; error?: string }> {
+  const { token, repo, branch } = env();
+  if (!token) return { ok: false, existed: false, error: 'Publishing is not configured on the server (missing GITHUB_TOKEN).' };
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) return { ok: false, existed: false, error: `Invalid slug "${slug}".` };
+
+  const path = `portal/src/content/deals/${slug}.json`;
+  const encoded = encodeURIComponent(path).replace(/%2F/g, '/');
+  try {
+    const sha = await currentSha(repo, path, branch, token);
+    if (!sha) return { ok: false, existed: false, error: `No deal found with slug "${slug}".` };
+    const res = await fetch(`${API}/repos/${repo}/contents/${encoded}`, {
+      method: 'DELETE',
+      headers: headers(token),
+      body: JSON.stringify({ message: `Unpublish ${slug} deal via Fireside connector`, sha, branch }),
+    });
+    if (!res.ok) return { ok: false, existed: true, error: `GitHub delete failed: ${res.status} ${await res.text()}` };
+    return { ok: true, existed: true };
+    // ponytail: deletes the deal record (page 404s, off the homepage). Any images under
+    // public/assets/deals/<slug>/ are left as harmless orphans — add cleanup if it matters.
+  } catch (err) {
+    return { ok: false, existed: true, error: err instanceof Error ? err.message : String(err) };
+  }
+}

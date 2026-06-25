@@ -24,7 +24,7 @@
  */
 import type { APIRoute } from 'astro';
 import { validateDeal } from '../../lib/deal-validation.mjs';
-import { publishDeal, fetchDeal, listDeals } from '../../lib/github-publish';
+import { publishDeal, fetchDeal, listDeals, deleteDeal } from '../../lib/github-publish';
 
 export const prerender = false;
 
@@ -80,6 +80,21 @@ const TOOLS = [
     },
   },
   {
+    name: 'unpublish_deal',
+    description:
+      'Remove a published deal from the live portal — deletes its record, so the page 404s and it leaves the homepage. ' +
+      'Requires the Fireside publish token. Use for test deals or genuine removals; it stays in git history if it ever needs restoring. ' +
+      'To merely hide a deal from the homepage while keeping its page reachable, do NOT use this — publish it with status "closed" instead.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        slug: { type: 'string', description: 'The slug of the deal to remove, e.g. "test-deal".' },
+        publish_token: { type: 'string', description: 'The Fireside publish token.' },
+      },
+      required: ['slug', 'publish_token'],
+    },
+  },
+  {
     name: 'list_deals',
     description: 'List the slugs of deals currently published to the portal.',
     inputSchema: { type: 'object', properties: {} },
@@ -119,6 +134,15 @@ function constantTimeEqual(a: string, b: string): boolean {
   return diff === 0;
 }
 
+// Gate the write tools (publish/unpublish). Returns an error string, or null if OK.
+function tokenError(given: any): string | null {
+  const token = import.meta.env.MCP_PUBLISH_TOKEN ?? process.env.MCP_PUBLISH_TOKEN ?? '';
+  if (!token) return 'Publishing is not configured on the server (no publish token set). Contact the GP.';
+  const g = String(given ?? '');
+  if (!g || !constantTimeEqual(g, token)) return 'Rejected: missing or incorrect publish token.';
+  return null;
+}
+
 async function callTool(name: string, args: Record<string, any>) {
   switch (name) {
     case 'validate_deal': {
@@ -126,10 +150,8 @@ async function callTool(name: string, args: Record<string, any>) {
       return textResult(reportText(args?.deal?.name ?? '(deal)', v), !v.ok);
     }
     case 'publish_deal': {
-      const token = import.meta.env.MCP_PUBLISH_TOKEN ?? process.env.MCP_PUBLISH_TOKEN ?? '';
-      if (!token) return textResult('Publishing is not configured on the server (no publish token set). Contact the GP.', true);
-      const given = String(args?.publish_token ?? '');
-      if (!given || !constantTimeEqual(given, token)) return textResult('Publish rejected: missing or incorrect publish token.', true);
+      const terr = tokenError(args?.publish_token);
+      if (terr) return textResult(terr, true);
 
       const v = validateDeal(args?.deal);
       if (!v.ok) return textResult('Publish blocked — the deal did not pass validation:\n\n' + reportText(args?.deal?.name ?? '(deal)', v), true);
@@ -141,6 +163,17 @@ async function callTool(name: string, args: Record<string, any>) {
       return textResult(
         `✓ Published "${args.deal.name}". It will be live at ${result.dealUrl} within ~1 minute (the site is redeploying).` +
         `\nCommitted ${result.commits.length} file(s).${warnLine}`,
+      );
+    }
+    case 'unpublish_deal': {
+      const terr = tokenError(args?.publish_token);
+      if (terr) return textResult(terr, true);
+      const slug = String(args?.slug ?? '');
+      const result = await deleteDeal(slug);
+      if (!result.ok) return textResult(`Could not remove "${slug}": ${result.error}`, true);
+      return textResult(
+        `✓ Removed "${slug}" from the portal. Its page will 404 and it's off the homepage within ~1 minute ` +
+        `(the site is redeploying). It remains in git history if you ever need to restore it.`,
       );
     }
     case 'list_deals': {

@@ -80,6 +80,14 @@ Connectors — see the setup card). It gives you these tools:
   push bad numbers live even by accident.
 - Editing an existing deal: `get_deal` its slug, change what's needed, `validate_deal`,
   then `publish_deal` again (same slug overwrites it).
+- Taking a deal down — two ways, pick by intent:
+  - **Remove it** ("delete / take down / remove the test deal") → `unpublish_deal` with the
+    slug + publish token. The deal is deleted: its page 404s and it leaves the homepage
+    (still recoverable from git history). Use this for test deals and genuine removals.
+  - **Just hide it from the homepage** ("archive / close it, but keep the link working") →
+    `publish_deal` again with `status: "closed"`. The page stays reachable by direct link;
+    it just drops off the home list. Nothing is deleted.
+  Confirm with the GP which they mean before doing it.
 - Disclosures and compliance language are fixed by the portal — you don't write them.
 
 ## Editorial Rules
