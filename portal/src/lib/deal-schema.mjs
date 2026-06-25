@@ -86,6 +86,12 @@ export const dealSchema = z.object({
     credit:   z.string().optional(),
   }).optional(),
 
+  // Market Pulse framing — keep current: the authoring skill sets marketAsOf to the
+  // latest reporting period that actually has data (anchored to today's date), never
+  // a fixed/old date. Both optional; the section degrades gracefully without them.
+  marketLabel: z.string().optional(),   // e.g. "Greensboro–Piedmont Triad multifamily submarket"
+  marketAsOf:  z.string().optional(),   // e.g. "Q2 2026"
+
   marketFindings: z.array(z.object({
     tag:      z.enum(['supportive', 'watch', 'challenge']),
     headline: z.string(),

@@ -42,7 +42,10 @@ Connectors — see the setup card). It gives you these tools:
    you assumed vs. what they gave you.
 3. **Run the live market scan** for the deal's specific market (Dashboard SKILL §8)
    and write 3–5 short findings, each tagged supportive / watch / challenge, dated,
-   with a real source.
+   with a real source. **Check today's date first, then find the most recent data**
+   (work backwards from today to the closest real figures) — never reuse an old "as of"
+   period like mid-2025. Note the submarket name and the latest period you found data
+   for; those become the deal's market label and "as of" date.
 4. **Assemble the deal record.** Build the structured record the portal needs:
    name, slug (kebab-case, e.g. "maple-street"), status (use **active** to show it on
    the home page; **fundraising** to keep it off the home list but reachable by link),

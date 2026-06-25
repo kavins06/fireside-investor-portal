@@ -310,6 +310,16 @@ deal's specific market and surface anything that could affect the underwriting. 
 GP is close to the deal; this scan is the outside set of eyes. Use web search /
 live sources — never rely on stale training data for rates or market figures.
 
+**Always anchor to today's actual date — do this first, every time.** Before scanning,
+note today's real date (you are given it at session start). Then find the **most recent
+statistics that actually exist** — work *backwards from today* to the closest verifiable
+data point; never reach for a fixed or remembered "as of" period (e.g. don't default to
+"mid-2025"). Date-stamp each finding to the real period it covers, and set the deal's
+`marketAsOf` to the latest reporting period you found data for (e.g. the most recent
+quarter). If the freshest figure you can verify is genuinely older, date it honestly and
+say so — but never present stale data as current. Re-run this fresh for every deal and
+every update; recency is judged against *today*, not against when this skill was written.
+
 **What to check (macro → local):**
 - **Rates & capital markets:** current Treasury / SOFR levels and agency spreads vs.
   the deal's assumed loan rate; whether the exit-cap assumption looks rich given

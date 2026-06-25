@@ -61,7 +61,11 @@ components own all visuals. The record is pure data; get the data right.
 4. **Run the live market scan** (dashboard SKILL §8) for the deal's specific
    market → produce 3–5 `marketFindings`, each tagged `supportive`/`watch`/
    `challenge`, dated, with a real source. Use web search / research tools — never
-   stale training data for rates, supply, or rent trends.
+   stale training data for rates, supply, or rent trends. **Anchor to today's date
+   first:** note today's actual date, then find the *most recent* available stats
+   (work backwards from today to the closest real data) — never default to an old
+   "as of" period. Set `marketAsOf` to the latest reporting period you found data for
+   and `marketLabel` to the submarket name; date-stamp each finding to its real period.
 5. **Author the record** `portal/src/content/deals/<slug>.json` to the contract
    below. Derive the `teaser` headline numbers from the engine so they don't lie.
 6. **Wire imagery** (§ Images). Real photos if the GP provides them; otherwise
@@ -134,10 +138,13 @@ reference. Required unless marked optional.
     "credit": "Photos: … / Pexels"           // shown wherever imagery appears
   },
 
+  "marketLabel": "…",                        // optional — submarket name shown in the Market Pulse intro
+  "marketAsOf": "…",                          // optional — the scan's recency (latest period WITH data, anchored to today)
+
   "marketFindings": [                        // optional but expected — drives the Market Pulse section
     { "tag": "supportive",                   // "supportive" | "watch" | "challenge"
       "headline": "…", "body": "…",
-      "source": "…", "date": "Q1 2025" }
+      "source": "…", "date": "…" }           // date each finding to its real period (current, not a fixed old quarter)
   ]
 }
 ```

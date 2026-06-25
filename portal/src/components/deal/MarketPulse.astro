@@ -9,8 +9,10 @@ interface Finding {
 interface Props {
   findings: Finding[];
   dealName: string;
+  marketLabel?: string;   // e.g. "Greensboro–Piedmont Triad multifamily submarket"
+  marketAsOf?: string;    // e.g. "Q2 2026" — the recency of the scan; omit if unknown
 }
-const { findings, dealName } = Astro.props;
+const { findings, dealName, marketLabel, marketAsOf } = Astro.props;
 
 const tagLabels: Record<Finding['tag'], string> = {
   supportive: 'Supportive',
@@ -24,8 +26,8 @@ const tagLabels: Record<Finding['tag'], string> = {
       <span class="label">Submarket Context</span>
       <h2 id="market-pulse-title">Market pulse</h2>
       <p class="section-sub">
-        Key findings for the Greensboro–Piedmont Triad multifamily submarket —
-        <strong>illustrative</strong>, drawn from publicly available sources as of mid-2025.
+        Key findings for {marketLabel ?? 'this submarket'} —
+        <strong>illustrative</strong>, drawn from publicly available sources{marketAsOf ? ` as of ${marketAsOf}` : ''}.
       </p>
     </div>
 
