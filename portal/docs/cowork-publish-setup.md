@@ -1,57 +1,63 @@
-# Publish Fireside deals from Claude Cowork — setup (2 minutes, once)
+# Add Fireside deals from Claude — quick setup
 
-This lets you add deals to the live Fireside portal just by talking to Claude. You
-do it once; after that, publishing a deal is a normal conversation.
-
-You'll need two things from the GP:
-1. The **connector URL** (looks like `https://portal-eta-peach.vercel.app/api/mcp`)
-2. Your **publish token** (a short secret string)
+> **GP:** paste this whole message to each publisher, along with two things only you
+> can give them: the **connector link** (`https://portal-eta-peach.vercel.app/api/mcp`)
+> and their **publish code** (the secret string). Everything below is written for them.
 
 ---
 
-## Step 1 — Add the Fireside connector (once)
+You can add deals to the Fireside website just by chatting with Claude — no website
+logins, no spreadsheets, no code. It's a one-time setup, then it's a normal
+conversation. You'll get two things from the GP:
 
-1. In Claude, open **Settings → Connectors** (on Pro/Max it may read **Customize → Connectors**).
+- a **connector link** (a web address)
+- a **publish code** (a private password — keep it to yourself)
+
+## 1. Connect Fireside to Claude (once, ~1 minute)
+
+1. In Claude, open **Settings → Connectors** (on some plans it reads **Customize → Connectors**).
 2. Click **Add custom connector**.
-3. Paste the **connector URL** the GP gave you.
-4. Leave authentication empty (no sign-in needed) and click **Add**.
-5. You'll see a one-time note that custom connectors aren't verified by Anthropic — that's expected for an in-house tool. Confirm.
+3. Paste the **connector link** the GP gave you. Leave everything else blank and click **Add**.
+4. If Claude warns that the connector "isn't verified by Anthropic," that's normal for an
+   in-house tool — go ahead.
 
-That's it — "Fireside Publish" now appears in your connectors.
+Done — **Fireside Publish** is now connected. When you start a chat, if it isn't already
+active, click the **+** (or "connectors") button next to the message box and switch on
+**Fireside Publish**.
 
-> In a chat, make sure the connector is switched on: click the **+ / connectors**
-> button in the message box and enable **Fireside Publish**.
+## 2. Add a deal
 
-## Step 2 — Save your publish token (once)
+Start a chat and say, for example:
 
-Tell Claude, in your **Fireside Portal** workspace:
+> **"Add a new deal to the Fireside website."**
 
-> "My Fireside publish token is `the-token-the-GP-gave-me`. Save it."
-
-Claude stores it in that workspace's memory so you don't have to paste it every time.
-Keep this token private — it's what lets you publish. Don't put it on the website or
-share it.
-
----
-
-## Publishing a deal
-
-Just talk to Claude in the **Fireside Portal** workspace. For example:
-
-> "Add a new deal to the portal." *(then paste the details, or attach the pro forma / offering memo)*
+Then paste the deal details, or attach the pro forma / offering memo / deck.
 
 Claude will:
-1. Build the deal from what you gave it, filling any gaps with Fireside's standard assumptions (and telling you which it assumed).
-2. **Check it** and show you the projected returns (IRR, equity multiple, LP figures). If something's off, it'll say so and fix it — it cannot publish broken numbers.
-3. Ask you to confirm, then **publish**. The deal is live on the site in about a minute.
+1. **Build the deal** from what you gave it, filling any gaps with Fireside's standard
+   assumptions — and telling you which ones it assumed.
+2. The first time, **ask for your publish code** — paste it and say *"remember this"* so
+   you won't be asked again.
+3. **Show you the projected returns** and check the numbers. It cannot publish broken
+   figures — if something's off it tells you and fixes it.
+4. **Ask you to confirm, then publish.** It's live on the website in about a minute.
 
-Other things you can say:
+You can also say things like:
 - "What deals are live right now?"
-- "Update the Maple Street deal — the exit cap should be 6.5%."
-- "Put this one up but keep it off the homepage for now." *(publishes as “fundraising” — reachable by link, not listed)*
+- "Update the Maple Street deal — change the exit cap to 6.5%."
+- "Add this one but keep it off the homepage for now." *(stays reachable by link, not listed)*
 
 ## If something doesn't work
 
-- **"Publish rejected: missing or incorrect publish token"** → your saved token is wrong; ask the GP for it again and re-save it (Step 2).
-- **It lists problems with the deal** → those are real (e.g. missing numbers); answer Claude's questions and it'll fix and re-check.
-- **The connector isn't offered** → make sure it's toggled on via the **+ / connectors** button in the message box.
+- **"missing or incorrect publish token"** → your publish code is wrong. Ask the GP for
+  it again and paste it in.
+- **Claude lists problems with the deal** → they're real (usually a missing number) —
+  just answer its questions and it'll fix and re-check.
+- **You don't see "Fireside Publish" as an option** → click the **+** / connectors button
+  by the message box and switch it on.
+
+---
+
+*Optional, for richer deal-writing: the GP can set up a dedicated "Fireside Portal"
+workspace in your Claude (it teaches Claude Fireside's underwriting style). Not required —
+the steps above work on their own.*
