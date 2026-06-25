@@ -102,3 +102,26 @@ Send each trusted publisher:
   setup; ask and I'll build it).
 - The `GITHUB_TOKEN` and `MCP_PUBLISH_TOKEN` live only in Vercel env vars (server-side)
   — never in the repo, never sent to the browser.
+
+---
+
+## What it costs
+
+You don't pay anything per deal. To be precise about the two meanings of "token":
+
+- **The publish token and GitHub token are just secrets** — passwords/keys, not metered. $0.
+- **AI usage** happens in *each publisher's own Claude plan* when they chat to write a deal.
+  The connector itself never calls an LLM — it only validates the math and commits to GitHub —
+  so there's **no Anthropic bill per deal** for you. (That's why we used the connector instead
+  of a server-side AI: the cost stays on whoever does the chatting.)
+- **Hosting** (Vercel + GitHub + the Supabase leads table) sits on free tiers at this volume.
+
+| Item | Cost | Who pays |
+| :---- | :---- | :---- |
+| Publish token / GitHub token | $0 | nobody (they're passwords) |
+| Connector endpoint (validate + commit, no AI) | ~$0 | your Vercel hosting (free tier) |
+| Claude chat to write a deal | per their plan | each publisher's own Claude subscription |
+| Vercel / GitHub / Supabase hosting | free tier | you, ~$0 at this scale |
+
+The only way a publisher spends money is if they're on Claude's free tier and hit its limits
+during heavy research — then *they'd* choose to upgrade their own plan.

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Add a Deal to Fireside — Quick Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --espresso:#1B1512; --ember:#C75D3A; --ember-ink:#A8481F; --ember-glow:#F0A35E;
+    --bone:#F2EBDF; --bone-2:#E7DECF; --card:#FAF6EE; --smoke:#6F6456;
+    --ink:#1B1512; --ink2:#5A5048; --good:#4E7A55;
+    --display:'Fraunces',Georgia,serif; --sans:'Hanken Grotesk',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#e8e2d6;}
+  body{font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased;display:flex;justify-content:center;padding:24px;}
+
+  /* US Letter sheet */
+  .page{
+    position:relative;width:8.5in;height:11in;background:
+      radial-gradient(120% 60% at 88% -8%, rgba(240,163,94,.22) 0%, transparent 46%),
+      radial-gradient(80% 50% at -10% 108%, rgba(199,93,58,.12) 0%, transparent 50%),
+      var(--bone);
+    overflow:hidden;box-shadow:0 12px 40px rgba(27,21,18,.18);
+    padding:0.62in 0.62in 0.5in;display:flex;flex-direction:column;
+  }
+  /* subtle warm grain */
+  .page::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.4;mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.045'/%3E%3C/svg%3E");}
+
+  /* ── Masthead ── */
+  .mast{display:flex;align-items:center;gap:11px;padding-bottom:12px;border-bottom:1px solid var(--bone-2);}
+  .mark{width:30px;height:30px;border:1.5px solid var(--espresso);display:flex;align-items:flex-end;padding:3px;position:relative;flex-shrink:0;border-radius:2px;}
+  .mark b{font-family:var(--sans);font-weight:700;color:var(--ember-ink);font-size:15px;line-height:1;margin-bottom:3px;}
+  .mark s{position:absolute;top:4px;right:4px;font-family:var(--mono);font-size:7.5px;color:var(--espresso);font-weight:500;}
+  .mark i{position:absolute;bottom:3px;left:4px;width:9px;height:2px;background:var(--ember);}
+  .wordmark{font-family:var(--sans);font-weight:700;letter-spacing:.22em;font-size:11px;color:var(--espresso);line-height:1.1;}
+  .wordmark span{display:block;font-family:var(--mono);font-weight:400;letter-spacing:.3em;font-size:8px;color:var(--smoke);margin-top:2px;}
+  .mast-tag{margin-left:auto;font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--ember-ink);
+    border:1px solid rgba(168,72,31,.35);border-radius:999px;padding:5px 11px;}
+
+  /* ── Title ── */
+  .hero{padding:22px 0 16px;position:relative;z-index:1;}
+  .kicker{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ember-ink);margin-bottom:10px;}
+  h1{font-family:var(--display);font-weight:400;font-size:38px;line-height:1.02;letter-spacing:-.015em;color:var(--espresso);}
+  h1 em{font-style:italic;color:var(--ember-ink);}
+  .sub{font-size:13.5px;line-height:1.55;color:var(--ink2);max-width:6in;margin-top:12px;}
+
+  /* ── "You'll get" strip ── */
+  .get{display:flex;gap:12px;margin:6px 0 20px;}
+  .chip{flex:1;background:var(--card);border:1px solid var(--bone-2);border-left:3px solid var(--ember);border-radius:5px;padding:11px 14px;display:flex;gap:11px;align-items:center;}
+  .chip .ico{flex-shrink:0;color:var(--ember-ink);}
+  .chip .lbl{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--smoke);}
+  .chip .txt{font-size:12.5px;color:var(--ink);font-weight:500;line-height:1.25;}
+  .get-head{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);margin-bottom:9px;}
+
+  /* ── Steps ── */
+  .steps{display:flex;flex-direction:column;gap:13px;position:relative;z-index:1;}
+  .step{display:flex;gap:16px;background:var(--card);border:1px solid var(--bone-2);border-radius:7px;padding:15px 17px;}
+  .num{flex-shrink:0;width:34px;height:34px;border-radius:50%;background:var(--espresso);color:var(--ember-glow);
+    font-family:var(--mono);font-weight:500;font-size:16px;display:flex;align-items:center;justify-content:center;}
+  .step-ico{flex-shrink:0;width:40px;display:flex;align-items:center;justify-content:center;color:var(--ember);}
+  .step-body h3{font-family:var(--display);font-weight:500;font-size:17px;color:var(--espresso);letter-spacing:-.01em;margin-bottom:3px;}
+  .step-body p{font-size:12px;line-height:1.5;color:var(--ink2);}
+  .step-body code{font-family:var(--mono);font-size:11px;background:var(--bone);border:1px solid var(--bone-2);border-radius:3px;padding:1px 5px;color:var(--ember-ink);}
+  .step-body .quote{display:inline-block;font-family:var(--display);font-style:italic;font-size:12.5px;color:var(--espresso);margin-top:2px;}
+  .hint{font-family:var(--mono);font-size:9.5px;color:var(--smoke);margin-top:6px;line-height:1.45;}
+
+  /* ── Reassurance band ── */
+  .safe{margin-top:16px;background:rgba(78,122,85,.08);border:1px solid rgba(78,122,85,.28);border-radius:7px;
+    padding:12px 16px;display:flex;align-items:center;gap:12px;position:relative;z-index:1;}
+  .safe .ico{color:var(--good);flex-shrink:0;}
+  .safe p{font-size:11.5px;line-height:1.5;color:var(--ink2);}
+  .safe b{color:var(--espresso);}
+
+  /* ── Footer ── */
+  .foot{margin-top:auto;padding-top:14px;border-top:1px solid var(--bone-2);display:flex;gap:24px;position:relative;z-index:1;}
+  .foot-col{flex:1;}
+  .foot-col h4{font-family:var(--mono);font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--ember-ink);margin-bottom:7px;}
+  .foot-col li{list-style:none;font-size:10.5px;line-height:1.5;color:var(--ink2);margin-bottom:3px;}
+  .foot-col li b{font-family:var(--display);font-style:italic;color:var(--espresso);font-weight:400;}
+  .sign{font-family:var(--mono);font-size:8.5px;color:var(--smoke);text-align:right;margin-top:10px;position:relative;z-index:1;letter-spacing:.04em;}
+
+  @page{size:letter;margin:0;}
+  @media print{
+    html,body{background:#fff;}
+    body{padding:0;}
+    .page{box-shadow:none;width:8.5in;height:11in;}
+  }
+</style>
+</head>
+<body>
+  <main class="page">
+    <!-- Masthead -->
+    <header class="mast">
+      <div class="mark"><b>F</b><s>S</s><i></i></div>
+      <div class="wordmark">FIRESIDE STRATEGIES<span>INVESTOR PORTAL</span></div>
+      <div class="mast-tag">GP Guide</div>
+    </header>
+
+    <!-- Title -->
+    <section class="hero">
+      <div class="kicker">For the General Partner</div>
+      <h1>Add a deal just by <em>talking to Claude</em></h1>
+      <p class="sub">No website logins, no spreadsheets, no code. Set it up once — about a minute — and from then on, putting a deal on the site is a normal conversation.</p>
+    </section>
+
+    <!-- You'll get -->
+    <div class="get-head">Two things you'll need (sent with this guide)</div>
+    <section class="get">
+      <div class="chip">
+        <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></span>
+        <div><div class="lbl">A connector link</div><div class="txt">A web address</div></div>
+      </div>
+      <div class="chip">
+        <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><line x1="10.8" y1="12.2" x2="19" y2="4"/><line x1="16" y1="7" x2="19" y2="10"/><line x1="14" y1="9" x2="17" y2="12"/></svg></span>
+        <div><div class="lbl">A publish code</div><div class="txt">Your private password — keep it to yourself</div></div>
+      </div>
+    </section>
+
+    <!-- Steps -->
+    <section class="steps">
+      <article class="step">
+        <div class="num">1</div>
+        <div class="step-ico"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6"/><path d="M5 8h14l-1 5a6 6 0 0 1-12 0Z"/><path d="M9 19v2"/><path d="M15 19v2"/></svg></div>
+        <div class="step-body">
+          <h3>Connect Fireside to Claude</h3>
+          <p>In Claude, open <code>Settings → Connectors</code>, click <b>Add custom connector</b>, paste the link, leave everything else blank, and click <b>Add</b>. If it warns the connector "isn't verified," that's normal for an in-house tool — continue.</p>
+          <div class="hint">Then in a chat, switch on “Fireside Publish” using the + button next to the message box.</div>
+        </div>
+      </article>
+
+      <article class="step">
+        <div class="num">2</div>
+        <div class="step-ico"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.3 7.6L3 21l1.9-5.7A8.5 8.5 0 1 1 21 11.5Z"/><line x1="8.5" y1="11" x2="15.5" y2="11"/><line x1="8.5" y1="14" x2="13" y2="14"/></svg></div>
+        <div class="step-body">
+          <h3>Tell Claude about the deal</h3>
+          <p>Start a chat and say: <span class="quote">“Add a new deal to the Fireside website.”</span> Then paste the details or attach the pro forma / offering memo.</p>
+          <div class="hint">The first time, Claude asks for your publish code — paste it and say “remember this,” so you won’t be asked again.</div>
+        </div>
+      </article>
+
+      <article class="step">
+        <div class="num">3</div>
+        <div class="step-ico"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13c0-5 3.5-9 7-10 3.5 1 7 5 7 10a13 13 0 0 1-2 6H7a13 13 0 0 1-2-6Z"/><circle cx="12" cy="9" r="2"/><path d="M8 19c-1 1-1.5 2.5-1.5 3 .5 0 2-.5 3-1.5"/><path d="M16 19c1 1 1.5 2.5 1.5 3-.5 0-2-.5-3-1.5"/></svg></div>
+        <div class="step-body">
+          <h3>Review &amp; go live</h3>
+          <p>Claude builds the deal, fills any gaps with Fireside’s standard assumptions (and tells you which), then shows you the projected returns. You confirm — and it’s on the website in about a minute.</p>
+        </div>
+      </article>
+    </section>
+
+    <!-- Reassurance -->
+    <div class="safe">
+      <span class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.5 8.5 8 11 4.5-2.5 8-6 8-11V5Z"/><path d="m9 12 2 2 4-4"/></svg></span>
+      <p><b>You can’t publish broken numbers.</b> Claude checks every deal against the real returns model first — if something’s off, it tells you in plain English and fixes it before anything goes live.</p>
+    </div>
+
+    <!-- Footer -->
+    <footer class="foot">
+      <div class="foot-col">
+        <h4>You can also just say…</h4>
+        <ul>
+          <li><b>“What deals are live right now?”</b></li>
+          <li><b>“Update the Maple St deal — exit cap 6.5%.”</b></li>
+          <li><b>“Keep this one off the homepage — or remove it.”</b></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>If something’s off</h4>
+        <ul>
+          <li><b>“Incorrect publish token”</b> → re-paste your code.</li>
+          <li>Don’t see Fireside Publish? → switch it on with the + button.</li>
+          <li>Claude lists problems? → just answer its questions.</li>
+        </ul>
+      </div>
+    </footer>
+    <div class="sign">Fireside Strategies, LLC · keep your publish code private · nothing extra to publish</div>
+  </main>
+</body>
+</html>
