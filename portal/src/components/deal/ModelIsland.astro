@@ -486,7 +486,9 @@ const chips = [
       .from('#model-overlay .dash-hero', { opacity: 0, y: 24, duration: 0.6 })
       .from('#model-overlay .kpi', { opacity: 0, y: 18, duration: 0.5, stagger: 0.07 }, '-=0.15')
       .add(() => renderKPIs(ctx.r, 0.9), '-=0.25')
-      .from('#model-overlay .anim-card', { opacity: 0, y: 26, duration: 0.55, stagger: 0.12 }, '-=0.2');
+      .from('#model-overlay .anim-card', { opacity: 0, y: 26, duration: 0.55, stagger: 0.12 }, '-=0.2')
+      .from('#cf-table thead th', { opacity: 0, y: -10, duration: 0.28, stagger: 0.04 }, '-=0.15')
+      .from('#tbody tr', { opacity: 0, x: -20, duration: 0.38, ease: 'power2.out', stagger: 0.07 }, '-=0.1');
   }
 
   function closeModel() {
