@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Publishing Deals in Cowork — Complete Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --espresso:#1B1512; --espresso-2:#2A211C; --ember:#C75D3A; --ember-ink:#A8481F; --ember-glow:#F0A35E;
+    --bone:#F2EBDF; --bone-2:#E7DECF; --card:#FAF6EE; --smoke:#6F6456; --mist:#C7B9A8;
+    --ink:#1B1512; --ink2:#5A5048; --good:#4E7A55; --watch:#C99A3F; --bad:#A8412B;
+    --display:'Fraunces',Georgia,serif; --sans:'Hanken Grotesk',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#e8e2d6}
+  body{font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.55;padding:24px}
+
+  .sheet{max-width:8.5in;margin:0 auto;background:var(--bone);padding:0.7in 0.72in 0.6in;box-shadow:0 12px 40px rgba(27,21,18,.16)}
+
+  /* Masthead */
+  .mast{display:flex;align-items:center;gap:11px;padding-bottom:13px;border-bottom:1px solid var(--bone-2)}
+  .mark{width:30px;height:30px;border:1.5px solid var(--espresso);display:flex;align-items:flex-end;padding:3px;position:relative;flex-shrink:0;border-radius:2px}
+  .mark b{font-family:var(--sans);font-weight:700;color:var(--ember-ink);font-size:15px;line-height:1;margin-bottom:3px}
+  .mark s{position:absolute;top:4px;right:4px;font-family:var(--mono);font-size:7.5px;color:var(--espresso);font-weight:500}
+  .mark i{position:absolute;bottom:3px;left:4px;width:9px;height:2px;background:var(--ember)}
+  .wordmark{font-family:var(--sans);font-weight:700;letter-spacing:.22em;font-size:11px;color:var(--espresso);line-height:1.1}
+  .wordmark span{display:block;font-family:var(--mono);font-weight:400;letter-spacing:.3em;font-size:8px;color:var(--smoke);margin-top:2px}
+  .mast-tag{margin-left:auto;font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--ember-ink);border:1px solid rgba(168,72,31,.35);border-radius:999px;padding:5px 11px}
+
+  /* Title */
+  .hero{padding:26px 0 8px}
+  .kicker{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ember-ink);margin-bottom:11px}
+  h1{font-family:var(--display);font-weight:400;font-size:40px;line-height:1.02;letter-spacing:-.015em;color:var(--espresso)}
+  h1 em{font-style:italic;color:var(--ember-ink)}
+  .lede{font-size:14.5px;line-height:1.6;color:var(--ink2);max-width:6.4in;margin-top:13px}
+
+  /* Section heading */
+  section{margin-top:30px;page-break-inside:avoid}
+  .sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:14px;border-bottom:1px solid var(--bone-2);padding-bottom:9px}
+  .sec-num{font-family:var(--mono);font-size:12px;color:var(--ember);font-weight:500}
+  .sec-head h2{font-family:var(--display);font-weight:500;font-size:23px;color:var(--espresso);letter-spacing:-.01em}
+
+  p.body{font-size:13px;line-height:1.6;color:var(--ink2);max-width:6.6in}
+  p.body + p.body{margin-top:9px}
+
+  /* Big-picture flow */
+  .bigflow{display:flex;align-items:stretch;gap:0;margin:16px 0 2px}
+  .bf-node{flex:1;background:var(--card);border:1px solid var(--bone-2);border-radius:7px;padding:14px 14px;text-align:center}
+  .bf-node.dark{background:var(--espresso);border-color:var(--espresso)}
+  .bf-node .t{font-family:var(--display);font-size:15px;color:var(--espresso);font-weight:500}
+  .bf-node.dark .t{color:var(--bone)}
+  .bf-node .d{font-family:var(--mono);font-size:9.5px;color:var(--smoke);margin-top:5px;line-height:1.45}
+  .bf-node.dark .d{color:var(--mist)}
+  .bf-arrow{display:flex;align-items:center;color:var(--ember);font-size:20px;padding:0 9px;flex-shrink:0}
+
+  /* Workflow steps strip */
+  .strip{display:flex;gap:8px;margin:6px 0 18px}
+  .strip-step{flex:1;border-top:2px solid var(--ember);padding-top:9px}
+  .strip-step .n{font-family:var(--mono);font-size:10px;color:var(--ember-ink);font-weight:500}
+  .strip-step .l{font-family:var(--display);font-size:13.5px;color:var(--espresso);margin-top:2px;line-height:1.15}
+
+  /* You / Claude rows */
+  .lanes{border:1px solid var(--bone-2);border-radius:8px;overflow:hidden}
+  .lane{display:grid;grid-template-columns:130px 1fr;border-bottom:1px solid var(--bone-2)}
+  .lane:last-child{border-bottom:none}
+  .lane-who{padding:13px 14px;background:var(--card);font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ember-ink);font-weight:500}
+  .lane-who.claude{color:var(--smoke)}
+  .lane-what{padding:13px 16px;font-size:12.5px;color:var(--ink2);line-height:1.55}
+  .lane-what .say{font-family:var(--display);font-style:italic;color:var(--espresso)}
+
+  /* "Everything you can do" cards */
+  .do-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+  .do{background:var(--card);border:1px solid var(--bone-2);border-radius:7px;padding:13px 15px;page-break-inside:avoid}
+  .do h3{font-family:var(--display);font-weight:500;font-size:15px;color:var(--espresso);margin-bottom:6px}
+  .do .say{display:block;font-family:var(--mono);font-size:11px;color:var(--ember-ink);background:var(--bone);border:1px solid var(--bone-2);border-radius:4px;padding:6px 9px;margin-bottom:7px;line-height:1.45}
+  .do p{font-size:11.5px;color:var(--ink2);line-height:1.5}
+
+  /* Do / Don't */
+  .rules{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .rule-col{border:1px solid var(--bone-2);border-radius:8px;padding:14px 16px;background:var(--card)}
+  .rule-col.do-col{border-top:3px solid var(--good)}
+  .rule-col.dont-col{border-top:3px solid var(--bad)}
+  .rule-col h4{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}
+  .do-col h4{color:var(--good)} .dont-col h4{color:var(--bad)}
+  .rule-col li{list-style:none;font-size:11.5px;color:var(--ink2);line-height:1.5;margin-bottom:8px;padding-left:16px;position:relative}
+  .rule-col li::before{position:absolute;left:0;top:0}
+  .do-col li::before{content:"✓";color:var(--good)}
+  .dont-col li::before{content:"✕";color:var(--bad)}
+  .rule-col li b{color:var(--espresso);font-weight:600}
+
+  /* Troubleshoot */
+  .trouble li{list-style:none;font-size:12px;color:var(--ink2);line-height:1.5;margin-bottom:8px;border-left:2px solid var(--watch);padding-left:12px}
+  .trouble li b{font-family:var(--mono);font-size:11px;color:var(--espresso)}
+
+  /* Setup footer */
+  .setup{margin-top:30px;background:var(--espresso);border-radius:9px;padding:20px 22px;page-break-inside:avoid;position:relative;overflow:hidden;
+    background-image:radial-gradient(80% 120% at 90% -10%, rgba(240,163,94,.20) 0%, transparent 55%)}
+  .setup h4{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ember-glow);margin-bottom:10px}
+  .setup p{font-size:12px;color:var(--mist);line-height:1.6}
+  .setup b{color:var(--bone)}
+  .setup code{font-family:var(--mono);font-size:11px;color:var(--ember-glow);background:rgba(242,235,223,.06);border:1px solid rgba(242,235,223,.14);border-radius:4px;padding:2px 7px}
+  .setup .cost{margin-top:11px;font-family:var(--mono);font-size:10px;color:var(--smoke)}
+
+  .footline{margin-top:14px;font-family:var(--mono);font-size:8.5px;color:var(--smoke);text-align:center;letter-spacing:.04em}
+
+  @page{size:letter;margin:0.5in}
+  @media print{
+    html,body{background:#fff}
+    body{padding:0}
+    .sheet{box-shadow:none;max-width:none;padding:0}
+  }
+</style>
+</head>
+<body>
+<main class="sheet">
+
+  <!-- Masthead -->
+  <header class="mast">
+    <div class="mark"><b>F</b><s>S</s><i></i></div>
+    <div class="wordmark">FIRESIDE STRATEGIES<span>INVESTOR PORTAL</span></div>
+    <div class="mast-tag">Cowork · Complete Guide</div>
+  </header>
+
+  <!-- Title -->
+  <section class="hero" style="margin-top:0">
+    <div class="kicker">How to publish &amp; manage deals</div>
+    <h1>Everything you can do in Cowork, and <em>how the workflow goes</em></h1>
+    <p class="lede">You run the Fireside website by talking to Claude. Describe a deal — or hand over a pro forma — and Claude underwrites it, researches the market, and publishes it for you. You stay in control: you review and approve before anything goes live. This is the whole picture, start to finish.</p>
+  </section>
+
+  <!-- 1. Big picture -->
+  <section>
+    <div class="sec-head"><span class="sec-num">01</span><h2>The big picture</h2></div>
+    <div class="bigflow">
+      <div class="bf-node"><div class="t">You</div><div class="d">in Cowork — describe the deal</div></div>
+      <div class="bf-arrow">→</div>
+      <div class="bf-node dark"><div class="t">Claude</div><div class="d">underwrites, researches, checks the numbers</div></div>
+      <div class="bf-arrow">→</div>
+      <div class="bf-node"><div class="t">The website</div><div class="d">deal is live in ~1 minute</div></div>
+    </div>
+    <p class="body" style="margin-top:14px">You never touch code, spreadsheets, or the website itself. You talk; Claude does the work and shows you the result; you say go. The same conversation can add a deal, fix one, take one down, or just tell you what’s live.</p>
+  </section>
+
+  <!-- 2. Workflow -->
+  <section>
+    <div class="sec-head"><span class="sec-num">02</span><h2>Your workflow, step by step</h2></div>
+    <div class="strip">
+      <div class="strip-step"><div class="n">01</div><div class="l">Describe</div></div>
+      <div class="strip-step"><div class="n">02</div><div class="l">Claude drafts</div></div>
+      <div class="strip-step"><div class="n">03</div><div class="l">You review</div></div>
+      <div class="strip-step"><div class="n">04</div><div class="l">You confirm</div></div>
+      <div class="strip-step"><div class="n">05</div><div class="l">Live</div></div>
+    </div>
+    <div class="lanes">
+      <div class="lane">
+        <div class="lane-who">You</div>
+        <div class="lane-what">Start a chat: <span class="say">“Add a new deal to the Fireside website.”</span> Paste the numbers, or attach the pro forma / offering memo / deck. Give Claude as much real material as you have.</div>
+      </div>
+      <div class="lane">
+        <div class="lane-who claude">Claude</div>
+        <div class="lane-what">Builds the deal — fills any gaps with Fireside’s standard assumptions and <b>tells you which it assumed</b>. Researches the submarket across current, authoritative sources and writes the market findings, each with a working source link.</div>
+      </div>
+      <div class="lane">
+        <div class="lane-who claude">Claude</div>
+        <div class="lane-what">Checks the numbers against the real returns model and shows you the projected <b>IRR, equity multiple, and LP figures</b>. It <b>cannot publish broken math or an unsourced claim</b> — if something’s off, it says so and fixes it.</div>
+      </div>
+      <div class="lane">
+        <div class="lane-who">You</div>
+        <div class="lane-what">Review it. Nudge anything: <span class="say">“make the exit cap 6.5%,” “shorten the thesis,” “that Year-2 NOI is wrong.”</span> Read the returns and click a source or two. This is your gut-check.</div>
+      </div>
+      <div class="lane">
+        <div class="lane-who">You</div>
+        <div class="lane-what">Say <span class="say">“publish.”</span> The first time, Claude asks for your publish code — paste it and say <span class="say">“remember this.”</span></div>
+      </div>
+      <div class="lane">
+        <div class="lane-who claude">Claude</div>
+        <div class="lane-what">Publishes. The deal is live on the website in about a minute, and Claude hands you the link to check.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Everything you can do -->
+  <section>
+    <div class="sec-head"><span class="sec-num">03</span><h2>Everything you can do</h2></div>
+    <div class="do-grid">
+      <div class="do">
+        <h3>Add a deal</h3>
+        <span class="say">“Add a new deal to the website.”</span>
+        <p>Paste the details or attach a pro forma. Claude builds it, checks it, and publishes once you confirm.</p>
+      </div>
+      <div class="do">
+        <h3>See what’s live</h3>
+        <span class="say">“What deals are up right now?”</span>
+        <p>Claude lists every deal currently on the site.</p>
+      </div>
+      <div class="do">
+        <h3>Edit a live deal</h3>
+        <span class="say">“Update the Maple St deal — exit cap 6.5%.”</span>
+        <p>Claude pulls up the deal, makes the change, re-checks the numbers, and re-publishes it.</p>
+      </div>
+      <div class="do">
+        <h3>Soft-launch</h3>
+        <span class="say">“Publish it, but keep it off the homepage.”</span>
+        <p>It goes up as <b>fundraising</b> — reachable by direct link to share privately, but not listed on the home page.</p>
+      </div>
+      <div class="do">
+        <h3>Archive</h3>
+        <span class="say">“Close the Oak St deal, but keep its link.”</span>
+        <p>It drops off the home page; the page still works for anyone with the link. Nothing is deleted.</p>
+      </div>
+      <div class="do">
+        <h3>Remove</h3>
+        <span class="say">“Remove the test deal.”</span>
+        <p>Deleted from the site entirely — the page stops working. Good for test deals (still recoverable if ever needed).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Doing it right -->
+  <section>
+    <div class="sec-head"><span class="sec-num">04</span><h2>Doing it right — so the deals are solid</h2></div>
+    <div class="rules">
+      <div class="rule-col do-col">
+        <h4>Do</h4>
+        <ul>
+          <li><b>Give Claude the real source material</b> — pro forma, OM, rent roll. The more it has, the less it has to assume.</li>
+          <li><b>Read the projected returns before you confirm.</b> That number is your gut-check — if it looks wrong, it probably is.</li>
+          <li><b>Click a source link or two.</b> Every market claim is backed by a real link — spot-check them.</li>
+          <li><b>Try anything new as “fundraising” first</b>, look at the page, then make it active.</li>
+          <li><b>Keep your publish code private.</b></li>
+        </ul>
+      </div>
+      <div class="rule-col dont-col">
+        <h4>Don’t</h4>
+        <ul>
+          <li><b>Don’t publish a number you couldn’t defend to an investor.</b> Claude researches hard, but you are the final set of eyes.</li>
+          <li><b>Don’t rush past the review.</b> "Publish" should come after you’ve actually read it, not instead of reading it.</li>
+          <li><b>Don’t share the connector or your code</b> with anyone you wouldn’t trust to publish to the live site.</li>
+          <li><b>Don’t paste your publish code</b> into a public chat, email, or the website.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Troubleshooting -->
+  <section>
+    <div class="sec-head"><span class="sec-num">05</span><h2>If something’s off</h2></div>
+    <ul class="trouble">
+      <li><b>“missing or incorrect publish token”</b> → your publish code is wrong. Ask whoever set you up for it again and paste it in.</li>
+      <li><b>Claude flags problems with the deal</b> → they’re real (usually a missing number or source). Just answer its questions and it’ll fix and re-check.</li>
+      <li><b>A market finding won’t publish</b> → it needs a real source link. Point Claude to where the figure came from.</li>
+      <li><b>You don’t see “Fireside Publish”</b> → click the <b>+</b> / connectors button by the message box and switch it on.</li>
+    </ul>
+  </section>
+
+  <!-- Setup -->
+  <div class="setup">
+    <h4>First time? Two-minute setup</h4>
+    <p><b>1. Add the connector once.</b> In Claude: <b>Settings → Connectors → Add custom connector</b>, paste <code>https://portal-eta-peach.vercel.app/api/mcp</code>, leave auth blank, click <b>Add</b>. (A “not verified by Anthropic” note is normal for an in-house tool.)</p>
+    <p style="margin-top:8px"><b>2. Save your publish code.</b> Tell Claude your publish code and say “remember this.” That code is what lets you publish — keep it private.</p>
+    <p class="cost">Cost: nothing extra to publish. The conversation runs on your own Claude plan; the connector and website cost nothing per deal.</p>
+  </div>
+
+  <div class="footline">Fireside Strategies, LLC · illustrative model &amp; internal tool · keep your publish code private</div>
+
+</main>
+</body>
+</html>
