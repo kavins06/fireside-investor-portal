@@ -16,7 +16,11 @@ the first commit, which is why the redesign never went live despite being pushed
 Fix it once:
 1. Vercel → the **portal** project → **Settings → Git** → **Connect Git Repository**
    → choose **`kavins06/fireside-investor-portal`**, production branch `master`.
-2. Confirm **Settings → General → Root Directory** is `portal` (the app lives in a subfolder).
+2. **Set Settings → Build & Deployment → Root Directory to `portal`** and save (the app
+   lives in a subfolder). If you skip this, Git-triggered builds fail with
+   `astro: command not found` / `"astro build" exited with 127` — because Vercel builds
+   from the repo root, which has no package.json. (The old CLI deploys worked only
+   because they ran from inside `portal/`.)
 3. Vercel will deploy `master` immediately — that publishes the redesign + the
    connector endpoint. From now on every push (yours, and the connector's deal
    commits) auto-deploys.
