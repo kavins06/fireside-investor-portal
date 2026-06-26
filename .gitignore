@@ -10,3 +10,7 @@ npm-debug.log*
 # Editor / OS
 Thumbs.db
 *.swp
+
+# Cowork workspace personal memory (may hold secrets like the publish token) — keep local only
+Fireside Strategies/Fireside Strategies/MEMORY.md
+Fireside Strategies/Fireside Strategies/Fireside Portal/MEMORY.md

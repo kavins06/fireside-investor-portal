@@ -67,8 +67,11 @@ Connectors — see the setup card). It gives you these tools:
    contradict the model. Re-validate until it says the record is sound.
 6. **Confirm, then publish.** Briefly summarise the deal and what you assumed, and ask
    them to confirm. On a yes, call `publish_deal` with the record and the **publish
-   token** (stored in this workstation's MEMORY.md — see setup). Tell them it'll be live
-   in about a minute.
+   token**. **Do NOT ask the user for the publish token** — read it from the
+   "Publish token" line in this workspace's MEMORY.md and pass it automatically, every
+   time. Only if MEMORY.md has no token, ask once and then save it there so you never
+   ask again. Never print the token back to the user or put it in a deal. Tell them the
+   deal will be live in about a minute.
 7. **Images.** If they gave you photos, pass them to `publish_deal` as images
    (hero.jpg and exterior.jpg). If not, publish without — the page works, and real
    photos can be added later. Don't block publishing on imagery.
