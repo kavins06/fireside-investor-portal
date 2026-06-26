@@ -1,0 +1,136 @@
+{
+  "name": "Ashton Place + Terrace View Portfolio",
+  "slug": "i40",
+  "status": "fundraising",
+  "location": {
+    "city": "Crossville & Cookeville",
+    "state": "TN",
+    "address": "28 Jacobs Crossing Dr (Crossville) & 1366 Crescent Dr (Cookeville)",
+    "zip": "38555",
+    "display": "Middle Tennessee — I-40 Corridor"
+  },
+  "property": {
+    "type": "Stabilized Workforce Housing Portfolio (2 assets)",
+    "units": 87,
+    "unitMix": "1BR / 2BR / 3BR (Ashton) · 3BR townhomes (Terrace View)",
+    "yearBuilt": 2001,
+    "buildings": 2,
+    "acres": 0,
+    "sqftPerUnit": 1063,
+    "occupancy": "Stabilized",
+    "coGP": "Ambling"
+  },
+  "transaction": {
+    "purchasePrice": 7400000,
+    "totalEquity": 2880000,
+    "agencyDebt": 5600000,
+    "capImprovements": 781000
+  },
+  "engine": {
+    "equity": 2880000,
+    "loan": 5600000,
+    "rate": 0.0648,
+    "lpShare": 0.7,
+    "gpShare": 0.3,
+    "pref": 0.08,
+    "promote": 0.3,
+    "moicHurdle": 2.5,
+    "assetMgmt": 0.01,
+    "sellCost": 0.01,
+    "baseOcc": 0.9,
+    "baseNOI": [
+      536697,
+      633688,
+      656654,
+      681267,
+      701705,
+      722755,
+      744354,
+      682335
+    ],
+    "baseOpex": [
+      496325,
+      511164,
+      526772,
+      542915,
+      559202,
+      575978,
+      593257,
+      610055
+    ]
+  },
+  "copy": {
+    "tagline": "A stabilized, cash-flowing 87-unit workforce housing portfolio along the I-40 corridor in Middle Tennessee — two newer-vintage assets (Ashton Place in Crossville and Terrace View Townhomes in Cookeville) acquired at roughly a 7.5% in-place cap with durable day-one income, modest capital needs, and measured rent-growth upside.",
+    "thesis": "Fireside Strategies is pursuing the acquisition of a fully stabilized, cash-flowing two-property workforce housing portfolio in Middle Tennessee — Ashton Place, a 64-unit community in Crossville (built 2001), and Terrace View Townhomes, a 23-unit all-3BR community in Cookeville (built 2000). Located roughly 40 minutes apart along the I-40 corridor and managed under one operator (Ambling), the assets share staffing and operating efficiencies while giving investors exposure to two of the fastest-growing secondary markets in the country. The thesis rests on strong in-place cash flow rather than heavy repositioning: acquired at an approximate 7.5% going-in cap, the portfolio throws off durable income from day one. Newer-vintage construction means limited deferred maintenance and modest capital needs — roughly $781K of targeted interior, exterior, and amenity upgrades (paint, appliance and cabinet packages, countertops, landscaping, a dog run, grilling areas, and parking-lot resealing) executed in place over the first 12–16 months to support measured rent growth without aggressive assumptions. In-place rents sit below comparable product across both markets, providing a conservative path to rent growth. Agency-style financing on Ashton (~6.36%, three years interest-only) and bank financing on Terrace View (~6.75%, one year interest-only) create immediate positive leverage against the going-in cap, supporting distributions from acquisition. The base case underwrites to roughly an 18% net IRR and a 2.64× equity multiple to investors over a seven-year hold, with an investor preferred return of 8% and a 70/30 LP/GP profit split up to a 2.5× equity multiple (50/50 thereafter).",
+    "marketNotes": "The portfolio sits in the Upper Cumberland region of Middle Tennessee, bisected by I-40 midway between Nashville and Knoxville. The Cookeville micropolitan area ranked among the fastest-growing micropolitans in the United States in 2025, and Putnam County posted its largest single-year population gain since 2006, driven primarily by net domestic in-migration and anchored by Tennessee Tech University. Crossville/Cumberland County continues to grow at roughly 1.3–1.4% annually. Both submarkets are dominated by small-scale (sub-50-unit) and older product, leaving limited institutional-quality competition and supporting pricing power for well-managed, newer-vintage workforce assets. The deal underwrites conservatively to ~3% rent growth and a 7.25% exit cap against an approximate 7.5% going-in cap."
+  },
+  "teaser": {
+    "targetIRR": "~18%",
+    "equityMultiple": "~2.64×",
+    "holdYears": 7
+  },
+  "images": {
+    "hero": "https://images.unsplash.com/photo-1568605114967-8130f3a36994?q=80&w=1740&auto=format&fit=crop",
+    "credit": "Hero: Unsplash"
+  },
+  "marketLabel": "Upper Cumberland (Cookeville–Crossville) Middle Tennessee multifamily submarket",
+  "marketAsOf": "mid-2025",
+  "marketFindings": [
+    {
+      "tag": "supportive",
+      "headline": "Cookeville Among the Fastest-Growing Micros in the U.S.",
+      "body": "The Cookeville micropolitan area ranked fourth nationwide for numeric population growth among all U.S. micropolitan areas in 2025, and Putnam County recorded its largest single-year population increase since 2006 (~1,600 residents). Growth is driven primarily by net domestic in-migration and anchored by Tennessee Tech University — sustained household formation directly supporting workforce rental demand.",
+      "sources": [
+        {
+          "title": "Tennessee Town & City / TSDC",
+          "url": "https://ttc.tml1.org/2026/04/08/tsdc-tennessees-biggest-growth-story-may-be-cookeville"
+        },
+        {
+          "title": "Upper Cumberland Business Journal",
+          "url": "https://www.ucbjournal.com/dynamic-growth-two-upper-cumberland-cities-are-the-fastest-growing-micropolitans-in-the-u-s/"
+        }
+      ],
+      "date": "2025"
+    },
+    {
+      "tag": "supportive",
+      "headline": "Limited Institutional Supply in Both Submarkets",
+      "body": "In Cookeville, large-scale apartment buildings (50+ units) represent only ~2% of the rental stock; roughly 73% of rentals are small sub-50-unit complexes. With most product older and fragmented, newer-vintage, professionally managed workforce assets like Ashton Place and Terrace View face limited direct competition — supporting occupancy and pricing power.",
+      "sources": [
+        {
+          "title": "RentCafe — Cookeville Market Trends",
+          "url": "https://www.rentcafe.com/average-rent-market-trends/us/tn/cookeville/"
+        }
+      ],
+      "date": "2025–2026"
+    },
+    {
+      "tag": "supportive",
+      "headline": "Steady Rent Growth Across East/Middle Tennessee",
+      "body": "Cookeville's average apartment rent rose ~1.9% year-over-year to ~$1,246, and broader East Tennessee rent growth is forecast to hold near 3.5% for 2025 — consistent with the portfolio's conservative ~3% rent-growth underwriting and supportive of the below-market in-place rents at both properties.",
+      "sources": [
+        {
+          "title": "RentCafe — Cookeville Rent Trends",
+          "url": "https://www.rentcafe.com/average-rent-market-trends/us/tn/cookeville/"
+        },
+        {
+          "title": "ETN Realtors 2025 Housing Market Forecast",
+          "url": "https://www.etnrealtors.com/assets/pdf/2025+Housing+Market+Forecast+Report/"
+        }
+      ],
+      "date": "2025"
+    },
+    {
+      "tag": "watch",
+      "headline": "Secondary-Market Liquidity and Exit Cap Risk",
+      "body": "Upper Cumberland is a thin, secondary institutional market; buyer pools for stabilized workforce assets are shallower than in primary metros, and the underwriting assumes a 7.25% exit cap against a ~7.5% going-in cap. A softening in cap rates or rates staying higher for longer would pressure exit value — the single largest driver of the projected equity multiple. Stress-test the exit-cap lever before committing.",
+      "sources": [
+        {
+          "title": "PropertyCashin — Cookeville CRE Market Report",
+          "url": "https://propertycashin.com/investing-guides/commercial-real-estate-market-cookeville-tn/"
+        }
+      ],
+      "date": "2025"
+    }
+  ]
+}
