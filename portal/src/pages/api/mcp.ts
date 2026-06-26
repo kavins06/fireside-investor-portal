@@ -57,12 +57,11 @@ const TOOLS = [
     description:
       'Publish (create or update) a deal on the live Fireside portal. Re-validates server-side and REJECTS ' +
       'an unsound deal. On success it commits the record (and any images) to the repo and the site redeploys ' +
-      'automatically. Requires the Fireside publish token.',
+      'automatically. No token or sign-in required.',
     inputSchema: {
       type: 'object',
       properties: {
         deal: { type: 'object', description: DEAL_SCHEMA_HINT },
-        publish_token: { type: 'string', description: 'The Fireside publish token (provided to authorised publishers).' },
         images: {
           type: 'array',
           description: 'Optional images to commit to public/assets/deals/<slug>/. Each is { filename, contentBase64 }.',
@@ -76,22 +75,21 @@ const TOOLS = [
           },
         },
       },
-      required: ['deal', 'publish_token'],
+      required: ['deal'],
     },
   },
   {
     name: 'unpublish_deal',
     description:
       'Remove a published deal from the live portal — deletes its record, so the page 404s and it leaves the homepage. ' +
-      'Requires the Fireside publish token. Use for test deals or genuine removals; it stays in git history if it ever needs restoring. ' +
+      'Use for test deals or genuine removals; it stays in git history if it ever needs restoring. ' +
       'To merely hide a deal from the homepage while keeping its page reachable, do NOT use this — publish it with status "closed" instead.',
     inputSchema: {
       type: 'object',
       properties: {
         slug: { type: 'string', description: 'The slug of the deal to remove, e.g. "test-deal".' },
-        publish_token: { type: 'string', description: 'The Fireside publish token.' },
       },
-      required: ['slug', 'publish_token'],
+      required: ['slug'],
     },
   },
   {
@@ -127,22 +125,6 @@ function reportText(name: string, v: ReturnType<typeof validateDeal>): string {
   return lines.join('\n');
 }
 
-function constantTimeEqual(a: string, b: string): boolean {
-  if (a.length !== b.length) return false;
-  let diff = 0;
-  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  return diff === 0;
-}
-
-// Gate the write tools (publish/unpublish). Returns an error string, or null if OK.
-function tokenError(given: any): string | null {
-  const token = import.meta.env.MCP_PUBLISH_TOKEN ?? process.env.MCP_PUBLISH_TOKEN ?? '';
-  if (!token) return 'Publishing is not configured on the server (no publish token set). Contact the GP.';
-  const g = String(given ?? '');
-  if (!g || !constantTimeEqual(g, token)) return 'Rejected: missing or incorrect publish token.';
-  return null;
-}
-
 async function callTool(name: string, args: Record<string, any>) {
   switch (name) {
     case 'validate_deal': {
@@ -150,9 +132,6 @@ async function callTool(name: string, args: Record<string, any>) {
       return textResult(reportText(args?.deal?.name ?? '(deal)', v), !v.ok);
     }
     case 'publish_deal': {
-      const terr = tokenError(args?.publish_token);
-      if (terr) return textResult(terr, true);
-
       const v = validateDeal(args?.deal);
       if (!v.ok) return textResult('Publish blocked — the deal did not pass validation:\n\n' + reportText(args?.deal?.name ?? '(deal)', v), true);
 
@@ -166,8 +145,6 @@ async function callTool(name: string, args: Record<string, any>) {
       );
     }
     case 'unpublish_deal': {
-      const terr = tokenError(args?.publish_token);
-      if (terr) return textResult(terr, true);
       const slug = String(args?.slug ?? '');
       const result = await deleteDeal(slug);
       if (!result.ok) return textResult(`Could not remove "${slug}": ${result.error}`, true);

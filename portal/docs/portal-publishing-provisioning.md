@@ -35,10 +35,12 @@ site. Everything below assumes this is done.
 3. **Permissions:** Repository permissions → **Contents: Read and write** (Metadata: Read is added automatically). Nothing else.
 4. Set an expiry you're comfortable with (e.g. 1 year) and generate. **Copy the token** (starts with `github_pat_…`) — you won't see it again.
 
-## 2. Pick a publish token (the secret your publishers will use)
+## 2. No publish token needed
 
-Make up a long random string (e.g. from a password manager), e.g. `fsp_live_7Q2…`.
-This is what gates publishing. You'll give it to each trusted publisher.
+Publishing is **open** — there is no publish token or password. Anyone who has the
+connector URL can publish (and remove) deals. This was a deliberate choice for
+frictionless multi-person use; see **Security notes** below for the trade-off and how
+to lock it back down later if you change your mind.
 
 ## 3. Set the environment variables in Vercel
 
@@ -48,7 +50,6 @@ Vercel → your portal project → **Settings → Environment Variables**. Add t
 | Name | Value |
 | :---- | :---- |
 | `GITHUB_TOKEN` | the fine-grained PAT from step 1 |
-| `MCP_PUBLISH_TOKEN` | the publish token from step 2 |
 | `GITHUB_REPO` | `kavins06/fireside-investor-portal` *(optional — this is the default)* |
 | `GITHUB_BRANCH` | `master` *(optional — default)* |
 | `PUBLIC_SITE_URL` | `https://portal-eta-peach.vercel.app` *(optional — used for the “it’s live at …” link)* |
@@ -69,8 +70,7 @@ open that URL — a 405 page with that message means the server is up (it only a
 ## 5. Add the connector in Claude (you, as the first publisher)
 
 Follow `cowork-publish-setup.md`: Settings → Connectors → Add custom connector → paste
-the `/api/mcp` URL → no auth → Add. Then save your publish token in the **Fireside
-Portal** Cowork workspace.
+the `/api/mcp` URL → no auth → Add. (Nothing else to enter — publishing needs no token.)
 
 ## 6. Smoke-test a real publish
 
@@ -83,25 +83,31 @@ the file from the repo) so it doesn't linger.
 
 Send each trusted publisher:
 - the connector URL (`…/api/mcp`),
-- their publish token (the same one, or rotate per-person if you prefer),
 - the `cowork-publish-setup.md` card.
+
+That's all — there's no token to hand out. **Treat the URL itself as the key:** anyone
+who has it can publish or remove deals, so share it only with people you trust.
 
 ---
 
 ## Security notes (read once)
 
-- The connector endpoint is **public** (Claude connects from Anthropic's cloud, so it
-  has to be). Anyone who finds the URL can *look* at the tools and *validate* a deal,
-  but **publishing requires the publish token**, which is never in the URL.
-- Worst case if the token leaks: someone could publish a *validated* deal record (the
-  only thing the tool can write) — annoying, but it's a normal git commit you can
-  revert, and there's no investor data exposed. **Rotate** by changing
-  `MCP_PUBLISH_TOKEN` in Vercel and re-sharing.
-- Want it locked down harder later? Two options: (a) rotate tokens periodically, or
-  (b) switch the connector to real OAuth with a "Sign in to Fireside" step (more
-  setup; ask and I'll build it).
-- The `GITHUB_TOKEN` and `MCP_PUBLISH_TOKEN` live only in Vercel env vars (server-side)
-  — never in the repo, never sent to the browser.
+- **Publishing is open — there is no token.** The connector endpoint is public (Claude
+  connects from Anthropic's cloud, so it has to be), and `publish_deal` / `unpublish_deal`
+  require no auth. **Anyone who has the connector URL can publish a deal — or remove a
+  live one.** You chose this for frictionless multi-person use.
+- **The URL is the only thing protecting it.** It isn't secret-strength, but it isn't
+  published anywhere except the guides you hand out. Treat it like a key; don't post it
+  publicly.
+- **Blast radius is bounded.** The tools can only write a *validated* deal record (no
+  arbitrary files, no investor data to read), and every change is a normal git commit you
+  can revert (or `unpublish`).
+- **Want it locked down again?** Two easy paths — ask and I'll do it: (a) put the token
+  gate back (a code each publisher saves once), or (b) real OAuth ("Sign in to Fireside").
+  Either restores per-person control.
+- The `GITHUB_TOKEN` still lives only in Vercel env vars (server-side) — never in the repo,
+  never sent to the browser. `MCP_PUBLISH_TOKEN` is no longer used; you can delete it from
+  Vercel.
 
 ---
 
@@ -109,7 +115,7 @@ Send each trusted publisher:
 
 You don't pay anything per deal. To be precise about the two meanings of "token":
 
-- **The publish token and GitHub token are just secrets** — passwords/keys, not metered. $0.
+- **The GitHub token is just a secret** — a key, not metered. $0. (There's no publish token.)
 - **AI usage** happens in *each publisher's own Claude plan* when they chat to write a deal.
   The connector itself never calls an LLM — it only validates the math and commits to GitHub —
   so there's **no Anthropic bill per deal** for you. (That's why we used the connector instead
@@ -118,7 +124,7 @@ You don't pay anything per deal. To be precise about the two meanings of "token"
 
 | Item | Cost | Who pays |
 | :---- | :---- | :---- |
-| Publish token / GitHub token | $0 | nobody (they're passwords) |
+| GitHub token | $0 | nobody (it's a key) |
 | Connector endpoint (validate + commit, no AI) | ~$0 | your Vercel hosting (free tier) |
 | Claude chat to write a deal | per their plan | each publisher's own Claude subscription |
 | Vercel / GitHub / Supabase hosting | free tier | you, ~$0 at this scale |

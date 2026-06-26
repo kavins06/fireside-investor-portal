@@ -22,7 +22,7 @@ publishes to the live website.
 You publish through the **Fireside Publish connector** (added once in Settings →
 Connectors — see the setup card). It gives you these tools:
 - `validate_deal` — checks a deal and returns the computed returns + any problems. No token.
-- `publish_deal` — puts the deal live (needs the publish token). Re-checks first and refuses a broken deal.
+- `publish_deal` — puts the deal live. Re-checks first and refuses a broken deal. No token needed.
 - `list_deals` / `get_deal` — see what's live / fetch a deal to edit.
 
 ## Resources
@@ -66,12 +66,9 @@ Connectors — see the setup card). It gives you these tools:
    numbers** (targetIRR ≈ LP IRR, equityMultiple ≈ LP MOIC) so the headline can't
    contradict the model. Re-validate until it says the record is sound.
 6. **Confirm, then publish.** Briefly summarise the deal and what you assumed, and ask
-   them to confirm. On a yes, call `publish_deal` with the record and the **publish
-   token**. **Do NOT ask the user for the publish token** — read it from the
-   "Publish token" line in this workspace's MEMORY.md and pass it automatically, every
-   time. Only if MEMORY.md has no token, ask once and then save it there so you never
-   ask again. Never print the token back to the user or put it in a deal. Tell them the
-   deal will be live in about a minute.
+   them to confirm. On a yes, call `publish_deal` with the record. **No token, code, or
+   sign-in is needed — never ask the user for a publish code/token.** Tell them the deal
+   will be live in about a minute.
 7. **Images.** If they gave you photos, pass them to `publish_deal` as images
    (hero.jpg and exterior.jpg). If not, publish without — the page works, and real
    photos can be added later. Don't block publishing on imagery.
@@ -85,7 +82,7 @@ Connectors — see the setup card). It gives you these tools:
   then `publish_deal` again (same slug overwrites it).
 - Taking a deal down — two ways, pick by intent:
   - **Remove it** ("delete / take down / remove the test deal") → `unpublish_deal` with the
-    slug + publish token. The deal is deleted: its page 404s and it leaves the homepage
+    slug. The deal is deleted: its page 404s and it leaves the homepage
     (still recoverable from git history). Use this for test deals and genuine removals.
   - **Just hide it from the homepage** ("archive / close it, but keep the link working") →
     `publish_deal` again with `status: "closed"`. The page stays reachable by direct link;

@@ -175,7 +175,7 @@
       </div>
       <div class="lane">
         <div class="lane-who">You</div>
-        <div class="lane-what">Say <span class="say">“publish.”</span> The first time, Claude asks for your publish code — paste it and say <span class="say">“remember this.”</span></div>
+        <div class="lane-what">Say <span class="say">“publish.”</span> No password or code is needed — Claude publishes straight away.</div>
       </div>
       <div class="lane">
         <div class="lane-who claude">Claude</div>
@@ -232,7 +232,7 @@
           <li><b>Read the projected returns before you confirm.</b> That number is your gut-check — if it looks wrong, it probably is.</li>
           <li><b>Click a source link or two.</b> Every market claim is backed by a real link — spot-check them.</li>
           <li><b>Try anything new as “fundraising” first</b>, look at the page, then make it active.</li>
-          <li><b>Keep your publish code private.</b></li>
+          <li><b>Treat the connector link like a key</b> — anyone who has it can publish, so share it only with people you trust.</li>
         </ul>
       </div>
       <div class="rule-col dont-col">
@@ -240,8 +240,8 @@
         <ul>
           <li><b>Don’t publish a number you couldn’t defend to an investor.</b> Claude researches hard, but you are the final set of eyes.</li>
           <li><b>Don’t rush past the review.</b> "Publish" should come after you’ve actually read it, not instead of reading it.</li>
-          <li><b>Don’t share the connector or your code</b> with anyone you wouldn’t trust to publish to the live site.</li>
-          <li><b>Don’t paste your publish code</b> into a public chat, email, or the website.</li>
+          <li><b>Don’t share the connector link</b> with anyone you wouldn’t trust to publish — whoever has it can publish or remove deals.</li>
+          <li><b>Don’t post the connector link publicly</b> (social, a public page, a forum) — keep it to your team.</li>
         </ul>
       </div>
     </div>
@@ -251,7 +251,6 @@
   <section>
     <div class="sec-head"><span class="sec-num">05</span><h2>If something’s off</h2></div>
     <ul class="trouble">
-      <li><b>“missing or incorrect publish token”</b> → your publish code is wrong. Ask whoever set you up for it again and paste it in.</li>
       <li><b>Claude flags problems with the deal</b> → they’re real (usually a missing number or source). Just answer its questions and it’ll fix and re-check.</li>
       <li><b>A market finding won’t publish</b> → it needs a real source link. Point Claude to where the figure came from.</li>
       <li><b>You don’t see “Fireside Publish”</b> → click the <b>+</b> / connectors button by the message box and switch it on.</li>
@@ -261,12 +260,11 @@
   <!-- Setup -->
   <div class="setup">
     <h4>First time? Two-minute setup</h4>
-    <p><b>1. Add the connector once.</b> In Claude: <b>Settings → Connectors → Add custom connector</b>, paste <code>https://portal-eta-peach.vercel.app/api/mcp</code>, leave auth blank, click <b>Add</b>. (A “not verified by Anthropic” note is normal for an in-house tool.)</p>
-    <p style="margin-top:8px"><b>2. Save your publish code.</b> Tell Claude your publish code and say “remember this.” That code is what lets you publish — keep it private.</p>
+    <p><b>Add the connector once.</b> In Claude: <b>Settings → Connectors → Add custom connector</b>, paste <code>https://portal-eta-peach.vercel.app/api/mcp</code>, leave auth blank, click <b>Add</b>. (A “not verified by Anthropic” note is normal for an in-house tool.) That's it — no password or code to set up.</p>
     <p class="cost">Cost: nothing extra to publish. The conversation runs on your own Claude plan; the connector and website cost nothing per deal.</p>
   </div>
 
-  <div class="footline">Fireside Strategies, LLC · illustrative model &amp; internal tool · keep your publish code private</div>
+  <div class="footline">Fireside Strategies, LLC · illustrative model &amp; internal tool</div>
 
 </main>
 </body>
