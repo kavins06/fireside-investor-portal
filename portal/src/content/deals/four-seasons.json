@@ -2,7 +2,6 @@
   "name": "Four Seasons Townhomes",
   "slug": "four-seasons",
   "status": "active",
-
   "location": {
     "city": "Greensboro",
     "state": "NC",
@@ -10,7 +9,6 @@
     "zip": "27407",
     "display": "Greensboro, North Carolina"
   },
-
   "property": {
     "type": "Multifamily Value-Add",
     "units": 90,
@@ -22,79 +20,116 @@
     "occupancy": "100%",
     "coGP": "Ginkgo Residential"
   },
-
   "transaction": {
-    "purchasePrice":   9721995,
-    "totalEquity":     4813998,
-    "agencyDebt":      6800000,
+    "purchasePrice": 9721995,
+    "totalEquity": 4813998,
+    "agencyDebt": 6800000,
     "capImprovements": 1420000
   },
-
   "engine": {
-    "equity":     4813998,
-    "loan":       6800000,
-    "rate":       0.0523,
-    "lpShare":    0.90,
-    "gpShare":    0.10,
-    "pref":       0.08,
-    "promote":    0.20,
+    "equity": 4813998,
+    "loan": 6800000,
+    "rate": 0.0523,
+    "lpShare": 0.9,
+    "gpShare": 0.1,
+    "pref": 0.08,
+    "promote": 0.2,
     "moicHurdle": 2.5,
-    "assetMgmt":  0.01,
-    "sellCost":   0.01,
-    "baseOcc":    0.95,
-    "baseNOI":  [693600, 924800,  979200, 1020000, 1047200, 1081200, 1107537],
-    "baseOpex": [601560, 552600,  564120,  580050,  596340,  613080,  630270]
+    "assetMgmt": 0.01,
+    "sellCost": 0.01,
+    "baseOcc": 0.95,
+    "baseNOI": [
+      693600,
+      924800,
+      979200,
+      1020000,
+      1047200,
+      1081200,
+      1107537
+    ],
+    "baseOpex": [
+      601560,
+      552600,
+      564120,
+      580050,
+      596340,
+      613080,
+      630270
+    ]
   },
-
   "copy": {
     "tagline": "A 90-unit workforce housing community in Greensboro's growth corridor — acquired at a discount to replacement cost and positioned for meaningful NOI expansion through a targeted renovation program and operational repositioning.",
     "thesis": "Four Seasons Townhomes is a cash-flowing, 90-unit townhome community in one of the Piedmont Triad's most resilient submarkets. At acquisition, the property carried below-market rents and deferred maintenance that suppressed NOI — precisely the conditions that create a value-add opportunity. Our renovation program upgrades unit interiors and common areas over the first 12–18 months, driving rents to market levels and pushing stabilized NOI toward $925K+ by Year 2. Agency debt at a fixed 5.23% IO rate provides predictable carry while the renovation program executes. With a 7-year hold and a projected 6.25% exit cap against a stabilized NOI above $1.1M, the deal underwrites to a 3.2× equity multiple for LPs. The asset is co-GP'd by Ginkgo Residential, an experienced regional operator with a proven renovation track record in the Triad market.",
     "marketNotes": "The Piedmont Triad — Greensboro, Winston-Salem, High Point — has consistently attracted corporate relocations and light manufacturing expansion, driving household formation and sustained multifamily demand. Vacancy in the submarket has remained below 5% for six consecutive quarters. New supply is limited by construction costs that now exceed $180K per door, creating a durable rent floor for workforce housing. Greensboro's median household income supports rents at our target levels with acceptable rent-to-income ratios, and demand from UNCG and surrounding employers anchors occupancy through economic cycles."
   },
-
   "teaser": {
-    "targetIRR":      "~21%",
+    "targetIRR": "~21%",
     "equityMultiple": "~3.2×",
-    "holdYears":       7
+    "holdYears": 7
   },
-
   "images": {
-    "hero":     "/assets/deals/four-seasons/hero.jpg",
+    "hero": "https://images.unsplash.com/photo-1471039497385-b6d6ba609f9c?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     "exterior": "/assets/deals/four-seasons/exterior.jpg",
-    "credit":   "Photos: Quang Nguyen Vinh / Pexels"
+    "credit": "Hero: Unsplash · Exterior: Quang Nguyen Vinh / Pexels"
   },
-
   "marketLabel": "Greensboro–Piedmont Triad multifamily submarket",
   "marketAsOf": "mid-2025",
-
   "marketFindings": [
     {
-      "tag":      "supportive",
+      "tag": "supportive",
       "headline": "Value-Add Properties Lead Rent Growth",
-      "body":     "Greensboro value-add multifamily posted +5.4% YoY rent growth in 2025 — the strongest segment in the metro. Class-A rents are flat while Class-C and workforce repositioning assets command the largest rent spreads, validating the renovation-driven underwriting.",
-      "sources":  [{ "title": "Fannie Mae Multifamily Market Commentary", "url": "https://www.fanniemae.com" }],
-      "date":     "Q1 2025"
+      "body": "Greensboro value-add multifamily posted +5.4% YoY rent growth in 2025 — the strongest segment in the metro. Class-A rents are flat while Class-C and workforce repositioning assets command the largest rent spreads, validating the renovation-driven underwriting.",
+      "sources": [
+        {
+          "title": "Fannie Mae Multifamily Market Commentary",
+          "url": "https://www.fanniemae.com"
+        }
+      ],
+      "date": "Q1 2025"
     },
     {
-      "tag":      "supportive",
+      "tag": "supportive",
       "headline": "Supply Pipeline Constrained at 4.7% of Stock",
-      "body":     "The Piedmont Triad's active development pipeline of ~4,600 units represents only 4.7% of the existing 98,000-unit base. With replacement costs exceeding $180K per door, new workforce-tier townhome construction is economically infeasible — creating a structural rent floor for existing assets.",
-      "sources":  [{ "title": "U.S. Census Building Permits Survey", "url": "https://www.census.gov" }, { "title": "HUD PD&R", "url": "https://www.huduser.gov" }],
-      "date":     "Q4 2024"
+      "body": "The Piedmont Triad's active development pipeline of ~4,600 units represents only 4.7% of the existing 98,000-unit base. With replacement costs exceeding $180K per door, new workforce-tier townhome construction is economically infeasible — creating a structural rent floor for existing assets.",
+      "sources": [
+        {
+          "title": "U.S. Census Building Permits Survey",
+          "url": "https://www.census.gov"
+        },
+        {
+          "title": "HUD PD&R",
+          "url": "https://www.huduser.gov"
+        }
+      ],
+      "date": "Q4 2024"
     },
     {
-      "tag":      "supportive",
+      "tag": "supportive",
       "headline": "Diversified Employment Anchors Rental Demand",
-      "body":     "Toyota's $13.9B EV battery plant (Liberty, NC — 40 min from Greensboro), Cone Health (18,000+ employees), Honda Aircraft, and Volvo represent a diversified employer base driving sustained household formation. NC faces a projected 760,000-unit housing shortage by 2029, keeping absorption strong.",
-      "sources":  [{ "title": "NC Dept. of Commerce", "url": "https://www.commerce.nc.gov" }, { "title": "U.S. Bureau of Labor Statistics", "url": "https://www.bls.gov" }],
-      "date":     "2024–2025"
+      "body": "Toyota's $13.9B EV battery plant (Liberty, NC — 40 min from Greensboro), Cone Health (18,000+ employees), Honda Aircraft, and Volvo represent a diversified employer base driving sustained household formation. NC faces a projected 760,000-unit housing shortage by 2029, keeping absorption strong.",
+      "sources": [
+        {
+          "title": "NC Dept. of Commerce",
+          "url": "https://www.commerce.nc.gov"
+        },
+        {
+          "title": "U.S. Bureau of Labor Statistics",
+          "url": "https://www.bls.gov"
+        }
+      ],
+      "date": "2024–2025"
     },
     {
-      "tag":      "watch",
+      "tag": "watch",
       "headline": "Metro Vacancy at 7.8% — Elevated vs. History",
-      "body":     "HUD reported 7.8% apartment vacancy in the Greensboro–High Point MSA (Q4 2024), above the 5–7% stabilized range. Elevated vacancy is concentrated in Class-A downtown deliveries; workforce 2BR/1.5BA townhomes — like Four Seasons — historically operate well below metro average, as reflected in the property's current 100% occupancy.",
-      "sources":  [{ "title": "HUD PD&R Housing Market Profile", "url": "https://www.huduser.gov" }],
-      "date":     "Q4 2024"
+      "body": "HUD reported 7.8% apartment vacancy in the Greensboro–High Point MSA (Q4 2024), above the 5–7% stabilized range. Elevated vacancy is concentrated in Class-A downtown deliveries; workforce 2BR/1.5BA townhomes — like Four Seasons — historically operate well below metro average, as reflected in the property's current 100% occupancy.",
+      "sources": [
+        {
+          "title": "HUD PD&R Housing Market Profile",
+          "url": "https://www.huduser.gov"
+        }
+      ],
+      "date": "Q4 2024"
     }
   ]
 }
