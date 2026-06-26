@@ -456,6 +456,33 @@ const chips = [
   let isOpen = false;
   let lastFocus: HTMLElement | null = null;
 
+  // The cash-flow table sits below the fold, so animating it on open is never seen.
+  // Reveal it the first time it scrolls into view. The overlay fills the viewport
+  // (position:fixed; inset:0), so a default-root IntersectionObserver fires correctly
+  // as the table scrolls up into view — far more reliable here than a custom root or a
+  // scroll listener. It toggles a class that runs a CSS keyframe (opacity animates
+  // reliably on <tr>, unlike GSAP transforms). The class is removed once the animation
+  // finishes so lever-driven row re-renders don't replay it.
+  let tableObserver: IntersectionObserver | null = null;
+  function revealTableOnScroll() {
+    if (reduce) return;
+    tableObserver?.disconnect();
+    const sec = overlay.querySelector('.table-section') as HTMLElement | null;
+    if (!sec) return;
+    sec.classList.remove('reveal-rows');
+    tableObserver = new IntersectionObserver((entries) => {
+      if (!entries.some(e => e.isIntersecting)) return;
+      tableObserver?.disconnect();
+      sec.classList.add('reveal-rows');
+      const rows = sec.querySelectorAll('#cf-table tbody tr');
+      const last = rows[rows.length - 1] as HTMLElement | undefined;
+      const cleanup = () => sec.classList.remove('reveal-rows');
+      if (last) last.addEventListener('animationend', cleanup, { once: true });
+      else setTimeout(cleanup, 1400);
+    }, { threshold: 0.18 });
+    tableObserver.observe(sec);
+  }
+
   function openModel() {
     if (isOpen) return;
     isOpen = true;
@@ -486,9 +513,9 @@ const chips = [
       .from('#model-overlay .dash-hero', { opacity: 0, y: 24, duration: 0.6 })
       .from('#model-overlay .kpi', { opacity: 0, y: 18, duration: 0.5, stagger: 0.07 }, '-=0.15')
       .add(() => renderKPIs(ctx.r, 0.9), '-=0.25')
-      .from('#model-overlay .anim-card', { opacity: 0, y: 26, duration: 0.55, stagger: 0.12 }, '-=0.2')
-      .from('#cf-table thead th', { opacity: 0, y: -10, duration: 0.28, stagger: 0.04 }, '-=0.15')
-      .from('#tbody tr', { opacity: 0, x: -20, duration: 0.38, ease: 'power2.out', stagger: 0.07 }, '-=0.1');
+      .from('#model-overlay .anim-card', { opacity: 0, y: 26, duration: 0.55, stagger: 0.12 }, '-=0.2');
+
+    revealTableOnScroll();   // the table is below the fold — reveal its rows when scrolled into view
   }
 
   function closeModel() {
@@ -749,15 +776,24 @@ const chips = [
   .sub-header .label { display: block; margin-bottom: 6px; }
   .sub-header h3 { font-size: clamp(22px, 3vw, 32px); color: var(--ink); letter-spacing: -.01em; }
 
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  th, td { padding: 12px 14px; text-align: right; border-bottom: var(--hair-light); white-space: nowrap; }
-  th:first-child, td:first-child { text-align: left; }
-  thead th { font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--smoke); font-weight: 500; }
-  tbody td { font-family: var(--font-mono); font-size: 12.5px; font-variant-numeric: tabular-nums; color: var(--ink); }
-  tbody tr:hover { background: #EFE7DA; }
-  tr.exit { background: rgba(199,93,58,.08); }
-  tr.exit td { font-weight: 600; color: var(--ink); border-top: 1.5px solid var(--ember); }
-  td.neg { color: var(--bad); }
+  /* The table BODY rows are injected at runtime via JS innerHTML, so they never get
+     Astro's scope attribute — scoped selectors silently miss them (cells would render
+     left-aligned, sans-serif, non-tabular). These must be :global, scoped under
+     #model-overlay so they don't leak to anything else. */
+  #model-overlay :global(#cf-table) { width: 100%; border-collapse: collapse; font-size: 13px; }
+  #model-overlay :global(#cf-table th),
+  #model-overlay :global(#cf-table td) { padding: 13px 18px; text-align: right; border-bottom: var(--hair-light); white-space: nowrap; }
+  #model-overlay :global(#cf-table th:first-child),
+  #model-overlay :global(#cf-table td:first-child) { text-align: left; padding-left: 6px; }
+  #model-overlay :global(#cf-table th:last-child),
+  #model-overlay :global(#cf-table td:last-child) { padding-right: 6px; }
+  #model-overlay :global(#cf-table thead th) { font-family: var(--font-mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--smoke); font-weight: 500; padding-top: 4px; padding-bottom: 14px; }
+  #model-overlay :global(#cf-table tbody td) { font-family: var(--font-mono); font-size: 13px; font-variant-numeric: tabular-nums; color: var(--ink); }
+  #model-overlay :global(#cf-table tbody tr:first-child td) { padding-top: 15px; }
+  #model-overlay :global(#cf-table tbody tr:hover) { background: #EFE7DA; }
+  #model-overlay :global(#cf-table tr.exit) { background: rgba(199,93,58,.08); }
+  #model-overlay :global(#cf-table tr.exit td) { font-weight: 600; color: var(--ink); border-top: 1.5px solid var(--ember); }
+  #model-overlay :global(#cf-table td.neg) { color: var(--bad); }
   :global(.incl-sale) { color: var(--ember-ink); font-weight: 600; margin-left: 4px; font-family: var(--font-sans); }
 
   /* Waterfall */
@@ -804,5 +840,28 @@ const chips = [
     .kpi-strip { grid-template-columns: repeat(2, 1fr); }
     .kpi:nth-child(2) { border-right: none; }
     .dash-close span { display: none; }
+  }
+</style>
+
+<style is:global>
+  /* Cash-flow table reveal. Global (not Astro-scoped) so the @keyframes name can't fall
+     out of sync with the rules; constrained to #model-overlay by selector. JS adds
+     .reveal-rows on first scroll-into-view and removes it on animationend (so lever-driven
+     row re-renders don't replay it). Opacity animates reliably on <tr>; translateY is a
+     bonus where supported. */
+  @keyframes cfRowIn { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: none; } }
+  #model-overlay .table-section.reveal-rows #cf-table tbody tr { animation: cfRowIn 0.5s cubic-bezier(.22,.7,.3,1) both; }
+  #model-overlay .table-section.reveal-rows #cf-table tbody tr:nth-child(1) { animation-delay: .03s; }
+  #model-overlay .table-section.reveal-rows #cf-table tbody tr:nth-child(2) { animation-delay: .09s; }
+  #model-overlay .table-section.reveal-rows #cf-table tbody tr:nth-child(3) { animation-delay: .15s; }
+  #model-overlay .table-section.reveal-rows #cf-table tbody tr:nth-child(4) { animation-delay: .21s; }
+  #model-overlay .table-section.reveal-rows #cf-table tbody tr:nth-child(5) { animation-delay: .27s; }
+  #model-overlay .table-section.reveal-rows #cf-table tbody tr:nth-child(6) { animation-delay: .33s; }
+  #model-overlay .table-section.reveal-rows #cf-table tbody tr:nth-child(7) { animation-delay: .39s; }
+  #model-overlay .table-section.reveal-rows #cf-table tbody tr:nth-child(8) { animation-delay: .45s; }
+  #model-overlay .table-section.reveal-rows #cf-table tbody tr:nth-child(9) { animation-delay: .51s; }
+  #model-overlay .table-section.reveal-rows #cf-table tbody tr:nth-child(10) { animation-delay: .57s; }
+  @media (prefers-reduced-motion: reduce) {
+    #model-overlay .table-section.reveal-rows #cf-table tbody tr { animation: none; }
   }
 </style>
