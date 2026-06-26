@@ -106,11 +106,13 @@
 
   .footline{margin-top:14px;font-family:var(--mono);font-size:8.5px;color:var(--smoke);text-align:center;letter-spacing:.04em}
 
-  @page{size:letter;margin:0.5in}
+  @page{size:letter;margin:0}
   @media print{
-    html,body{background:#fff}
+    /* No page margin → no white frame. The bone fills the whole sheet (html/body +
+       the full-width .sheet), and the content inset is the .sheet's own padding. */
+    html,body{background:var(--bone);-webkit-print-color-adjust:exact;print-color-adjust:exact}
     body{padding:0}
-    .sheet{box-shadow:none;max-width:none;padding:0}
+    .sheet{box-shadow:none;max-width:none;background:var(--bone);padding:0.55in 0.6in;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   }
 </style>
 </head>
