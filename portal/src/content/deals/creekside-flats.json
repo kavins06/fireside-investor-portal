@@ -1,0 +1,150 @@
+{
+  "name": "Creekside Flats",
+  "slug": "creekside-flats",
+  "status": "active",
+  "location": {
+    "city": "San Antonio",
+    "state": "TX",
+    "address": "2847 Fredericksburg Road",
+    "zip": "78228",
+    "display": "Northwest San Antonio, TX"
+  },
+  "property": {
+    "type": "Multifamily Value-Add",
+    "units": 64,
+    "yearBuilt": 1978,
+    "unitMix": "32× 1BR/1BA · 32× 2BR/1BA",
+    "buildings": 4,
+    "acres": 2.8,
+    "sqftPerUnit": 780,
+    "occupancy": "82%"
+  },
+  "transaction": {
+    "purchasePrice": 6200000,
+    "totalEquity": 3285000,
+    "agencyDebt": 4030000,
+    "capImprovements": 960000
+  },
+  "engine": {
+    "equity": 3285000,
+    "loan": 4030000,
+    "rate": 0.0525,
+    "lpShare": 0.9,
+    "gpShare": 0.1,
+    "pref": 0.08,
+    "promote": 0.2,
+    "moicHurdle": 2.5,
+    "assetMgmt": 0.01,
+    "sellCost": 0.01,
+    "baseOcc": 0.95,
+    "baseNOI": [
+      300000,
+      401000,
+      504000,
+      525000,
+      537000,
+      550000,
+      563000,
+      576000
+    ],
+    "baseOpex": [
+      244000,
+      251000,
+      258000,
+      265000,
+      272000,
+      280000,
+      288000,
+      296000
+    ]
+  },
+  "copy": {
+    "tagline": "Buy the bottom. Own the recovery.",
+    "thesis": "San Antonio's 1978 workforce housing acquired mid-cycle while vacancy peaks. Renovate 50 of 64 units while rents are soft; by Year 3 the 80% collapse in 2024 apartment starts translates into occupancy recovery. Exit stabilized, supply-constrained NOI in Year 7 — before the next wave can form."
+  },
+  "teaser": {
+    "targetIRR": "~11%",
+    "equityMultiple": "~1.9×",
+    "holdYears": 7
+  },
+  "marketLabel": "Northwest San Antonio",
+  "marketAsOf": "Q2 2026",
+  "marketFindings": [
+    {
+      "tag": "watch",
+      "headline": "Vacancy at 15.7% — highest of the 50 largest US apartment markets",
+      "body": "San Antonio ranked #1 for apartment vacancies in Q1 2026, driven by the 2023–2025 delivery wave. Rents are down 3.3% YoY. The disruption is real and baked into our Year 1–2 underwriting.",
+      "sources": [
+        {
+          "title": "San Antonio has highest apartment vacancy rates in US — CultureMap",
+          "url": "https://sanantonio.culturemap.com/news/real-estate/highest-apartment-vacancy-rates-us/"
+        }
+      ],
+      "date": "Q1 2026"
+    },
+    {
+      "tag": "supportive",
+      "headline": "2026 deliveries fall 63% — slowest construction pace since 2011",
+      "body": "Only ~2,600 units deliver in 2026 vs. 7,000+ in 2025. Apartment starts collapsed 80% in 2024. At current rents and construction costs almost no new projects pencil, making the supply constraint structural rather than cyclical.",
+      "sources": [
+        {
+          "title": "Multifamily construction pipeline thinning in San Antonio — Northmarq",
+          "url": "https://www.northmarq.com/insights/insights/multifamily-construction-pipeline-beginning-thin-san-antonio-vacancies-dip"
+        },
+        {
+          "title": "San Antonio multifamily construction to slow further in 2026 — Northmarq",
+          "url": "https://www.northmarq.com/insights/insights/new-construction-san-antonio-multifamily-market-expected-slow-further-2026"
+        }
+      ],
+      "date": "Q2 2026"
+    },
+    {
+      "tag": "supportive",
+      "headline": "San Antonio leads Texas employment growth; 4th fastest-growing US city",
+      "body": "Payrolls grew an annualized 2.2% YTD through April 2025, led by construction, healthcare, and government. The metro added 23,900 residents in 2024 — sustaining demand for workforce housing through the supply overhang.",
+      "sources": [
+        {
+          "title": "San Antonio will lead employment growth in Texas — Texas Public Radio",
+          "url": "https://www.tpr.org/economy-and-labor/2025-05-19/san-antonio-will-lead-employment-growth-in-texas-this-year"
+        },
+        {
+          "title": "San Antonio ranks as nation's 4th fastest-growing city — SA Current",
+          "url": "https://www.sacurrent.com/news/san-antonio-ranks-as-nations-fourth-fastest-growing-city-new-census-numbers-show-37527683/"
+        }
+      ],
+      "date": "Q1 2025"
+    },
+    {
+      "tag": "supportive",
+      "headline": "Cap rates widened to ~6.0% — buying 27% below the Q1 2026 median price-per-unit",
+      "body": "Broader San Antonio multifamily cap rates averaged 6.0% in Q1 2026 (up 50bps from 2024); C-class averages ~5.4%. The Q1 2026 median sale price was $132,600/unit. We enter at $96,875/unit, a 27% discount, reflecting renovation need and current softness.",
+      "sources": [
+        {
+          "title": "2025 Multifamily Recap & 2026 Trends in Texas — SWBC",
+          "url": "https://blog.swbc.com/businesshub/2025-multifamily-recap-2026-trends-in-texas"
+        },
+        {
+          "title": "San Antonio Multifamily Market Report — Yardi Matrix",
+          "url": "https://www.yardimatrix.com/blog/san-antonio-multifamily-market-report/"
+        }
+      ],
+      "date": "Q1 2026"
+    },
+    {
+      "tag": "watch",
+      "headline": "Distressed sales increasing as income falls short of debt thresholds",
+      "body": "Class C properties were 45% of Q1 2026 transactions, many driven by forced sales. We underwrite Year 1 at 78% effective occupancy and zero rent growth — consistent with observed stressed pricing — and hold 18 months of interest reserves at close.",
+      "sources": [
+        {
+          "title": "San Antonio Multifamily Market Outlook 2026 — Neiboroughly",
+          "url": "https://neiboroughly.com/resources/san-antonio-multifamily-market-outlook2026/"
+        },
+        {
+          "title": "Multifamily Cap Rates Stabilize as Investor Sentiment Strengthens — Multi-Housing News",
+          "url": "https://www.multihousingnews.com/multifamily-cap-rates-stabilize-as-investor-sentiment-strengthens/"
+        }
+      ],
+      "date": "Q1 2026"
+    }
+  ]
+}
