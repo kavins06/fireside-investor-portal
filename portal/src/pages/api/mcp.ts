@@ -171,6 +171,13 @@ async function callTool(name: string, args: Record<string, any>) {
 const rpcResult = (id: any, result: any) => ({ jsonrpc: '2.0', id, result });
 const rpcError = (id: any, code: number, message: string) => ({ jsonrpc: '2.0', id, error: { code, message } });
 
+function constantTimeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
 async function handleMessage(msg: any): Promise<any | null> {
   const { id, method, params } = msg ?? {};
   // Notifications have no id → no response.
@@ -204,6 +211,17 @@ const jsonResponse = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
 
 export const POST: APIRoute = async ({ request }) => {
+  // Whole-connector gate. The request must carry the Fireside token in the Authorization
+  // header — baked into the Fireside Publish plugin's .mcp.json, so authorised installers
+  // are auto-authenticated and nobody types anything. No valid token → no access at all
+  // (this is what closes the open-publishing hole; the bare URL alone returns 401).
+  const expected = import.meta.env.MCP_PUBLISH_TOKEN ?? process.env.MCP_PUBLISH_TOKEN ?? '';
+  const auth = request.headers.get('authorization') ?? '';
+  const provided = /^bearer /i.test(auth) ? auth.slice(7) : '';
+  if (!expected || !provided || !constantTimeEqual(provided, expected)) {
+    return jsonResponse(rpcError(null, -32001, 'Unauthorized — Fireside Publish connector requires a valid token (install the Fireside plugin).'), 401);
+  }
+
   let payload: any;
   try {
     payload = await request.json();
