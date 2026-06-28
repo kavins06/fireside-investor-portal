@@ -50,7 +50,7 @@ const activeDeals = deals.filter(d => d.data.status === 'active');
                 <a href={`/deals/${d.data.slug}`} class="deal-entry-link">
                   <div class="deal-figure">
                     {d.data.images?.hero && (
-                      <img src={d.data.images.hero} alt="" loading="lazy" aria-hidden="true" />
+                      <img src={d.data.images.hero} alt="" loading="lazy" decoding="async" aria-hidden="true" />
                     )}
                     <span class="deal-figure-cap label">{d.data.location.city}, {d.data.location.state}</span>
                   </div>

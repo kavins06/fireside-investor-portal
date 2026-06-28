@@ -20,7 +20,7 @@ const namePart2 = rest.join(' ');
 <section class="hero" id="main-content" aria-label="Deal overview">
   {heroImage ? (
     <div class="hero-bg" aria-hidden="true">
-      <img src={heroImage} alt="" class="hero-bg-img" />
+      <img src={heroImage} alt="" class="hero-bg-img" fetchpriority="high" loading="eager" decoding="async" />
       <div class="hero-bg-overlay"></div>
     </div>
   ) : (
@@ -221,6 +221,8 @@ const namePart2 = rest.join(' ');
   }
 
   @media (max-width: 700px) {
+    .hero-bg-img { object-position: center 25%; }
+    .hero-inner { padding-top: 88px; padding-bottom: 56px; gap: 40px; }
     .teaser-strip { flex-wrap: wrap; gap: 24px; }
     .teaser-kpi { padding-right: 28px; margin-right: 28px; }
     .scroll-hint { display: none; }
