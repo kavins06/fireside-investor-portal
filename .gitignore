@@ -14,3 +14,7 @@ Thumbs.db
 # Cowork workspace personal memory (may hold secrets like the publish token) — keep local only
 Fireside Strategies/Fireside Strategies/MEMORY.md
 Fireside Strategies/Fireside Strategies/Fireside Portal/MEMORY.md
+
+# Plugin build artifacts — these bundle the baked-in GitHub token; never commit
+fireside-publish.plugin
+fireside-publish-plugin.zip
