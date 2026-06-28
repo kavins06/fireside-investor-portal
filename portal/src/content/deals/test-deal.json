@@ -1,0 +1,63 @@
+{
+  "name": "Test Deal — delete me",
+  "slug": "test-deal",
+  "status": "fundraising",
+  "location": {
+    "city": "Testville",
+    "state": "NC",
+    "address": "1 Test Street",
+    "zip": "00000",
+    "display": "Testville, North Carolina"
+  },
+  "property": {
+    "type": "Multifamily Value-Add",
+    "units": 90,
+    "yearBuilt": 1970
+  },
+  "transaction": {
+    "purchasePrice": 9721995,
+    "totalEquity": 4813998,
+    "agencyDebt": 6800000,
+    "capImprovements": 1420000
+  },
+  "engine": {
+    "equity": 4813998,
+    "loan": 6800000,
+    "rate": 0.0523,
+    "lpShare": 0.9,
+    "gpShare": 0.1,
+    "pref": 0.08,
+    "promote": 0.2,
+    "moicHurdle": 2.5,
+    "assetMgmt": 0.01,
+    "sellCost": 0.01,
+    "baseOcc": 0.95,
+    "baseNOI": [
+      693600,
+      924800,
+      979200,
+      1020000,
+      1047200,
+      1081200,
+      1107537
+    ],
+    "baseOpex": [
+      601560,
+      552600,
+      564120,
+      580050,
+      596340,
+      613080,
+      630270
+    ]
+  },
+  "copy": {
+    "tagline": "Throwaway record created to verify publish access — safe to delete.",
+    "thesis": "This is a temporary test deal used to confirm the Fireside Publish plugin can write to the portal repo. It is set to fundraising so it stays off the homepage, and should be removed right after the check."
+  },
+  "teaser": {
+    "targetIRR": "~20%",
+    "equityMultiple": "~2.9×",
+    "holdYears": 7
+  }
+}
