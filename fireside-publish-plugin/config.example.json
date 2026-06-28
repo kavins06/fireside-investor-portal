@@ -1,0 +1,6 @@
+{
+  "githubToken": "PASTE_GITHUB_FINE_GRAINED_PAT_HERE",
+  "repo": "kavins06/fireside-investor-portal",
+  "branch": "master",
+  "siteUrl": "https://portal-eta-peach.vercel.app"
+}

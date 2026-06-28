@@ -1,0 +1,6 @@
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Holds the GitHub publish token — never commit. Copy config.example.json → config.json.
+config.json
