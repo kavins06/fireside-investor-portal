@@ -12,7 +12,7 @@ Claude — no logins, no spreadsheets, no code. Setup takes about five minutes.
 
 ---
 
-## Setup (once)
+## Setup (once, usually done by your admin)
 
 ### 1. Set your token
 
@@ -25,7 +25,16 @@ setx FIRESIDE_TOKEN "your-token-here"
 Replace `your-token-here` with the token your admin gave you. Close and reopen
 Claude Code after running this — it picks up the new variable on launch.
 
-### 2. Install the Fireside plugin
+### 2. Register the Fireside plugin source
+
+Claude Code needs to know where to find the Fireside plugin. Run this in a terminal
+(one line):
+
+```
+node -e "const fs=require('fs'),p=process.env.USERPROFILE+'/.claude/settings.json',s=JSON.parse(fs.readFileSync(p,'utf8')||'{}');s.extraKnownMarketplaces=s.extraKnownMarketplaces||{};s.extraKnownMarketplaces.fireside={source:{source:'git',url:'https://github.com/kavins06/fireside-publish-plugin.git'}};fs.writeFileSync(p,JSON.stringify(s,null,2))"
+```
+
+### 3. Install the Fireside plugin
 
 In any Claude Code chat, run:
 
@@ -36,8 +45,7 @@ In any Claude Code chat, run:
 Claude will confirm it's installed. You'll see **Fireside Publish** appear in your
 plugins list with three skills: `/new-deal`, `/edit-deal`, and `/deals`.
 
-That's it. The plugin handles the connection automatically — no URLs to paste,
-no connectors to configure.
+That's it — no URLs to paste, no connectors to configure.
 
 ---
 
