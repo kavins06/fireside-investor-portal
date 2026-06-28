@@ -2,7 +2,7 @@
   "mcpServers": {
     "fireside-publish": {
       "type": "http",
-      "url": "https://portal-eta-peach.vercel.app/api/mcp",
+      "url": "https://fireside-investor-portal.vercel.app/api/mcp",
       "headers": {
         "Authorization": "Bearer REPLACE_WITH_MCP_PUBLISH_TOKEN"
       }
