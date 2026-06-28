@@ -1,69 +1,100 @@
-# Add Fireside deals from Claude — quick setup
+# Publish Fireside deals from Claude — setup guide
 
-> **Setting someone up?** Send them this page plus the **connector link**
-> (`https://portal-eta-peach.vercel.app/api/mcp`). That's all they need — there's no
-> password or code. Everything below speaks to the person who'll be publishing.
+You can add, edit, and manage deals on the Fireside website just by chatting with
+Claude — no logins, no spreadsheets, no code. Setup takes about five minutes.
 
 ---
 
-You can add deals to the Fireside website just by chatting with Claude — no website
-logins, no spreadsheets, no code. It's a one-time setup, then it's a normal
-conversation. All you need is the **connector link** (a web address) — no password,
-no code, no login.
+## What you need
 
-## 1. Connect Fireside to Claude (once, ~1 minute)
+- **Claude Code** — the desktop app (get it at claude.ai/download)
+- **Your Fireside token** — a short code your admin gives you once
 
-1. In Claude, open **Settings → Connectors** (on some plans it reads **Customize → Connectors**).
-2. Click **Add custom connector**.
-3. Paste the **connector link** you were given. Leave everything else blank and click **Add**.
-4. If Claude warns that the connector "isn't verified by Anthropic," that's normal for an
-   in-house tool — go ahead.
+---
 
-Done — **Fireside Publish** is now connected. When you start a chat, if it isn't already
-active, click the **+** (or "connectors") button next to the message box and switch on
-**Fireside Publish**.
+## Setup (once)
 
-## 2. Add a deal
+### 1. Set your token
 
-Start a chat and say, for example:
+Open a terminal and run:
 
-> **"Add a new deal to the Fireside website."**
+```
+setx FIRESIDE_TOKEN "your-token-here"
+```
 
-Then paste the deal details, or attach the pro forma / offering memo / deck.
+Replace `your-token-here` with the token your admin gave you. Close and reopen
+Claude Code after running this — it picks up the new variable on launch.
 
-Claude will:
-1. **Build the deal** from what you gave it, filling any gaps with Fireside's standard
-   assumptions — and telling you which ones it assumed.
-2. **Show you the projected returns** and check the numbers. It cannot publish broken
-   figures — if something's off it tells you and fixes it.
-3. **Ask you to confirm, then publish.** It's live on the website in about a minute.
+### 2. Install the Fireside plugin
 
-You can also say things like:
-- "What deals are live right now?"
-- "Update the Maple Street deal — change the exit cap to 6.5%."
-- "Add this one but keep it off the homepage for now." *(stays reachable by link, not listed)*
+In any Claude Code chat, run:
 
-## Taking a deal down
+```
+/plugin install fireside-publish@fireside
+```
 
-- **Remove it completely** — *"Remove the test deal"* / *"Delete the Oak Street deal."* It
-  comes off the website entirely and its page stops working. Perfect for test deals.
-- **Just hide it from the homepage** — *"Take the Oak Street deal off the homepage, but keep
-  the link working."* It stays reachable by its direct link; it just drops off the home list.
+Claude will confirm it's installed. You'll see **Fireside Publish** appear in your
+plugins list with three skills: `/new-deal`, `/edit-deal`, and `/deals`.
 
-Claude will confirm which you mean before doing it.
+That's it. The plugin handles the connection automatically — no URLs to paste,
+no connectors to configure.
+
+---
+
+## Publishing deals
+
+### Add a new deal
+
+```
+/new-deal
+```
+
+Paste in the deal details, or attach a pro forma / offering memo / deck.
+Claude will build the deal, fill gaps with Fireside's standard assumptions
+(and tell you which ones it assumed), show you the projected returns, then
+ask you to confirm before publishing. It's live on the website in about a minute.
+
+### Edit an existing deal
+
+```
+/edit-deal
+```
+
+Claude shows you what's live, you pick the deal and describe what to change.
+It applies the edits, re-validates the numbers, shows you a before/after summary,
+and publishes on your say-so.
+
+You can change numbers, copy, images, market findings, hold period, or status
+all in one session.
+
+### See what's live
+
+```
+/deals
+```
+
+Shows all current deals — name, status, IRR, and location. Read-only.
+
+---
+
+## Deal status
+
+| Status | Homepage | Deal page | Use for |
+|---|---|---|---|
+| `active` | Listed | Live | Open to all investors |
+| `fundraising` | Hidden | Live | Share by link — soft launch or private preview |
+| `closed` | Hidden | Live | Deal is done — record stays, nothing disappears |
+
+To take a deal off the homepage without removing it: `/edit-deal` → set status
+to `closed` or `fundraising`.
+
+---
 
 ## If something doesn't work
 
-- **Claude lists problems with the deal** → they're real (usually a missing number) —
-  just answer its questions and it'll fix and re-check.
-- **You don't see "Fireside Publish" as an option** → click the **+** / connectors button
-  by the message box and switch it on.
-
----
-
-*Cost: there's nothing extra to pay to publish. The conversation runs on your own Claude
-plan; the connector and the website cost nothing per deal.*
-
-*Optional, for richer deal-writing: you can set up a dedicated "Fireside Portal" workspace
-in Claude (it teaches Claude Fireside's underwriting style) — or ask your Fireside admin to.
-Not required; the steps above work on their own.*
+- **"Unauthorized" or connector errors** → your token may be wrong or not set.
+  Re-run `setx FIRESIDE_TOKEN "your-token"`, then fully close and reopen Claude Code.
+- **Plugin skills not showing** → run `/plugin install fireside-publish@fireside`
+  again, then restart Claude Code.
+- **Deal rejected at publish** → Claude will list exactly what's wrong. Answer
+  its questions and it re-validates automatically.

@@ -1,25 +1,24 @@
 /**
  * Fireside Publish — remote MCP server (Streamable HTTP, stateless).
  *
- * This is the connector a non-technical user adds to Claude Cowork (no-auth URL).
- * It exposes a tiny, purpose-built tool surface for publishing deals to the live
- * portal — nothing else is readable or writable. Authentication for the *write*
- * path is a `publish_token` tool argument checked against env (the Claude
- * connector UI has no password field, so the secret rides on the tool call, not
- * the connection).
+ * Backend for the Fireside Publish Claude Code plugin. The plugin's .mcp.json
+ * wires this endpoint automatically with the publisher's FIRESIDE_TOKEN env var
+ * in the Authorization header — publishers never type a URL or token.
+ *
+ * Token-gated: every request must carry `Authorization: Bearer <FIRESIDE_TOKEN>`.
+ * No valid token → 401. The bare URL alone does nothing.
  *
  * Stateless: each POST is an independent JSON-RPC request/response. No sessions,
- * no SSE, no Redis — which is exactly what a Vercel serverless function wants.
- * The tools are plain request→response, so a single application/json reply per
- * call is sufficient (Streamable HTTP permits this).
+ * no SSE, no Redis — exactly what a Vercel serverless function wants.
  *
  * Tools:
- *   validate_deal  (open)        dry-run: shape + engine soundness, returns a report
- *   publish_deal   (token-gated) validate, then commit to the repo → Vercel deploy
- *   list_deals     (open)        slugs currently live
- *   get_deal       (open)        fetch a deal record to edit
+ *   validate_deal   dry-run: shape + engine soundness, returns computed returns
+ *   publish_deal    validate then commit to repo → Vercel redeploy (~1 min)
+ *   unpublish_deal  delete a deal record (use status "closed" to merely hide)
+ *   list_deals      slugs + status of all live deals
+ *   get_deal        fetch a deal record by slug for editing
  *
- * ponytail: hand-rolled because the surface is trivial (4 request/response tools,
+ * ponytail: hand-rolled because the surface is trivial (5 request/response tools,
  * no streaming). If this ever needs sampling/subscriptions, swap in the MCP SDK.
  */
 import type { APIRoute } from 'astro';
