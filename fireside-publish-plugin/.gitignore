@@ -2,5 +2,5 @@
 Thumbs.db
 desktop.ini
 
-# Holds the GitHub publish token — never commit. Copy config.example.json → config.json.
-config.json
+# Holds the connector access token — never commit. Copy .mcp.json.example → .mcp.json.
+.mcp.json

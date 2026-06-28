@@ -1,7 +1,7 @@
 {
   "name": "fireside-publish",
-  "version": "2.0.0",
-  "description": "Publish and manage Fireside Strategies deals on the live investor portal by chatting with Claude. Bundles the structured deal-authoring workflow (flagged house defaults, deep multi-source market research with real citations, a headline derived from the actual returns model) and a self-contained Node publishing tool that validates each deal against the real finance engine and commits it to the portal repo (Vercel auto-deploys). The GitHub token lives in the plugin's config.json — set it once and publish straight from chat; no MCP server, no per-session env vars.",
+  "version": "3.0.0",
+  "description": "Publish and manage Fireside Strategies deals on the live investor portal by chatting with Claude. A pre-authenticated connector validates each deal against the real finance engine and publishes it to the portal (which auto-deploys) — all server-side. Nothing to install or set up: just upload the plugin and start adding deals.",
   "author": {
     "name": "Fireside Strategies"
   }

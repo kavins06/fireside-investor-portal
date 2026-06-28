@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "fireside-publish",
-      "description": "Add and manage deals on the live Fireside portal — structured authoring with built-in guardrails; a bundled Node tool validates against the real finance engine and commits to the repo (Vercel auto-deploys). GitHub token set once in config.json; no MCP server.",
+      "description": "Add and manage deals on the live Fireside portal — structured authoring with built-in guardrails; a pre-authenticated connector validates against the real finance engine and publishes (the site auto-deploys). Nothing to install — upload the plugin and start.",
       "source": "./fireside-publish-plugin",
       "category": "productivity"
     }

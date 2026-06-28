@@ -1,110 +1,59 @@
 # Fireside Publish — Claude Code plugin
 
 Publish and manage deals on the live Fireside Investor Portal just by chatting
-with Claude. No logins, no spreadsheets, no JSON. One-time setup: paste a GitHub
-token into the plugin's `config.json`.
+with Claude. **Nothing to install or configure — upload the plugin and start.**
 
 ---
 
-## What's inside
+## For publishers (the easy part)
 
-This plugin lives inside the **`fireside-investor-portal`** repo (one repo for the whole
-project — the live site under `portal/`, this plugin under `fireside-publish-plugin/`).
+1. **Open the `fireside-publish.plugin` file in Claude** and accept it.
+2. If Claude asks to connect the **Fireside Publish** connector, approve it once.
+3. That's it. Chat:
+   - **`/new-deal`** — add a deal (paste numbers, describe the property, or attach a pro forma / OM / deck).
+   - **`/edit-deal`** — update a live deal.
+   - **`/deals`** — list what's live.
+
+No logins, no tokens, no terminal, no setup. Claude does the underwriting judgment,
+deep market research, and validation; the connector does the validated publish. Your
+deal is live in about a minute.
+
+---
+
+## How it works (for the admin)
 
 ```
 .claude-plugin/
   plugin.json           # plugin metadata
-config.json             # GitHub token + repo/branch the publisher commits to  ← set this once
-commands/
-  new-deal.md           # /new-deal  — add a deal to the portal
-  edit-deal.md          # /edit-deal — update a live deal
-  deals.md              # /deals     — list all live deals (read-only)
-skills/
-  new-deal/SKILL.md     # full guided workflow: intake → research → validate → publish
-  edit-deal/SKILL.md    # full guided workflow: load → edit → validate → republish
-scripts/
-  fireside.mjs          # the publisher CLI: validate / publish / get / list / unpublish
-  validate.mjs          # deal validation (shape + the real finance engine)
-  schema.mjs            # deal shape rules (dependency-free port of the portal schema)
-  engine.mjs            # the finance engine (same model the live site renders)
-  github.mjs            # commits the deal JSON to the repo via the GitHub API
-  selfcheck.mjs         # offline sanity check: `node scripts/selfcheck.mjs`
+.mcp.json               # the Fireside connector (pre-wired with the access token)
+commands/               # /new-deal, /edit-deal, /deals
+skills/                 # the guided authoring + edit workflows
 ```
 
-There is **no MCP server**. Publishing happens entirely on your machine: the
-skills do the judgment (house defaults, deep-sourced market research, model-derived
-headline, guardrails), then the bundled `fireside.mjs` validates the deal against
-the real finance engine and commits the record straight to the portal repo through
-the GitHub API — which triggers a Vercel auto-deploy. Pure Node, zero `npm install`.
+The plugin carries **no logic and no GitHub credentials** — only a pre-authenticated
+pointer to the Fireside connector (`/api/mcp`), with the access token baked into
+`.mcp.json`. All the real work happens server-side:
+
+- **`validate_deal`** runs the real finance engine and returns the computed returns.
+- **`publish_deal`** re-validates, then commits the deal to the portal repo → Vercel
+  auto-deploys.
+- **`unpublish_deal` / `list_deals` / `get_deal`** manage what's live.
+
+Because the connector is server-side, a publisher's machine runs nothing. The GitHub
+write-token never leaves the server (it's a Vercel env var), so the plugin you hand out
+does **not** contain it — only the connector access token.
 
 ---
 
-## How access works (read this)
+## Access & security (admin)
 
-The publisher commits to the portal repo using a **GitHub token stored in
-`config.json`** inside the plugin. That makes publishing one step (no env vars, no
-sign-in) — but it also means:
-
-- **Treat the configured plugin as a secret.** Anyone who has the plugin folder with
-  a real token in `config.json` can publish to the portal. Don't share it, and don't
-  commit `config.json` with a live token to a public repo.
-- **Use a least-privilege token.** A GitHub **fine-grained PAT** scoped to *only* the
-  `kavins06/fireside-investor-portal` repo with **Contents: Read and write**. Nothing else.
-- **Revoke by rotating.** Delete/rotate the PAT in GitHub settings to cut off access;
-  paste the new one into `config.json`.
-
----
-
-## Setup (once)
-
-**1. Install the plugin.** Two ways:
-
-- **Easiest (turnkey):** open the `fireside-publish.plugin` file in Claude (desktop) and
-  accept. Best for handing it to a non-technical publisher — the token is already inside.
-- **From the repo:** in any Claude Code chat —
-  ```
-  /plugin marketplace add kavins06/fireside-investor-portal
-  /plugin install fireside-publish@fireside
-  ```
-  (Installs the plugin source; you then add your token — see step 3.)
-
-**2. Create the GitHub token.** GitHub → Settings → Developer settings →
-Fine-grained tokens → *Generate new token*. Repository access: only
-`kavins06/fireside-investor-portal`. Permissions: **Contents → Read and write**.
-
-**3. Paste it into `config.json`:**
-
-```json
-{
-  "githubToken": "github_pat_...your token...",
-  "repo": "kavins06/fireside-investor-portal",
-  "branch": "master",
-  "siteUrl": "https://portal-eta-peach.vercel.app"
-}
-```
-
-That's it. (Prefer not to keep the token in the file? Set `GITHUB_TOKEN` in your
-environment instead — it overrides `config.json`.)
-
-**4. Sanity-check (optional):** `node scripts/selfcheck.mjs` → prints `selfcheck OK`.
-
----
-
-## Using it
-
-### `/new-deal`
-Add a deal. Paste numbers, describe the property, or attach a pro forma / OM / deck.
-Claude intakes the deal, fills gaps with flagged Fireside house defaults, does deep
-multi-source market research (every figure cited with a working link), assembles the
-record, shows you the computed returns, then publishes on your confirmation. Live in ~1 min.
-
-### `/edit-deal [deal name]`
-Update a live deal. Claude loads what's on the site, applies your changes — numbers,
-copy, images, status, market findings, all in one session — re-validates, shows you a
-before/after summary, and republishes on your say-so.
-
-### `/deals`
-See all live deals — name, status, target IRR, location. Read-only.
+- **The plugin's `.mcp.json` holds the connector access token.** Whoever has the plugin
+  can publish — so share it only with people you trust, and don't post it publicly.
+- **Two server-side secrets live only in Vercel**, never in the plugin:
+  - `MCP_PUBLISH_TOKEN` — the value baked into `.mcp.json`; the connector's gate.
+  - `GITHUB_TOKEN` — the fine-grained PAT (Contents: Read+write) the server uses to commit.
+- **Revoke everyone:** rotate `MCP_PUBLISH_TOKEN` in Vercel and re-issue the plugin with
+  the new value. Anyone on the old plugin is locked out immediately.
 
 ---
 
@@ -115,25 +64,6 @@ See all live deals — name, status, target IRR, location. Read-only.
 | `active` | Listed | Live | Open to all investors |
 | `fundraising` | Hidden | Live | Share by link — soft launch or private preview |
 | `closed` | Hidden | Live | Deal closed — record stays, nothing disappears |
-
----
-
-## Under the hood
-
-`fireside.mjs` is the only thing Claude runs to publish:
-
-```
-node scripts/fireside.mjs validate  deal.json        # shape + real engine; prints returns
-node scripts/fireside.mjs publish   deal.json [--image hero.jpg]   # validate, commit, deploy
-node scripts/fireside.mjs get       four-seasons      # print a live deal's JSON to edit
-node scripts/fireside.mjs list                        # slugs of all live deals
-node scripts/fireside.mjs unpublish test-deal         # remove a deal (recoverable from git)
-```
-
-`validate` runs the same finance engine the live site renders with, so the returns you
-approve are the returns investors see. `publish` re-validates and refuses a broken deal.
-Deals are committed as JSON to `portal/src/content/deals/<slug>.json`; the Vercel build
-does the rest.
 
 ---
 

@@ -22,18 +22,11 @@ you what they want changed — you do it, validate, show the diff, and publish w
 one confirmation. You never re-run full market research unless they explicitly ask
 to update market findings. You never ask unnecessary questions.
 
-You run the **Fireside publisher CLI** bundled with this plugin (it carries the publish
-token in the plugin's `config.json` — never ask the human for a token). Write the updated
-record to a temporary `.json` file when validating/publishing. From a terminal:
-
-```
-node "${CLAUDE_PLUGIN_ROOT}/scripts/fireside.mjs" <command>
-```
-
-- **`list`** — all live deals (slugs); pair with `get` for status/IRR/location detail
-- **`get <slug>`** — print the full record for a specific deal (the JSON to edit)
-- **`validate <deal.json>`** — checks the record, prints computed returns + any errors
-- **`publish <deal.json>`** — overwrites the live deal (same slug = update, not new)
+The connector tools (all pre-authenticated — no token to pass):
+- **`list_deals`** — all deals with status, IRR, location
+- **`get_deal`** — full record for a specific deal
+- **`validate_deal`** — checks the record, returns computed returns + any errors
+- **`publish_deal`** — overwrites the live deal (same slug = update, not new)
 
 ---
 
@@ -41,7 +34,7 @@ node "${CLAUDE_PLUGIN_ROOT}/scripts/fireside.mjs" <command>
 
 ### Step 1 — Find the deal
 
-Call `list` immediately.
+Call `list_deals` immediately.
 
 If the user named a deal in their opening message and it matches unambiguously, skip
 to Step 2 and load it directly — do not show the list.
@@ -57,7 +50,7 @@ Ask: **"Which deal?"** — nothing else.
 
 ### Step 2 — Load the deal
 
-Call `get`. Reply in one sentence:
+Call `get_deal`. Reply in one sentence:
 
 > "Got **[Deal Name]** — [status], [IRR], [location]. What would you like to change?"
 
@@ -89,17 +82,17 @@ Parse what they want. Apply all changes to the record.
 | Status | `active` / `fundraising` / `closed` (see Status reference below) |
 
 **Engine input changes:** if any engine input changes, re-derive `teaser.targetIRR`
-and `teaser.equityMultiple` from the `validate` output so the headline always
+and `teaser.equityMultiple` from the `validate_deal` output so the headline always
 reflects the actual model — never let a teaser figure contradict the computed returns.
 
 **Never:**
-- Call `unpublish` — closed status covers every real use case
+- Call `unpublish_deal` — closed status covers every real use case
 - Re-run full market research (that's the new-deal workflow)
 - Ask for a token, code, or password
 
 ### Step 4 — Validate
 
-Call `validate` with the full updated record.
+Call `validate_deal` with the full updated record.
 
 Show what changed — plain English, not JSON. Before → after for each field:
 
@@ -115,7 +108,7 @@ input. Re-validate. Don't re-ask anything already answered.
 
 One-line prompt: "**[N] change(s)** to [Deal Name] — publish now?"
 
-On yes: `publish` with the full updated record.
+On yes: `publish_deal` with the full updated record.
 
 Confirm: "Done. **[Deal Name]** is updated. [link]"
 
@@ -129,7 +122,7 @@ Confirm: "Done. **[Deal Name]** is updated. [link]"
 | `fundraising` | ❌ Hidden | ✅ Live | Share by link only — soft launch or private preview |
 | `closed` | ❌ Hidden | ✅ Live | Deal closed or fully subscribed — record stays, nothing disappears |
 
-`unpublish` is not used in the publisher workflow. Closed is permanent enough.
+`unpublish_deal` is not used in the publisher workflow. Closed is permanent enough.
 
 ---
 
