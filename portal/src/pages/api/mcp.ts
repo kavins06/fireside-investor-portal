@@ -217,9 +217,11 @@ export const POST: APIRoute = async ({ request }) => {
   // (this is what closes the open-publishing hole; the bare URL alone returns 401).
   const expected = import.meta.env.MCP_PUBLISH_TOKEN ?? process.env.MCP_PUBLISH_TOKEN ?? '';
   const auth = request.headers.get('authorization') ?? '';
-  const provided = /^bearer /i.test(auth) ? auth.slice(7) : '';
+  const fromHeader = /^bearer /i.test(auth) ? auth.slice(7) : '';
+  const fromQuery = new URL(request.url).searchParams.get('token') ?? '';
+  const provided = fromHeader || fromQuery;
   if (!expected || !provided || !constantTimeEqual(provided, expected)) {
-    return jsonResponse(rpcError(null, -32001, 'Unauthorized — Fireside Publish connector requires a valid token (install the Fireside plugin).'), 401);
+    return jsonResponse(rpcError(null, -32001, 'Unauthorized — valid Fireside token required (plugin header or ?token= param).'), 401);
   }
 
   let payload: any;
