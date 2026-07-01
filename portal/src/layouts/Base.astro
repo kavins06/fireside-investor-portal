@@ -21,11 +21,13 @@ const {
   <meta name="description" content={description} />
   {ogImage && <meta property="og:image" content={ogImage} />}
 
-  <!-- Fonts — Fraunces (editorial serif display) · Hanken Grotesk (body) · IBM Plex Mono (data/labels) -->
+  <!-- Fonts — Public Sans (body + display fallback) · IBM Plex Mono (data/labels)  -->
+  <!-- Andes ExtraLight (brand primary display) requires a separate license;        -->
+  <!-- load via Adobe Fonts or self-host, then it auto-activates from --font-display -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..600&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
     rel="stylesheet"
   />
 
@@ -58,12 +60,11 @@ const {
     line-height: 1.6;
   }
 
-  /* Editorial serif headings — Fraunces, light, gentle tighten at display sizes */
+  /* Brand headings — Andes ExtraLight (falls back to Public Sans 200), architectural spacing */
   h1, h2, h3, .display {
     font-family: var(--font-display);
-    font-weight: 300;
-    letter-spacing: -.005em;
-    font-optical-sizing: auto;
+    font-weight: 200;
+    letter-spacing: 0.04em;
   }
 
   .wrap {
@@ -114,13 +115,13 @@ const {
     border-radius: 2px;
   }
 
-  /* Warm film-grain atmosphere — faint, cinematic, non-interactive */
+  /* Subtle grain — architectural, almost imperceptible on white */
   .grain {
     position: fixed;
     inset: 0;
     z-index: 9998;
     pointer-events: none;
-    opacity: .035;
+    opacity: .018;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 

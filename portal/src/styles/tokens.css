@@ -1,62 +1,62 @@
-/* ─── Fireside design system — "ember-lit editorial" ───────────────────────── */
-/* Bold reinvention (2026-06-25): warm espresso + living ember, off navy+gold.   */
-/* Source of truth. Legacy token names are aliased to the new palette so every   */
-/* component shifts warm immediately; composition is refined per-component.       */
+/* ─── Fireside design system — brand-aligned ────────────────────────────────── */
+/* Palette: Navy Ink · Papaya Orange · Warm Linen · Pure White (brand book 2026) */
+/* Fonts:   Andes ExtraLight (display) · Public Sans (body) · IBM Plex Mono (data) */
 
 :root {
-  /* ── Warm darks (brown-black, never blue) ── */
-  --espresso:   #1B1512;   /* dominant dark — replaces navy            */
-  --espresso-2: #2A211C;   /* raised warm surface                      */
-  --espresso-3: #3A2D25;   /* warm mid — separators, gradient stops    */
+  /* ── Navy Ink (brand primary dark) ── */
+  --espresso:   #1A3241;   /* Navy Ink (brand)                          */
+  --espresso-2: #1E3D4F;   /* raised navy surface                       */
+  --espresso-3: #25506A;   /* mid navy — separators, gradient stops     */
 
-  /* ── Ember accent (living copper, refined not neon) ── */
-  --ember:      #C75D3A;   /* primary accent — large text, borders, UI, accents-on-dark */
-  --ember-ink:  #A8481F;   /* deeper ember — AA-safe for small text & button fills on light/ember */
-  --ember-glow: #F0A35E;   /* firelight highlight / hover / accent-on-dark */
-  --oxblood:    #5A2620;   /* deep warm secondary, used sparingly      */
+  /* ── Papaya Orange / Gold (brand accent) ── */
+  --ember:      #EAC246;   /* Papaya Orange — decorative, borders, dark accents */
+  --ember-ink:  #1A3241;   /* navy — used for button fills & text accents on light */
+  --ember-glow: #F2D47A;   /* lighter gold — accent-on-dark             */
+  --oxblood:    #0E1F2C;   /* deep navy secondary, used sparingly       */
 
-  /* ── Warm lights (bone / cream) ── */
-  --bone:       #F2EBDF;   /* page background — replaces paper          */
-  --bone-2:     #E7DECF;   /* hairlines + deeper surface on light       */
-  --card:       #FAF6EE;   /* card / panel surface (warm near-white)    */
+  /* ── Pure White / Warm Linen (brand lights) ── */
+  --bone:       #FFFFFF;   /* Pure White (brand)                        */
+  --bone-2:     #E5E5E6;   /* Warm Linen (brand) — hairlines + surfaces */
+  --card:       #F8F9FB;   /* card / panel surface (off-white)          */
 
   /* ── Neutrals & text ── */
-  --smoke:      #6F6456;   /* taupe — labels/metadata on LIGHT (AA-safe) */
-  --mist:       #C7B9A8;   /* warm light grey — text/labels on DARK     */
-  --ink:        #1B1512;   /* primary text on light                     */
-  --ink2:       #5A5048;   /* secondary text on light                   */
+  --smoke:      #6B7280;   /* gray — labels/metadata on LIGHT (AA-safe) */
+  --mist:       #C9D3DB;   /* light gray — text/labels on DARK          */
+  --ink:        #0F172A;   /* primary text on light                     */
+  --ink2:       #4B5563;   /* secondary text on light                   */
 
-  /* ── Semantic (warmed, kept distinguishable) ── */
-  --good:       #4E7A55;
-  --watch:      #C99A3F;
-  --bad:        #A8412B;
+  /* ── Semantic ── */
+  --good:       #16A34A;
+  --watch:      #D97706;
+  --bad:        #DC2626;
 
-  /* ── Elevation (warm-tinted, used sparingly) ── */
-  --shadow-sm: 0 1px 3px rgba(27,21,18,.08), 0 2px 8px rgba(27,21,18,.05);
-  --shadow:    0 1px 3px rgba(27,21,18,.08), 0 10px 30px rgba(27,21,18,.07);
-  --shadow-lg: 0 4px 16px rgba(27,21,18,.14), 0 28px 56px rgba(27,21,18,.12);
+  /* ── Elevation (navy-tinted) ── */
+  --shadow-sm: 0 1px 3px rgba(26,50,65,.07), 0 2px 8px rgba(26,50,65,.04);
+  --shadow:    0 1px 3px rgba(26,50,65,.07), 0 10px 30px rgba(26,50,65,.06);
+  --shadow-lg: 0 4px 16px rgba(26,50,65,.12), 0 28px 56px rgba(26,50,65,.10);
 
-  /* ── Hairlines (the structural primitive, replaces shadow-cards) ── */
-  --hair-light: 1px solid var(--bone-2);                 /* on light surfaces */
-  --hair-dark:  1px solid rgba(242,235,223,.14);         /* on dark surfaces  */
+  /* ── Hairlines ── */
+  --hair-light: 1px solid var(--bone-2);
+  --hair-dark:  1px solid rgba(255,255,255,.14);
 
-  /* ── Typography — distinctive 3-font editorial system ── */
-  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;  /* headlines */
-  --font-sans:    'Hanken Grotesk', system-ui, sans-serif;        /* body / UI */
-  --font-mono:    'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace; /* labels, figures, captions */
+  /* ── Typography ── */
+  /* Andes ExtraLight: load via Adobe Fonts/self-host (commercial). Public Sans is the brand fallback + body. */
+  --font-display: 'Andes', 'Public Sans', system-ui, sans-serif;
+  --font-sans:    'Public Sans', system-ui, sans-serif;
+  --font-mono:    'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
 
   /* ── Layout ── */
   --wrap:   1240px;
   --gutter: 32px;
 
-  /* ── Motion (used by GSAP + CSS) ── */
+  /* ── Motion ── */
   --ease-out: cubic-bezier(.16,1,.3,1);
   --ease-in:  cubic-bezier(.7,0,.84,0);
   --dur-fast: .25s;
   --dur-base: .5s;
   --dur-slow: .8s;
 
-  /* ── Legacy aliases → new palette (keep existing component refs working) ── */
+  /* ── Legacy aliases — keep existing component refs working ── */
   --navy:  var(--espresso);
   --navy2: var(--espresso-2);
   --navy3: var(--espresso-3);
