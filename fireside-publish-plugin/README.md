@@ -3,6 +3,17 @@
 Publish and manage deals on the live Fireside Investor Portal just by chatting
 with Claude. **Nothing to install or configure — upload the plugin and start.**
 
+There are two distribution paths — see `portal/docs/cowork-publish-setup.md`
+for the publisher-facing version of both:
+
+- **claude.ai (most publishers):** they add the connector URL under
+  Settings → Connectors and type an access code once on the connect page —
+  an OAuth handshake (`portal/src/lib/oauth.ts` + `portal/src/pages/api/oauth/*`)
+  wraps the same token check below, because claude.ai's Connectors UI only
+  supports OAuth, not the static-header auth Claude Code understands.
+- **Claude Code (terminal):** open this `.plugin` file directly — the token
+  is already baked into `.mcp.json`, no OAuth involved.
+
 ---
 
 ## For publishers (the easy part)
@@ -49,11 +60,20 @@ does **not** contain it — only the connector access token.
 
 - **The plugin's `.mcp.json` holds the connector access token.** Whoever has the plugin
   can publish — so share it only with people you trust, and don't post it publicly.
-- **Two server-side secrets live only in Vercel**, never in the plugin:
-  - `MCP_PUBLISH_TOKEN` — the value baked into `.mcp.json`; the connector's gate.
+  The same value is also the "access code" claude.ai publishers type once on the
+  connect page.
+- **Three server-side secrets live only in Vercel**, never in the plugin:
+  - `MCP_PUBLISH_TOKEN` — the value baked into `.mcp.json`; the connector's gate
+    (also what the OAuth `/authorize` page checks, and what `/token` hands back
+    as the `access_token`).
   - `GITHUB_TOKEN` — the fine-grained PAT (Contents: Read+write) the server uses to commit.
-- **Revoke everyone:** rotate `MCP_PUBLISH_TOKEN` in Vercel and re-issue the plugin with
-  the new value. Anyone on the old plugin is locked out immediately.
+  - `OAUTH_SIGNING_SECRET` — signs the stateless OAuth client IDs and authorization
+    codes issued to claude.ai (see `portal/src/lib/oauth.ts`). Not a publish credential
+    itself — rotating it just forces everyone's claude.ai connector to re-register
+    (harmless; they'll just see the connect page again).
+- **Revoke everyone:** rotate `MCP_PUBLISH_TOKEN` in Vercel and redeploy. claude.ai
+  publishers are locked out immediately (their access code stops working); re-issue
+  the plugin with the new value for Claude Code publishers too.
 
 ---
 

@@ -3,34 +3,60 @@
 You can add, edit, and manage deals on the Fireside website just by chatting
 with Claude — no logins, no spreadsheets, no code. Setup takes under a minute.
 
-> This doc describes the **current (v3) flow**: a single plugin file with the
-> connector pre-wired. There is no environment variable to set, no
-> marketplace to register, and no URL to paste. (Earlier versions of this
-> project used a `FIRESIDE_TOKEN` env var + marketplace install — that flow
-> is retired; ignore any instructions that mention `setx FIRESIDE_TOKEN` or
-> `/plugin install fireside-publish@fireside`.)
+There are two ways to connect, depending on what you use day to day. If
+you're not sure, use **claude.ai** — that's what most publishers should use.
 
 ---
 
-## What you need
+## Option A — claude.ai (recommended for most people)
 
-- **Claude Code or Claude Desktop**
-- **The `fireside-publish.plugin` file** — get this from your admin. It has
-  the connector (and your access) already baked in.
+1. Go to **claude.ai → Settings → Connectors → Add custom connector**.
+2. Paste the connector URL your admin gave you (ends in `/api/mcp`) and add it.
+3. Claude will open a **Connect Fireside Publish** page asking for an access
+   code. Enter the code your admin gave you — this is a one-time step per
+   device.
+4. That's it. In any chat you'll have `/new-deal`, `/edit-deal`, and `/deals`
+   available (ask your admin for the matching skill files if they don't show
+   up automatically).
+
+### If something doesn't work
+
+- **"Couldn't register with fireside-publish's sign-in service"** → this
+  should no longer happen; if it does, the connector's OAuth layer may not be
+  configured server-side (`OAUTH_SIGNING_SECRET` missing in Vercel) — tell
+  your admin.
+- **"That code is not correct"** on the connect page → double check the
+  access code with your admin; it may have been rotated.
+- **Deal rejected at publish** → Claude will list exactly what's wrong.
+  Answer its questions and it re-validates automatically.
 
 ---
 
-## Setup (once)
+## Option B — Claude Code (terminal)
 
-1. **Open the `fireside-publish.plugin` file in Claude** and accept it.
-2. If Claude asks to connect the **Fireside Publish** connector, approve it once.
-3. That's it. You'll see three new commands: `/new-deal`, `/edit-deal`, `/deals`.
+If you already use Claude Code day to day:
 
-No logins, no tokens to type, no terminal, no setup.
+1. **Open the `fireside-publish.plugin` file in Claude Code** and accept it.
+2. If Claude asks to connect the **Fireside Publish** connector, approve it
+   once — the access token is already baked into the plugin file, nothing to
+   type.
+3. That's it — `/new-deal`, `/edit-deal`, `/deals`.
+
+> Older instructions for this option (a `FIRESIDE_TOKEN` environment
+> variable + a separate marketplace repo) are retired — ignore any guide
+> that mentions `setx FIRESIDE_TOKEN` or `/plugin install fireside-publish@fireside`.
+
+### If something doesn't work
+
+- **"Unauthorized" or connector errors** → the token baked into your plugin
+  file no longer matches the server. Ask your admin to re-issue you the
+  current `fireside-publish.plugin` file.
+- **Plugin commands not showing** → re-open the `fireside-publish.plugin`
+  file, then restart Claude.
 
 ---
 
-## Publishing deals
+## Publishing deals (same in both options)
 
 ### Add a new deal
 
@@ -79,18 +105,5 @@ to `closed` or `fundraising`.
 
 ---
 
-## If something doesn't work
-
-- **"Unauthorized" or connector errors** → the access token baked into your
-  plugin file no longer matches the server. Ask your admin to re-issue you
-  the current `fireside-publish.plugin` file (this happens automatically
-  whenever the admin rotates the token, e.g. after a security review).
-- **Plugin commands not showing** → re-open the `fireside-publish.plugin`
-  file, then restart Claude.
-- **Deal rejected at publish** → Claude will list exactly what's wrong. Answer
-  its questions and it re-validates automatically.
-
----
-
 *Admin reference: `fireside-publish-plugin/README.md` in the portal repo
-covers how the plugin is built, distributed, and how to rotate access.*
+covers how the connector is built, distributed, and how to rotate access.*
