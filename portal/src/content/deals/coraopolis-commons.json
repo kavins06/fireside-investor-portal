@@ -1,0 +1,138 @@
+{
+  "name": "Coraopolis Commons",
+  "slug": "coraopolis-commons",
+  "status": "active",
+  "location": {
+    "city": "Coraopolis",
+    "state": "PA",
+    "address": "951 First Ave",
+    "zip": "15108",
+    "display": "Coraopolis, PA — Pittsburgh Airport Corridor"
+  },
+  "property": {
+    "type": "Affordable / HAP Multifamily Value-Add",
+    "units": 200,
+    "yearBuilt": 1979,
+    "unitMix": "193× 1BR/1BA · 7× 2BR/2BA",
+    "buildings": 1,
+    "acres": 2.19,
+    "sqftPerUnit": 563,
+    "occupancy": "97%"
+  },
+  "transaction": {
+    "purchasePrice": 29800000,
+    "totalEquity": 8750000,
+    "agencyDebt": 22350000,
+    "capImprovements": 2479000
+  },
+  "engine": {
+    "equity": 8750000,
+    "loan": 22350000,
+    "rate": 0.0578,
+    "lpShare": 0.9,
+    "gpShare": 0.1,
+    "pref": 0.08,
+    "promote": 0.2,
+    "moicHurdle": 2.5,
+    "assetMgmt": 0.01,
+    "sellCost": 0.01,
+    "baseOcc": 0.95,
+    "baseNOI": [
+      1045768,
+      1452232,
+      1513309,
+      1541412,
+      1569927,
+      1598854,
+      1628194,
+      1657949
+    ],
+    "baseOpex": [
+      1374301,
+      1888221,
+      1945788,
+      2004162,
+      2064287,
+      2126215,
+      2190002,
+      2255702
+    ]
+  },
+  "copy": {
+    "tagline": "Federally subsidized cash flow in a tightening Pittsburgh market.",
+    "thesis": "A 200-unit HAP-contract community on the Pittsburgh airport corridor, acquired at $149K/unit. Project-based Section 8 anchors in-place income while a $2.5M interior and common-area renovation lifts NOI from roughly $1.05M in the partial first year to a stabilized $1.5M+. The entry basis sits at a sub-5% stabilized cap against 5.78% agency debt, so this is a cash-flow-and-preservation hold rather than a cap-rate-compression play; the base case underwrites a conservative 6.25% exit."
+  },
+  "teaser": {
+    "targetIRR": "~-7%",
+    "equityMultiple": "~0.6×",
+    "holdYears": 7
+  },
+  "marketLabel": "Coraopolis / Pittsburgh Airport Corridor",
+  "marketAsOf": "Q3 2025",
+  "marketFindings": [
+    {
+      "tag": "supportive",
+      "headline": "Pittsburgh vacancy tightening toward 4% as rent growth accelerates to 3.8%",
+      "body": "Northmarq reports Pittsburgh apartment vacancy ending 2025 around 4.5% — matching its five-year average — with rent growth forecast to accelerate to 3.8% by year-end and stay positive through 2026 as demand outpaces a moderating supply pipeline. Pittsburgh remains a national outperformer versus oversupplied Sun Belt metros.",
+      "sources": [
+        {
+          "title": "Multifamily rent growth accelerates in Pittsburgh as vacancy tightens — Northmarq",
+          "url": "https://www.northmarq.com/insights/insights/multifamily-rent-growth-accelerates-pittsburgh-vacancy-tightens"
+        }
+      ],
+      "date": "Q3 2025"
+    },
+    {
+      "tag": "supportive",
+      "headline": "Older value-add vintage is exactly what Pittsburgh buyers want",
+      "body": "Properties built in the 1950s and 1970s account for nearly 25% of Pittsburgh multifamily transactions, and in-place cap rates for quality assets with value-add upside have run 5.5%–6.0%. Our 1979-vintage asset at a $2.5M renovation basis sits squarely in the most actively traded segment of this market.",
+      "sources": [
+        {
+          "title": "Multifamily rent growth accelerates in Pittsburgh as vacancy tightens — Northmarq",
+          "url": "https://www.northmarq.com/insights/insights/multifamily-rent-growth-accelerates-pittsburgh-vacancy-tightens"
+        }
+      ],
+      "date": "Q3 2025"
+    },
+    {
+      "tag": "supportive",
+      "headline": "Nearly 600 new jobs and $109M landing in Coraopolis",
+      "body": "Mainspring Energy is building a 292,000 SF clean-tech manufacturing plant in the Northfield Industrial Park in Findlay Township/Coraopolis on Allegheny County Airport Authority land, backed by $8.6M in state incentives — creating at least 597 jobs. It anchors a broader airport-corridor employment base that supports workforce-housing demand nearby.",
+      "sources": [
+        {
+          "title": "Shapiro Administration Invests $8.6M to Recruit Mainspring Energy, Creating Nearly 600 Jobs in Allegheny County — PA.gov",
+          "url": "https://www.pa.gov/governor/newsroom/2024-press-releases/-8-6-million-to-help-recruit-mainspring-energy-to-move-to-pa-cre"
+        }
+      ],
+      "date": "Q4 2024"
+    },
+    {
+      "tag": "supportive",
+      "headline": "FY2026 appropriations sustain Section 8 project-based rental assistance",
+      "body": "The FY2026 HUD appropriations bill continues funding for renewal of Section 8 project-based rental assistance (PBRA) contracts — the operating subsidy that anchors this property's in-place income — and HUD published FY2026 Annual Adjustment Factors effective December 9, 2025 that escalate HAP contract rents. Federal subsidy continuity underpins the base-case cash flow.",
+      "sources": [
+        {
+          "title": "2026 HUD Funding Update: PBRA, PRAC, Vouchers — US Housing Consultants",
+          "url": "https://www.us-hc.com/blogs/2026-hud-funding-update-pbra-prac-vouchers-and-key-coc-changes/"
+        },
+        {
+          "title": "Section 8 HAP Program — Annual Adjustment Factors, FY2026 (90 FR 57091) — Federal Register",
+          "url": "https://www.federalregister.gov/documents/2025/12/09/2025-22375/section-8-housing-assistance-payments-program-annual-adjustment-factors-fiscal-year-2026"
+        }
+      ],
+      "date": "Q4 2025"
+    },
+    {
+      "tag": "watch",
+      "headline": "Entry basis prices in cap-rate expansion risk",
+      "body": "At $149K/unit the going-in yield on stabilized NOI is roughly 4.9%, inside the 5.5%–6.0% range where comparable Pittsburgh value-add trades. Buying at ~4.9% against 5.78% debt is negative leverage, and a 6.25% exit puts sale value below the entry price — so the base case leans on subsidized cash flow and debt paydown, not appreciation. Minimum operating-year DSCR is 0.81, indicating the senior loan is undersized against in-place NOI.",
+      "sources": [
+        {
+          "title": "Multifamily rent growth accelerates in Pittsburgh as vacancy tightens — Northmarq",
+          "url": "https://www.northmarq.com/insights/insights/multifamily-rent-growth-accelerates-pittsburgh-vacancy-tightens"
+        }
+      ],
+      "date": "Q3 2025"
+    }
+  ]
+}
