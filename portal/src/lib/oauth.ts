@@ -30,6 +30,21 @@ function signingSecret(): string {
   return import.meta.env.OAUTH_SIGNING_SECRET ?? process.env.OAUTH_SIGNING_SECRET ?? '';
 }
 
+/**
+ * The public origin of this deployment. `new URL(request.url).origin` is NOT
+ * reliable on Vercel's Node serverless runtime — it reflects the internal
+ * request target (observed as `https://localhost`), not the domain the
+ * client actually connected to. Vercel forwards the real host via standard
+ * proxy headers, so derive it from those instead.
+ */
+export function originFromRequest(request: Request): string {
+  const forwardedHost = request.headers.get('x-forwarded-host');
+  const host = forwardedHost ?? request.headers.get('host');
+  if (!host) return new URL(request.url).origin; // last-resort fallback (e.g. local dev)
+  const proto = request.headers.get('x-forwarded-proto') ?? 'https';
+  return `${proto}://${host}`;
+}
+
 function b64url(input: Buffer | string): string {
   return Buffer.from(input).toString('base64url');
 }

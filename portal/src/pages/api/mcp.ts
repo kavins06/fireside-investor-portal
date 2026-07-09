@@ -24,6 +24,7 @@
 import type { APIRoute } from 'astro';
 import { validateDeal } from '../../lib/deal-validation.mjs';
 import { publishDeal, fetchDeal, listDeals, deleteDeal } from '../../lib/github-publish';
+import { originFromRequest } from '../../lib/oauth';
 
 export const prerender = false;
 
@@ -220,7 +221,7 @@ export const POST: APIRoute = async ({ request }) => {
   const auth = request.headers.get('authorization') ?? '';
   const provided = /^bearer /i.test(auth) ? auth.slice(7) : '';
   if (!expected || !provided || !constantTimeEqual(provided, expected)) {
-    const origin = new URL(request.url).origin;
+    const origin = originFromRequest(request);
     return jsonResponse(
       rpcError(null, -32001, 'Unauthorized — Fireside Publish connector requires a valid token (install the Fireside plugin).'),
       401,

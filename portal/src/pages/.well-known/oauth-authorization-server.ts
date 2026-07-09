@@ -3,11 +3,12 @@
  * minimal OAuth layer. See src/lib/oauth.ts for the design rationale.
  */
 import type { APIRoute } from 'astro';
+import { originFromRequest } from '../../lib/oauth';
 
 export const prerender = false;
 
 export const GET: APIRoute = ({ request }) => {
-  const origin = new URL(request.url).origin;
+  const origin = originFromRequest(request);
   return new Response(
     JSON.stringify({
       issuer: origin,

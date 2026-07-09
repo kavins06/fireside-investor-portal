@@ -3,11 +3,12 @@
  * authorization server for the Fireside Publish connector.
  */
 import type { APIRoute } from 'astro';
+import { originFromRequest } from '../../lib/oauth';
 
 export const prerender = false;
 
 export const GET: APIRoute = ({ request }) => {
-  const origin = new URL(request.url).origin;
+  const origin = originFromRequest(request);
   return new Response(
     JSON.stringify({
       resource: `${origin}/api/mcp`,
