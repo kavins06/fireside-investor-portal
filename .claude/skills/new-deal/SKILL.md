@@ -40,8 +40,9 @@ components own all visuals. The record is pure data; get the data right.
 > publish from **Claude Cowork** via the **Fireside Publish connector** (an MCP server
 > at `portal/src/pages/api/mcp.ts` → commits to the repo the same way). Both paths run
 > the *same* validation (`portal/src/lib/deal-validation.mjs`, shared with the content
-> schema) so neither can publish a broken deal. Cowork setup: `portal/docs/cowork-publish-setup.md`;
-> go-live: `portal/docs/portal-publishing-provisioning.md`.
+> schema) so neither can publish a broken deal. Non-technical publisher setup:
+> `portal/docs/cowork-publish-setup.md`. Admin/distribution reference:
+> `fireside-publish-plugin/README.md`.
 
 ---
 

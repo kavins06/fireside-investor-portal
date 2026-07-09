@@ -1,51 +1,32 @@
 # Publish Fireside deals from Claude — setup guide
 
-You can add, edit, and manage deals on the Fireside website just by chatting with
-Claude — no logins, no spreadsheets, no code. Setup takes about five minutes.
+You can add, edit, and manage deals on the Fireside website just by chatting
+with Claude — no logins, no spreadsheets, no code. Setup takes under a minute.
+
+> This doc describes the **current (v3) flow**: a single plugin file with the
+> connector pre-wired. There is no environment variable to set, no
+> marketplace to register, and no URL to paste. (Earlier versions of this
+> project used a `FIRESIDE_TOKEN` env var + marketplace install — that flow
+> is retired; ignore any instructions that mention `setx FIRESIDE_TOKEN` or
+> `/plugin install fireside-publish@fireside`.)
 
 ---
 
 ## What you need
 
-- **Claude Code** — the desktop app (get it at claude.ai/download)
-- **Your Fireside token** — a short code your admin gives you once
+- **Claude Code or Claude Desktop**
+- **The `fireside-publish.plugin` file** — get this from your admin. It has
+  the connector (and your access) already baked in.
 
 ---
 
-## Setup (once, usually done by your admin)
+## Setup (once)
 
-### 1. Set your token
+1. **Open the `fireside-publish.plugin` file in Claude** and accept it.
+2. If Claude asks to connect the **Fireside Publish** connector, approve it once.
+3. That's it. You'll see three new commands: `/new-deal`, `/edit-deal`, `/deals`.
 
-Open a terminal and run:
-
-```
-setx FIRESIDE_TOKEN "your-token-here"
-```
-
-Replace `your-token-here` with the token your admin gave you. Close and reopen
-Claude Code after running this — it picks up the new variable on launch.
-
-### 2. Register the Fireside plugin source
-
-Claude Code needs to know where to find the Fireside plugin. Run this in a terminal
-(one line):
-
-```
-node -e "const fs=require('fs'),p=process.env.USERPROFILE+'/.claude/settings.json',s=JSON.parse(fs.readFileSync(p,'utf8')||'{}');s.extraKnownMarketplaces=s.extraKnownMarketplaces||{};s.extraKnownMarketplaces.fireside={source:{source:'git',url:'https://github.com/kavins06/fireside-publish-plugin.git'}};fs.writeFileSync(p,JSON.stringify(s,null,2))"
-```
-
-### 3. Install the Fireside plugin
-
-In any Claude Code chat, run:
-
-```
-/plugin install fireside-publish@fireside
-```
-
-Claude will confirm it's installed. You'll see **Fireside Publish** appear in your
-plugins list with three skills: `/new-deal`, `/edit-deal`, and `/deals`.
-
-That's it — no URLs to paste, no connectors to configure.
+No logins, no tokens to type, no terminal, no setup.
 
 ---
 
@@ -100,9 +81,16 @@ to `closed` or `fundraising`.
 
 ## If something doesn't work
 
-- **"Unauthorized" or connector errors** → your token may be wrong or not set.
-  Re-run `setx FIRESIDE_TOKEN "your-token"`, then fully close and reopen Claude Code.
-- **Plugin skills not showing** → run `/plugin install fireside-publish@fireside`
-  again, then restart Claude Code.
+- **"Unauthorized" or connector errors** → the access token baked into your
+  plugin file no longer matches the server. Ask your admin to re-issue you
+  the current `fireside-publish.plugin` file (this happens automatically
+  whenever the admin rotates the token, e.g. after a security review).
+- **Plugin commands not showing** → re-open the `fireside-publish.plugin`
+  file, then restart Claude.
 - **Deal rejected at publish** → Claude will list exactly what's wrong. Answer
   its questions and it re-validates automatically.
+
+---
+
+*Admin reference: `fireside-publish-plugin/README.md` in the portal repo
+covers how the plugin is built, distributed, and how to rotate access.*
