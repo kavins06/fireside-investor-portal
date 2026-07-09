@@ -206,19 +206,26 @@ async function handleMessage(msg: any): Promise<any | null> {
   }
 }
 
-const jsonResponse = (body: unknown, status = 200) =>
-  new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
+const jsonResponse = (body: unknown, status = 200, extraHeaders: Record<string, string> = {}) =>
+  new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', ...extraHeaders } });
 
 export const POST: APIRoute = async ({ request }) => {
   // Whole-connector gate. The request must carry the Fireside token in the Authorization
-  // header — baked into the Fireside Publish plugin's .mcp.json, so authorised installers
-  // are auto-authenticated and nobody types anything. No valid token → no access at all
-  // (this is what closes the open-publishing hole; the bare URL alone returns 401).
+  // header — either baked into the Claude Code plugin's .mcp.json directly, or obtained
+  // via the OAuth layer (src/lib/oauth.ts) for clients like claude.ai's Connectors UI that
+  // require an OAuth handshake instead of accepting a static header. Either way it's the
+  // same MCP_PUBLISH_TOKEN value. No valid token → no access at all (this is what closes
+  // the open-publishing hole; the bare URL alone returns 401).
   const expected = import.meta.env.MCP_PUBLISH_TOKEN ?? process.env.MCP_PUBLISH_TOKEN ?? '';
   const auth = request.headers.get('authorization') ?? '';
   const provided = /^bearer /i.test(auth) ? auth.slice(7) : '';
   if (!expected || !provided || !constantTimeEqual(provided, expected)) {
-    return jsonResponse(rpcError(null, -32001, 'Unauthorized — Fireside Publish connector requires a valid token (install the Fireside plugin).'), 401);
+    const origin = new URL(request.url).origin;
+    return jsonResponse(
+      rpcError(null, -32001, 'Unauthorized — Fireside Publish connector requires a valid token (install the Fireside plugin).'),
+      401,
+      { 'WWW-Authenticate': `Bearer resource_metadata="${origin}/.well-known/oauth-protected-resource/api/mcp"` },
+    );
   }
 
   let payload: any;

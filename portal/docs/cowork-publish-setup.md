@@ -1,55 +1,62 @@
 # Publish Fireside deals from Claude — setup guide
 
-You can add, edit, and manage deals on the Fireside website just by chatting with
-Claude — no logins, no spreadsheets, no code. Setup takes about five minutes.
+You can add, edit, and manage deals on the Fireside website just by chatting
+with Claude — no logins, no spreadsheets, no code. Setup takes under a minute.
+
+There are two ways to connect, depending on what you use day to day. If
+you're not sure, use **claude.ai** — that's what most publishers should use.
 
 ---
 
-## What you need
+## Option A — claude.ai (recommended for most people)
 
-- **Claude Code** — the desktop app (get it at claude.ai/download)
-- **Your Fireside token** — a short code your admin gives you once
+1. Go to **claude.ai → Settings → Connectors → Add custom connector**.
+2. Paste the connector URL your admin gave you (ends in `/api/mcp`) and add it.
+3. Claude will open a **Connect Fireside Publish** page asking for an access
+   code. Enter the code your admin gave you — this is a one-time step per
+   device.
+4. That's it. In any chat you'll have `/new-deal`, `/edit-deal`, and `/deals`
+   available (ask your admin for the matching skill files if they don't show
+   up automatically).
 
----
+### If something doesn't work
 
-## Setup (once, usually done by your admin)
-
-### 1. Set your token
-
-Open a terminal and run:
-
-```
-setx FIRESIDE_TOKEN "your-token-here"
-```
-
-Replace `your-token-here` with the token your admin gave you. Close and reopen
-Claude Code after running this — it picks up the new variable on launch.
-
-### 2. Register the Fireside plugin source
-
-Claude Code needs to know where to find the Fireside plugin. Run this in a terminal
-(one line):
-
-```
-node -e "const fs=require('fs'),p=process.env.USERPROFILE+'/.claude/settings.json',s=JSON.parse(fs.readFileSync(p,'utf8')||'{}');s.extraKnownMarketplaces=s.extraKnownMarketplaces||{};s.extraKnownMarketplaces.fireside={source:{source:'git',url:'https://github.com/kavins06/fireside-publish-plugin.git'}};fs.writeFileSync(p,JSON.stringify(s,null,2))"
-```
-
-### 3. Install the Fireside plugin
-
-In any Claude Code chat, run:
-
-```
-/plugin install fireside-publish@fireside
-```
-
-Claude will confirm it's installed. You'll see **Fireside Publish** appear in your
-plugins list with three skills: `/new-deal`, `/edit-deal`, and `/deals`.
-
-That's it — no URLs to paste, no connectors to configure.
+- **"Couldn't register with fireside-publish's sign-in service"** → this
+  should no longer happen; if it does, the connector's OAuth layer may not be
+  configured server-side (`OAUTH_SIGNING_SECRET` missing in Vercel) — tell
+  your admin.
+- **"That code is not correct"** on the connect page → double check the
+  access code with your admin; it may have been rotated.
+- **Deal rejected at publish** → Claude will list exactly what's wrong.
+  Answer its questions and it re-validates automatically.
 
 ---
 
-## Publishing deals
+## Option B — Claude Code (terminal)
+
+If you already use Claude Code day to day:
+
+1. **Open the `fireside-publish.plugin` file in Claude Code** and accept it.
+2. If Claude asks to connect the **Fireside Publish** connector, approve it
+   once — the access token is already baked into the plugin file, nothing to
+   type.
+3. That's it — `/new-deal`, `/edit-deal`, `/deals`.
+
+> Older instructions for this option (a `FIRESIDE_TOKEN` environment
+> variable + a separate marketplace repo) are retired — ignore any guide
+> that mentions `setx FIRESIDE_TOKEN` or `/plugin install fireside-publish@fireside`.
+
+### If something doesn't work
+
+- **"Unauthorized" or connector errors** → the token baked into your plugin
+  file no longer matches the server. Ask your admin to re-issue you the
+  current `fireside-publish.plugin` file.
+- **Plugin commands not showing** → re-open the `fireside-publish.plugin`
+  file, then restart Claude.
+
+---
+
+## Publishing deals (same in both options)
 
 ### Add a new deal
 
@@ -98,11 +105,5 @@ to `closed` or `fundraising`.
 
 ---
 
-## If something doesn't work
-
-- **"Unauthorized" or connector errors** → your token may be wrong or not set.
-  Re-run `setx FIRESIDE_TOKEN "your-token"`, then fully close and reopen Claude Code.
-- **Plugin skills not showing** → run `/plugin install fireside-publish@fireside`
-  again, then restart Claude Code.
-- **Deal rejected at publish** → Claude will list exactly what's wrong. Answer
-  its questions and it re-validates automatically.
+*Admin reference: `fireside-publish-plugin/README.md` in the portal repo
+covers how the connector is built, distributed, and how to rotate access.*
